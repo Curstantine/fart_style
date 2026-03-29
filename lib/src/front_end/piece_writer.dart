@@ -460,7 +460,8 @@ final class PieceWriter {
     var solver = Solver(
       cache,
       pageWidth: style.pageWidth,
-      leadingIndent: style.leadingIndent,
+      leadingTabs: style.leadingIndent,
+      leadingSpaces: 0,
     );
 
     var solution = solver.format(rootPiece);

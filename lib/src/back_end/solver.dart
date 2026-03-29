@@ -47,27 +47,37 @@ final class Solver {
 
   final int _pageWidth;
 
-  /// The number of spaces of indentation on the first line.
-  final int _leadingIndent;
+  /// The number of tabs of block-level indentation on the first line.
+  final int _leadingTabs;
 
-  /// The number of spaces of indentation on all lines after the first.
-  final int _subsequentIndent;
+  /// The number of spaces of alignment on the first line.
+  final int _leadingSpaces;
+
+  /// The number of tabs of block-level indentation on all lines after the first.
+  final int _subsequentTabs;
+
+  /// The number of spaces of alignment on all lines after the first.
+  final int _subsequentSpaces;
 
   final PriorityQueue<Solution> _queue = PriorityQueue();
 
   /// Creates a solver that fits code into the given [pageWidth].
   ///
-  /// The first line is indented by [leadingIndent] spaces and all lines after
-  /// that are indented by [subsequentIndent]. If [subsequentIndent] is omitted,
-  /// defaults to [leadingIndent].
+  /// The first line is indented by [leadingTabs] tabs and [leadingSpaces]
+  /// spaces. All lines after that use [subsequentTabs] and [subsequentSpaces].
+  /// If subsequent values are omitted, they default to the leading values.
   Solver(
     this._cache, {
     required int pageWidth,
-    int leadingIndent = 0,
-    int? subsequentIndent,
+    int leadingTabs = 0,
+    int leadingSpaces = 0,
+    int? subsequentTabs,
+    int? subsequentSpaces,
   }) : _pageWidth = pageWidth,
-       _leadingIndent = leadingIndent,
-       _subsequentIndent = subsequentIndent ?? leadingIndent;
+       _leadingTabs = leadingTabs,
+       _leadingSpaces = leadingSpaces,
+       _subsequentTabs = subsequentTabs ?? leadingTabs,
+       _subsequentSpaces = subsequentSpaces ?? leadingSpaces;
 
   /// Finds the best set of line splits for [root] piece and returns the
   /// resulting formatted code.
@@ -99,8 +109,10 @@ final class Solver {
       _cache,
       root,
       pageWidth: _pageWidth,
-      leadingIndent: _leadingIndent,
-      subsequentIndent: _subsequentIndent,
+      leadingTabs: _leadingTabs,
+      leadingSpaces: _leadingSpaces,
+      subsequentTabs: _subsequentTabs,
+      subsequentSpaces: _subsequentSpaces,
       rootState: rootState,
     );
 
@@ -156,8 +168,10 @@ final class Solver {
         _cache,
         root,
         pageWidth: _pageWidth,
-        leadingIndent: _leadingIndent,
-        subsequentIndent: _subsequentIndent,
+        leadingTabs: _leadingTabs,
+        leadingSpaces: _leadingSpaces,
+        subsequentTabs: _subsequentTabs,
+        subsequentSpaces: _subsequentSpaces,
       )) {
         Profile.count('Solver enqueue');
         _queue.add(expanded);

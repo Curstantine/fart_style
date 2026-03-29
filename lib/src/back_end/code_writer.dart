@@ -4,6 +4,7 @@
 import 'dart:math';
 
 import '../debug.dart' as debug;
+import '../indentation.dart' show tabWidth;
 import '../piece/piece.dart';
 import '../profile.dart';
 import 'code.dart';
@@ -44,19 +45,24 @@ final class CodeWriter {
   /// before the first token.
   Whitespace _pendingWhitespace = Whitespace.none;
 
-  /// The number of spaces of indentation that should be begin the next line
+  /// The number of tabs of indentation that should begin the next line
   /// when [_pendingWhitespace] is [Whitespace.newline] or
   /// [Whitespace.blankLine].
-  int _pendingIndent = 0;
+  int _pendingIndentTabs = 0;
+
+  /// The number of spaces of alignment that should begin the next line
+  /// when [_pendingWhitespace] is [Whitespace.newline] or
+  /// [Whitespace.blankLine].
+  int _pendingIndentSpaces = 0;
 
   /// The number of characters in the line currently being written.
   int _column = 0;
 
   /// The stack of indentation levels.
   ///
-  /// Each entry in the stack is the absolute number of spaces of leading
-  /// indentation that should be written when beginning a new line to account
-  /// for block nesting, expression wrapping, constructor initializers, etc.
+  /// Each entry in the stack tracks the number of tabs for block-level
+  /// indentation and spaces for alignment that should be written when
+  /// beginning a new line.
   final List<_IndentLevel> _indentStack = [];
 
   /// The stack of information for each [Piece] currently being formatted.
@@ -98,28 +104,35 @@ final class CodeWriter {
   /// written to the current line.
   final Set<Piece> _currentLinePieces = {};
 
-  /// [leadingIndent] is the number of spaces of leading indentation at the
-  /// beginning of the first line and [subsequentIndent] is the indentation of
-  /// each line after that, independent of indentation created by pieces being
-  /// written.
+  /// [leadingTabs] and [leadingSpaces] specify the indentation at the
+  /// beginning of the first line. [subsequentTabs] and [subsequentSpaces]
+  /// specify the indentation of each line after that, independent of
+  /// indentation created by pieces being written.
   CodeWriter(
     this._pageWidth,
-    int leadingIndent,
-    int subsequentIndent,
+    int leadingTabs,
+    int leadingSpaces,
+    int subsequentTabs,
+    int subsequentSpaces,
     this._cache,
     this._solution,
-  ) : _code = GroupCode(leadingIndent) {
-    _indentStack.add(_IndentLevel(Indent.none, leadingIndent));
+  ) : _code = GroupCode.withTabs(leadingTabs, leadingSpaces) {
+    _indentStack.add(_IndentLevel(Indent.none, leadingTabs, leadingSpaces));
 
     // Track the leading indent before the first line.
-    _pendingIndent = leadingIndent;
-    _column = _pendingIndent;
+    _pendingIndentTabs = leadingTabs;
+    _pendingIndentSpaces = leadingSpaces;
+    _column = leadingTabs * tabWidth + leadingSpaces;
 
     // If there is additional indentation on subsequent lines, then push that
-    // onto the stack. When the first newline is written, [_pendingIndent] will
-    // pick this up and use it for subsequent lines.
-    if (subsequentIndent > leadingIndent) {
-      _indentStack.add(_IndentLevel(Indent.none, subsequentIndent));
+    // onto the stack. When the first newline is written, [_pendingIndentTabs]
+    // will pick this up and use it for subsequent lines.
+    var leadingVisual = leadingTabs * tabWidth + leadingSpaces;
+    var subsequentVisual = subsequentTabs * tabWidth + subsequentSpaces;
+    if (subsequentVisual > leadingVisual) {
+      _indentStack.add(
+        _IndentLevel(Indent.none, subsequentTabs, subsequentSpaces),
+      );
     }
   }
 
@@ -160,26 +173,32 @@ final class CodeWriter {
       var parent = _indentStack.last;
 
       // Combine the new indentation with the surrounding one.
-      var offset = switch ((parent.type, indent)) {
+      // Determine if we should collapse any alignment spaces.
+      var collapseSpaces = switch ((parent.type, indent)) {
         // On the right-hand side of `=`, `:`, or `=>`, don't indent subsequent
         // infix operands so that they all align:
         //
         //     variable =
         //         operand +
         //         another;
-        (Indent.assignment, Indent.infix) => 0,
+        (Indent.assignment, Indent.infix) => true,
 
         // We have already indented the control flow header, so collapse the
         // duplicate indentation.
-        (Indent.controlFlowClause, Indent.expression) => 0,
-        (Indent.controlFlowClause, Indent.infix) => 0,
+        (Indent.controlFlowClause, Indent.expression) => true,
+        (Indent.controlFlowClause, Indent.infix) => true,
 
         // If we get here, the parent context has no effect, so just apply the
         // indentation directly.
-        (_, _) => indent.spaces,
+        (_, _) => false,
       };
 
-      _indentStack.add(_IndentLevel(indent, parent.spaces + offset));
+      var newTabs = parent.tabs + indent.tabs;
+      var newSpaces = collapseSpaces
+          ? parent.spaces
+          : parent.spaces + indent.spaces;
+
+      _indentStack.add(_IndentLevel(indent, newTabs, newSpaces));
       if (debug.traceIndent) {
         debug.log('pushIndent: ${_indentStack.join(' ')}');
       }
@@ -229,13 +248,19 @@ final class CodeWriter {
   /// and later, there is a different mechanism for merging indentation kinds.
   /// This function implements the former.
   void _pushIndent3Dot7(Indent indent, {bool canCollapse = false}) {
-    var parentIndent = _indentStack.last.spaces;
+    var parentTabs = _indentStack.last.tabs;
+    var parentSpaces = _indentStack.last.spaces;
     var parentCollapse = _indentStack.last.collapsible;
 
-    if (parentCollapse == indent.spaces) {
+    // For 3.7 style, the visual width needs to consider both tabs and spaces.
+    var indentVisualWidth = indent.visualWidth;
+
+    if (parentCollapse == indentVisualWidth) {
       // We're indenting by the same existing collapsible amount, so collapse
       // this new indentation with that existing one.
-      _indentStack.add(_IndentLevel.v3Dot7(parentIndent, 0));
+      _indentStack.add(
+        _IndentLevel.v3Dot7(parentTabs + indent.tabs, parentSpaces, 0),
+      );
     } else if (canCollapse) {
       // We should never get multiple levels of nested collapsible indentation.
       assert(parentCollapse == 0);
@@ -243,11 +268,21 @@ final class CodeWriter {
       // Increase the indentation and note that it can be collapsed with
       // further indentation.
       _indentStack.add(
-        _IndentLevel.v3Dot7(parentIndent + indent.spaces, indent.spaces),
+        _IndentLevel.v3Dot7(
+          parentTabs + indent.tabs,
+          parentSpaces + indent.spaces,
+          indentVisualWidth,
+        ),
       );
     } else {
       // Regular indentation, so just increase the indent.
-      _indentStack.add(_IndentLevel.v3Dot7(parentIndent + indent.spaces, 0));
+      _indentStack.add(
+        _IndentLevel.v3Dot7(
+          parentTabs + indent.tabs,
+          parentSpaces + indent.spaces,
+          0,
+        ),
+      );
     }
   }
 
@@ -300,7 +335,13 @@ final class CodeWriter {
   void whitespace(Whitespace whitespace, {bool flushLeft = false}) {
     if (whitespace case Whitespace.newline || Whitespace.blankLine) {
       _applyNewlineToShape(_pieceFormats.last);
-      _pendingIndent = flushLeft ? 0 : _indentStack.last.spaces;
+      if (flushLeft) {
+        _pendingIndentTabs = 0;
+        _pendingIndentSpaces = 0;
+      } else {
+        _pendingIndentTabs = _indentStack.last.tabs;
+        _pendingIndentSpaces = _indentStack.last.spaces;
+      }
     }
 
     _pendingWhitespace = _pendingWhitespace.collapse(whitespace);
@@ -340,15 +381,20 @@ final class CodeWriter {
   /// Format [piece] using a separate [Solver] and merge the result into this
   /// writer's [_solution].
   void _formatSeparate(Piece piece) {
+    // Pass the actual tabs/spaces breakdown to the cache. The cache will use
+    // visual width for the cache key while the solver/writer use tabs/spaces.
     var solution = _cache.find(
       piece,
       _solution.pieceStateIfBound(piece),
       pageWidth: _pageWidth,
-      indent: _pendingIndent,
-      subsequentIndent: _indentStack.last.spaces,
+      leadingTabs: _pendingIndentTabs,
+      leadingSpaces: _pendingIndentSpaces,
+      subsequentTabs: _indentStack.last.tabs,
+      subsequentSpaces: _indentStack.last.spaces,
     );
 
-    _pendingIndent = 0;
+    _pendingIndentTabs = 0;
+    _pendingIndentSpaces = 0;
     _flushWhitespace();
 
     _solution.mergeSubtree(solution);
@@ -451,10 +497,11 @@ final class CodeWriter {
       case Whitespace.newline:
       case Whitespace.blankLine:
         _finishLine();
-        _column = _pendingIndent;
+        _column = _pendingIndentTabs * tabWidth + _pendingIndentSpaces;
         _code.newline(
           blank: _pendingWhitespace == Whitespace.blankLine,
-          indent: _column,
+          tabs: _pendingIndentTabs,
+          spaces: _pendingIndentSpaces,
         );
 
       case Whitespace.space:
@@ -536,50 +583,68 @@ enum Whitespace {
 /// A kind of indentation that a [Piece] may output to control the leading
 /// whitespace at the beginning of a line.
 ///
-/// Each indentation type defines the number of spaces it writes. Indentation
-/// is also semantic: a type describes *why* it writes that, or what kind of
-/// syntax its coming from. This allows us to merge or combine indentation in
-/// smarter ways in some contexts.
+/// Each indentation type defines the number of tabs and spaces it writes,
+/// following SmartTabs style:
+/// - **Tabs** are used for block-level indentation (semantic nesting)
+/// - **Spaces** are used for alignment (expression wrapping, initializers, etc.)
+///
+/// Indentation is also semantic: a type describes *why* it writes that, or
+/// what kind of syntax its coming from. This allows us to merge or combine
+/// indentation in smarter ways in some contexts.
 enum Indent {
   // No indentation.
-  none(0),
+  none(tabs: 0, spaces: 0),
 
   /// The right-hand side of an `=`, `:`, or `=>`.
-  assignment(4),
+  /// This is alignment, so uses spaces.
+  assignment(tabs: 0, spaces: 4),
 
   /// The contents of a block-like structure: block, collection literal,
   /// argument list, etc.
-  block(2),
+  /// This is block-level indentation, so uses tabs.
+  block(tabs: 1, spaces: 0),
 
   /// A split cascade chain.
-  cascade(2),
+  /// This is block-level indentation, so uses tabs.
+  cascade(tabs: 1, spaces: 0),
 
   /// Indentation when splits occur inside for-in and if-case clause headers.
-  controlFlowClause(4),
+  /// This is alignment, so uses spaces.
+  controlFlowClause(tabs: 0, spaces: 4),
 
   /// Any general sort of split expression.
-  expression(4),
+  /// This is alignment, so uses spaces.
+  expression(tabs: 0, spaces: 4),
 
   /// "Indentation" for parenthesized expressions and other contexts where we
   /// want to prevent some inner expression's indentation from merging with
   /// the surrounding one.
-  grouping(0),
+  grouping(tabs: 0, spaces: 0),
 
   /// An infix operator expression: `+`, `*`, `is`, etc.
-  infix(4),
+  /// This is alignment, so uses spaces.
+  infix(tabs: 0, spaces: 4),
 
   /// Constructor initializer when the parameter list doesn't have optional
   /// or named parameters.
-  initializer(2),
+  /// This is alignment, so uses spaces.
+  initializer(tabs: 0, spaces: 2),
 
   /// Constructor initializer when the parameter list does have optional or
   /// named parameters.
-  initializerWithOptionalParameter(3);
+  /// This is alignment, so uses spaces.
+  initializerWithOptionalParameter(tabs: 0, spaces: 3);
+
+  /// The number of tabs this type of indentation applies.
+  final int tabs;
 
   /// The number of spaces this type of indentation applies.
   final int spaces;
 
-  const Indent(this.spaces);
+  const Indent({required this.tabs, required this.spaces});
+
+  /// The visual width of this indentation for line-length calculations.
+  int get visualWidth => tabs * tabWidth + spaces;
 }
 
 /// Information for each piece currently being formatted while [CodeWriter]
@@ -625,24 +690,34 @@ enum ShapeMode {
 }
 
 /// A level of indentation in the indentation stack.
+///
+/// Uses SmartTabs style where [tabs] is for block-level indentation and
+/// [spaces] is for alignment.
 final class _IndentLevel {
   /// The reason this indentation was added.
   ///
   /// Not used for 3.7 style.
   final Indent type;
 
-  /// The total number of spaces of indentation.
+  /// The number of tabs for block-level indentation.
+  final int tabs;
+
+  /// The number of spaces for alignment.
   final int spaces;
 
-  /// How many spaces of [spaces] can be collapsed with further indentation.
+  /// How many spaces of alignment can be collapsed with further indentation.
   ///
   /// Only used for 3.7 style.
   final int collapsible;
 
-  _IndentLevel.v3Dot7(this.spaces, this.collapsible) : type = Indent.none;
+  /// The visual width of this indentation for line-length calculations.
+  int get visualWidth => tabs * tabWidth + spaces;
 
-  _IndentLevel(this.type, this.spaces) : collapsible = 0;
+  _IndentLevel.v3Dot7(this.tabs, this.spaces, this.collapsible)
+    : type = Indent.none;
+
+  _IndentLevel(this.type, this.tabs, this.spaces) : collapsible = 0;
 
   @override
-  String toString() => '${type.name}:$spaces';
+  String toString() => '${type.name}:tabs=$tabs,spaces=$spaces';
 }

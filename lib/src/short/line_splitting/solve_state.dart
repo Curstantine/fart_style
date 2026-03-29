@@ -298,20 +298,22 @@ final class SolveState {
     for (var i = 0; i < _splitter.chunks.length; i++) {
       var chunk = _splitter.chunks[i];
       if (chunk.rule.isSplit(getValue(chunk.rule), chunk)) {
-        var indent = 0;
+        var tabs = 0;
+        var spaces = 0;
         if (!chunk.flushLeft) {
-          // Add in the chunk's indent.
-          indent = _splitter.blockIndentation + chunk.indent;
+          // Block indentation comes from blockIndentation + chunk.indent (tabs)
+          tabs = _splitter.blockIndentation + chunk.indent;
 
-          // And any expression nesting.
-          indent += chunk.nesting.totalUsedIndent;
+          // Expression nesting is alignment (spaces)
+          spaces = chunk.nesting.totalUsedIndent;
 
+          // Additional indent for blocks is alignment (spaces)
           if (_splitter.chunks[i].indentBlock(getValue)) {
-            indent += Indent.expression;
+            spaces += Indent.expression;
           }
         }
 
-        _splits.add(i, indent);
+        _splits.add(i, tabs, spaces);
       }
     }
   }
@@ -398,8 +400,8 @@ final class SolveState {
 
         previousNesting = chunk.nesting;
 
-        // Start the new line.
-        length = _splits.getColumn(i);
+        // Start the new line. Use visual width for line length calculation.
+        length = _splits.getVisualWidth(i);
       } else {
         if (chunk.spaceWhenUnsplit) length++;
       }
@@ -407,8 +409,9 @@ final class SolveState {
       if (chunk is BlockChunk) {
         if (_splits.shouldSplitAt(i)) {
           // Include the cost of the nested block.
+          // Pass the tab count as the block's starting indentation.
           cost += _splitter.writer
-              .formatBlock(chunk, _splits.getColumn(i))
+              .formatBlock(chunk, _splits.getTabs(i))
               .cost;
         } else {
           // Include the nested block inline, if any.

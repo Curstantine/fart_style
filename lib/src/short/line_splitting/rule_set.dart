@@ -125,32 +125,53 @@ final class RuleSet {
 }
 
 /// For each chunk, this tracks if it has been split and, if so, what the
-/// chosen column is for the following line.
+/// chosen indentation is for the following line.
 ///
-/// Internally, this uses a list where each element corresponds to the column
-/// of the chunk at that index in the chunk list, or `-1` if that chunk did not
-/// split. This had about a 10% perf improvement over using a [Set] of splits.
+/// Uses SmartTabs style: tabs for block indentation, spaces for alignment.
+///
+/// Internally, this uses lists where each element corresponds to the tabs and
+/// spaces of the chunk at that index in the chunk list, or `-1` for tabs if
+/// that chunk did not split.
 final class SplitSet {
-  final List<int> _columns;
+  /// The number of tabs for each chunk (-1 if not split).
+  final List<int> _tabs;
+
+  /// The number of alignment spaces for each chunk (0 if not split).
+  final List<int> _spaces;
 
   /// The cost of the solution that led to these splits.
   int get cost => _cost;
   late final int _cost;
 
   /// Creates a new empty split set for a line with [numChunks].
-  SplitSet(int numChunks) : _columns = List.filled(numChunks, -1);
+  SplitSet(int numChunks)
+    : _tabs = List.filled(numChunks, -1),
+      _spaces = List.filled(numChunks, 0);
 
-  /// Marks the chunk at [index] as starting at [column].
-  void add(int index, int column) {
-    _columns[index] = column;
+  /// Marks the chunk at [index] as starting with [tabs] tabs and [spaces]
+  /// alignment spaces.
+  void add(int index, int tabs, int spaces) {
+    _tabs[index] = tabs;
+    _spaces[index] = spaces;
   }
 
   /// Returns `true` if the chunk at [splitIndex] should be split.
   bool shouldSplitAt(int index) =>
-      index < _columns.length && _columns[index] != -1;
+      index < _tabs.length && _tabs[index] != -1;
 
-  /// Gets the zero-based starting column for the chunk at [index].
-  int getColumn(int index) => _columns[index];
+  /// Gets the number of tabs for the chunk at [index].
+  int getTabs(int index) => _tabs[index];
+
+  /// Gets the number of alignment spaces for the chunk at [index].
+  int getSpaces(int index) => _spaces[index];
+
+  /// Gets the visual width (for line length calculation) at [index].
+  ///
+  /// This computes tabs * tabWidth + spaces.
+  int getVisualWidth(int index) => _tabs[index] * _tabWidth + _spaces[index];
+
+  /// The visual width of a tab character.
+  static const int _tabWidth = 4;
 
   /// Sets the resulting [cost] for the splits.
   ///
@@ -162,8 +183,8 @@ final class SplitSet {
   @override
   String toString() {
     return [
-      for (var i = 0; i < _columns.length; i++)
-        if (_columns[i] != -1) '$i:${_columns[i]}',
+      for (var i = 0; i < _tabs.length; i++)
+        if (_tabs[i] != -1) '$i:tabs=${_tabs[i]},spaces=${_spaces[i]}',
     ].join(' ');
   }
 }

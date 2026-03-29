@@ -270,7 +270,7 @@ void dumpLines(List<Chunk> chunks, SplitSet splits) {
     if (splits.shouldSplitAt(i)) {
       for (var j = 0; j < (chunk.isDouble ? 2 : 1); j++) {
         buffer.writeln();
-        buffer.write(gray('| ' * (splits.getColumn(i) ~/ 2)));
+        buffer.write(gray('| ' * (splits.getVisualWidth(i) ~/ 2)));
       }
     } else if (chunk.spaceWhenUnsplit) {
       buffer.write(' ');

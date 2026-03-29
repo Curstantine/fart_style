@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 import '../dart_formatter.dart';
 import '../debug.dart' as debug;
+import '../indentation.dart' as indent_utils;
 import 'chunk.dart';
 import 'line_splitting/line_splitter.dart';
 
@@ -152,7 +153,8 @@ final class LineWriter {
           _buffer.write(_lineEnding);
 
           // Include the formatted block contents.
-          var block = formatBlock(chunk, splits.getColumn(i));
+          // Pass the tab count as the block's starting indentation.
+          var block = formatBlock(chunk, splits.getTabs(i));
 
           // If this block contains one of the selection markers, tell the
           // writer where it ended up in the final output.
@@ -178,7 +180,10 @@ final class LineWriter {
           if (chunk.isDouble) _buffer.write(_lineEnding);
         }
 
-        _buffer.write(' ' * (splits.getColumn(i)));
+        // Write tabs for block indentation, then spaces for alignment.
+        _buffer.write(
+          indent_utils.getIndent(splits.getTabs(i), splits.getSpaces(i)),
+        );
       } else {
         if (chunk.spaceWhenUnsplit) _buffer.write(' ');
       }

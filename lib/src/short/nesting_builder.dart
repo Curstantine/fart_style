@@ -8,18 +8,22 @@ import 'nesting_level.dart';
 /// Keeps track of block indentation and expression nesting while the source
 /// code is being visited and the chunks are being built.
 ///
+/// Uses SmartTabs style:
+/// - Block indentation is tracked in tabs via [_tabStack]
+/// - Expression nesting is tracked in spaces via [NestingLevel]
+///
 /// This class requires (and verifies) that indentation and nesting are
 /// stratified from each other. Expression nesting is always inside block
 /// indentation, which means it is an error to try to change the block
 /// indentation while any expression nesting is in effect.
 final class NestingBuilder {
-  /// The block indentation levels.
+  /// The block indentation levels in tabs.
   ///
   /// This is tracked as a stack of numbers, each of which is the total number
-  /// of spaces of block indentation. We only store the stack of previous
+  /// of tabs of block indentation. We only store the stack of previous
   /// levels as a convenience to the caller: it spares you from having to pass
   /// the unindent amount to [unindent()].
-  final List<int> _stack = [0];
+  final List<int> _tabStack = [0];
 
   /// When not `null`, the expression nesting after the next token is written.
   ///
@@ -51,8 +55,8 @@ final class NestingBuilder {
   /// it won't get indented as it should.
   NestingLevel? _pendingNesting;
 
-  /// The current number of characters of block indentation.
-  int get indentation => _stack.last;
+  /// The current number of tabs of block indentation.
+  int get indentation => _tabStack.last;
 
   /// The current nesting, ignoring any pending nesting.
   NestingLevel get nesting => _nesting;
@@ -61,17 +65,17 @@ final class NestingBuilder {
   /// The current nesting, including any pending nesting.
   NestingLevel get currentNesting => _pendingNesting ?? _nesting;
 
-  /// Creates a new indentation level [spaces] deeper than the current one.
+  /// Creates a new indentation level [tabs] tabs deeper than the current one.
   ///
-  /// If omitted, [spaces] defaults to [Indent.block].
-  void indent([int? spaces]) {
-    spaces ??= Indent.block;
+  /// If omitted, [tabs] defaults to [Indent.block] (which is 1 tab).
+  void indent([int? tabs]) {
+    tabs ??= Indent.block;
 
     // Indentation should only change outside of nesting.
     assert(_pendingNesting == null);
     assert(_nesting.indent == 0);
 
-    _stack.add(_stack.last + spaces);
+    _tabStack.add(_tabStack.last + tabs);
   }
 
   /// Discards the most recent indentation level.
@@ -80,19 +84,19 @@ final class NestingBuilder {
     assert(_pendingNesting == null);
     assert(_nesting.indent == 0);
 
-    _stack.removeLast();
+    _tabStack.removeLast();
 
     // If this fails, an unindent() call did not have a preceding indent() call.
-    assert(_stack.isNotEmpty);
+    assert(_tabStack.isNotEmpty);
   }
 
-  /// Begins a new expression nesting level [indent] deeper than the current
-  /// one if it splits.
+  /// Begins a new expression nesting level [indent] spaces deeper than the
+  /// current one if it splits.
   ///
   /// Expressions that are more nested will get increased indentation when split
   /// if the previous line has a lower level of nesting.
   ///
-  /// If [indent] is omitted, defaults to [Indent.expression].
+  /// If [indent] is omitted, defaults to [Indent.expression] (4 spaces).
   void nest([int? indent]) {
     indent ??= Indent.expression;
 

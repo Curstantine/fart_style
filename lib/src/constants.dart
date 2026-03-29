@@ -54,40 +54,55 @@ final class Cost {
   static const parameterType = 4;
 }
 
-/// Constants for the number of spaces for various kinds of indentation.
+/// Constants for indentation using SmartTabs style.
+///
+/// SmartTabs uses:
+/// - **Tabs** for block-level indentation (semantic nesting like `if`, `class`, `{` bodies)
+/// - **Spaces** for alignment (expression wrapping, initializers, etc.)
+///
+/// Block indentation constants ([block], [cascade]) represent **tab counts**.
+/// Alignment constants ([expression], [constructorInitializer], etc.) represent **space counts**.
 final class Indent {
   /// Reset back to no indentation.
   static const none = 0;
 
-  /// The number of spaces in a block or collection body.
-  static const block = 2;
+  /// The number of tabs in a block or collection body.
+  ///
+  /// This is block-level indentation and uses tabs.
+  static const block = 1;
 
-  /// How much wrapped cascade sections indent.
-  static const cascade = 2;
+  /// How many tabs wrapped cascade sections indent.
+  ///
+  /// This is block-level indentation and uses tabs.
+  static const cascade = 1;
 
   /// The number of spaces in a single level of expression nesting.
+  ///
+  /// This is alignment indentation and uses spaces.
   static const expression = 4;
 
   /// The ":" on a wrapped constructor initialization list.
+  ///
+  /// This is alignment indentation and uses spaces.
   static const constructorInitializer = 4;
 
   /// A wrapped constructor initializer after the first one when the parameter
   /// list does not have optional or named parameters, like:
   ///
   ///     Constructor(
-  ///       parameter,
+  ///     	parameter,
   ///     ) : first,
   ///         second;
-  ///       ^^ This indentation.
+  ///       ^^ This alignment (spaces).
   static const initializer = 2;
 
   /// A wrapped constructor initializer after the first one when the parameter
   /// list has optional or named parameters, like:
   ///
   ///     Constructor([
-  ///       parameter,
+  ///     	parameter,
   ///     ]) : first,
   ///          second;
-  ///       ^^^ This indentation.
+  ///       ^^^ This alignment (spaces).
   static const initializerWithOptionalParameter = 3;
 }

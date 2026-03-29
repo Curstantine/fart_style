@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import '../indentation.dart' show tabWidth;
 import '../piece/piece.dart';
 import 'solution.dart';
 import 'solver.dart';
@@ -31,8 +32,9 @@ final class SolutionCache {
   SolutionCache({required this.is3Dot7});
 
   /// Returns a previously cached solution for formatting [root] with leading
-  /// [indent] (and [subsequentIndent] for lines after the first) or produces a
-  /// new solution, caches it, and returns it.
+  /// indentation of [leadingTabs] tabs and [leadingSpaces] spaces (and
+  /// [subsequentTabs]/[subsequentSpaces] for lines after the first) or produces
+  /// a new solution, caches it, and returns it.
   ///
   /// If [root] is already bound to a state in the surrounding piece tree's
   /// [Solution], then [stateIfBound] is that state. Otherwise, it is treated
@@ -42,18 +44,31 @@ final class SolutionCache {
     Piece root,
     State? stateIfBound, {
     required int pageWidth,
-    required int indent,
-    required int subsequentIndent,
+    required int leadingTabs,
+    required int leadingSpaces,
+    required int subsequentTabs,
+    required int subsequentSpaces,
   }) {
+    // Use visual width for caching - pieces with equivalent visual indentation
+    // can share cached solutions.
+    var leadingVisualWidth = leadingTabs * tabWidth + leadingSpaces;
+    var subsequentVisualWidth = subsequentTabs * tabWidth + subsequentSpaces;
+
     // See if we've already formatted this piece at this indentation. If not,
     // format it and store the result.
     return _cache.putIfAbsent(
-      (root, indent: indent, subsequentIndent: subsequentIndent),
+      (
+        root,
+        indent: leadingVisualWidth,
+        subsequentIndent: subsequentVisualWidth,
+      ),
       () => Solver(
         this,
         pageWidth: pageWidth,
-        leadingIndent: indent,
-        subsequentIndent: subsequentIndent,
+        leadingTabs: leadingTabs,
+        leadingSpaces: leadingSpaces,
+        subsequentTabs: subsequentTabs,
+        subsequentSpaces: subsequentSpaces,
       ).format(root, stateIfBound),
     );
   }
@@ -65,7 +80,6 @@ final class SolutionCache {
 /// indentation in the context where it appears (which may vary based on how
 /// surrounding pieces end up splitting).
 ///
-/// In particular, note that if surrounding pieces split in *different* ways
-/// that still end up producing the same overall leading indentation, we are
-/// able to reuse a previously cached Solution for some Piece.
+/// Uses visual width for the indent so that equivalent indentations (e.g.,
+/// 1 tab vs 4 spaces when tabWidth=4) share cache entries.
 typedef _Key = (Piece, {int indent, int subsequentIndent});

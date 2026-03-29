@@ -117,12 +117,22 @@ final class Solution implements Comparable<Solution> {
     SolutionCache cache,
     Piece root, {
     required int pageWidth,
-    required int leadingIndent,
-    required int subsequentIndent,
+    required int leadingTabs,
+    required int leadingSpaces,
+    required int subsequentTabs,
+    required int subsequentSpaces,
     State? rootState,
   }) {
     var solution = Solution._(root, 0, {}, {}, rootState);
-    solution._format(cache, root, pageWidth, leadingIndent, subsequentIndent);
+    solution._format(
+      cache,
+      root,
+      pageWidth,
+      leadingTabs,
+      leadingSpaces,
+      subsequentTabs,
+      subsequentSpaces,
+    );
     return solution;
   }
 
@@ -223,8 +233,10 @@ final class Solution implements Comparable<Solution> {
     SolutionCache cache,
     Piece root, {
     required int pageWidth,
-    required int leadingIndent,
-    required int subsequentIndent,
+    required int leadingTabs,
+    required int leadingSpaces,
+    required int subsequentTabs,
+    required int subsequentSpaces,
   }) {
     // If there is no piece that we can expand on this solution, it's a dead
     // end (or a winner).
@@ -270,8 +282,10 @@ final class Solution implements Comparable<Solution> {
             cache,
             root,
             pageWidth,
-            leadingIndent,
-            subsequentIndent,
+            leadingTabs,
+            leadingSpaces,
+            subsequentTabs,
+            subsequentSpaces,
           );
 
           // TODO(rnystrom): These come mostly (entirely?) from hard newlines
@@ -333,13 +347,17 @@ final class Solution implements Comparable<Solution> {
     SolutionCache cache,
     Piece root,
     int pageWidth,
-    int leadingIndent,
-    int subsequentIndent,
+    int leadingTabs,
+    int leadingSpaces,
+    int subsequentTabs,
+    int subsequentSpaces,
   ) {
     var writer = CodeWriter(
       pageWidth,
-      leadingIndent,
-      subsequentIndent,
+      leadingTabs,
+      leadingSpaces,
+      subsequentTabs,
+      subsequentSpaces,
       cache,
       this,
     );

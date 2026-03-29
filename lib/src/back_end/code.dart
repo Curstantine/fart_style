@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import '../indentation.dart' as indent_utils;
 import '../source_code.dart';
 
 /// Base class for an object that represents fully formatted code.
@@ -30,13 +31,17 @@ sealed class Code {
     void trace(Code code) {
       switch (code) {
         case _NewlineCode():
-          write('Newline(blank: ${code._blank}, indent: ${code._indent})');
+          write(
+            'Newline(blank: ${code._blank}, tabs: ${code._tabs}, spaces: ${code._spaces})',
+          );
 
         case _TextCode():
           write('`${code._text}`');
 
         case GroupCode():
-          write('Group(indent: ${code._indent}):');
+          write(
+            'Group(tabs: ${code._indentTabs}, spaces: ${code._indentSpaces}):',
+          );
           prefix += '| ';
           for (var child in code._children) {
             trace(child);
@@ -71,13 +76,18 @@ sealed class Code {
 /// A [Code] object which can be written to and contain other child [Code]
 /// objects.
 final class GroupCode extends Code {
-  /// How many spaces the first text inside this group should be indented.
-  final int _indent;
+  /// How many tabs the first text inside this group should be indented.
+  final int _indentTabs;
+
+  /// How many spaces (for alignment) the first text inside this group should
+  /// have after the tabs.
+  final int _indentSpaces;
 
   /// The child [Code] objects contained in this group.
   final List<Code> _children = [];
 
-  GroupCode(this._indent);
+  /// Creates a GroupCode with the given number of tabs and alignment spaces.
+  GroupCode.withTabs(this._indentTabs, this._indentSpaces);
 
   /// Appends [text] to this code.
   void write(String text) {
@@ -87,12 +97,13 @@ final class GroupCode extends Code {
   /// Writes a newline and the subsequent indentation to this code.
   ///
   /// If [blank] is `true`, then a blank line is written. Otherwise, only a
-  /// single newline is written. The [indent] parameter is the number of spaces
-  /// of leading indentation on the next line after the newline.
-  void newline({required bool blank, required int indent}) {
+  /// single newline is written. The [tabs] and [spaces] parameters specify the
+  /// leading indentation on the next line after the newline (tabs for block
+  /// indentation, spaces for alignment).
+  void newline({required bool blank, required int tabs, required int spaces}) {
     // Don't insert a redundant newline at the top of a group.
     if (_children.isNotEmpty) {
-      _children.add(_NewlineCode(blank: blank, indent: indent));
+      _children.add(_NewlineCode(blank: blank, tabs: tabs, spaces: spaces));
     }
   }
 
@@ -138,11 +149,15 @@ final class _NewlineCode extends Code {
   /// Whether a blank line (two newlines) should be written.
   final bool _blank;
 
-  /// The number of spaces of indentation after this newline.
-  final int _indent;
+  /// The number of tabs of indentation after this newline.
+  final int _tabs;
 
-  _NewlineCode({required bool blank, required int indent})
-    : _indent = indent,
+  /// The number of spaces (for alignment) after this newline.
+  final int _spaces;
+
+  _NewlineCode({required bool blank, required int tabs, required int spaces})
+    : _tabs = tabs,
+      _spaces = spaces,
       _blank = blank;
 }
 
@@ -189,44 +204,6 @@ enum _Marker { start, end }
 /// Traverses a [Code] tree and produces the final string of output code and
 /// the selection markers, if any.
 final class _StringBuilder {
-  /// Pre-calculated whitespace strings for various common levels of
-  /// indentation.
-  ///
-  /// Generating these ahead of time is faster than concatenating multiple
-  /// spaces at runtime.
-  static const _indents = {
-    2: '  ',
-    4: '    ',
-    6: '      ',
-    8: '        ',
-    10: '          ',
-    12: '            ',
-    14: '              ',
-    16: '                ',
-    18: '                  ',
-    20: '                    ',
-    22: '                      ',
-    24: '                        ',
-    26: '                          ',
-    28: '                            ',
-    30: '                              ',
-    32: '                                ',
-    34: '                                  ',
-    36: '                                    ',
-    38: '                                      ',
-    40: '                                        ',
-    42: '                                          ',
-    44: '                                            ',
-    46: '                                              ',
-    48: '                                                ',
-    50: '                                                  ',
-    52: '                                                    ',
-    54: '                                                      ',
-    56: '                                                        ',
-    58: '                                                          ',
-    60: '                                                            ',
-  };
-
   final SourceCode _source;
   final String _lineEnding;
   final StringBuffer _buffer = StringBuffer();
@@ -239,8 +216,11 @@ final class _StringBuilder {
   /// marker is, if there is one.
   int? _selectionEnd;
 
-  /// How many spaces of indentation should be written before the next text.
-  int _indent = 0;
+  /// How many tabs of indentation should be written before the next text.
+  int _indentTabs = 0;
+
+  /// How many spaces of alignment should be written before the next text.
+  int _indentSpaces = 0;
 
   /// If formatting has been disabled, then this is the offset from the
   /// beginning of the source, to where the disabled formatting begins.
@@ -259,7 +239,8 @@ final class _StringBuilder {
         if (_disableFormattingStart == -1) {
           _buffer.write(_lineEnding);
           if (code._blank) _buffer.write(_lineEnding);
-          _indent = code._indent;
+          _indentTabs = code._tabs;
+          _indentSpaces = code._spaces;
         }
 
       case _TextCode():
@@ -267,15 +248,17 @@ final class _StringBuilder {
         // output. The unformatted output will be written when formatting is
         // re-enabled.
         if (_disableFormattingStart == -1) {
-          // Write any pending indentation.
-          _buffer.write(_indents[_indent] ?? (' ' * _indent));
-          _indent = 0;
+          // Write any pending indentation (tabs for block indent, spaces for alignment).
+          _buffer.write(indent_utils.getIndent(_indentTabs, _indentSpaces));
+          _indentTabs = 0;
+          _indentSpaces = 0;
 
           _buffer.write(code._text);
         }
 
       case GroupCode():
-        _indent = code._indent;
+        _indentTabs = code._indentTabs;
+        _indentSpaces = code._indentSpaces;
         for (var i = 0; i < code._children.length; i++) {
           var child = code._children[i];
           traverse(child);
@@ -288,7 +271,8 @@ final class _StringBuilder {
           // formatted output we've written, pending indentation, and then the
           // relative offset of the marker into the subsequent [Code] we will
           // write.
-          var absolutePosition = _buffer.length + _indent + code._offset;
+          var pendingIndentLength = _indentTabs + _indentSpaces;
+          var absolutePosition = _buffer.length + pendingIndentLength + code._offset;
           switch (code._marker) {
             case _Marker.start:
               _selectionStart = absolutePosition;
@@ -399,24 +383,30 @@ final class _StringBuilder {
 final class _DebugStringBuilder {
   final StringBuffer _buffer = StringBuffer();
 
-  /// How many spaces of indentation should be written before the next text.
-  int _indent = 0;
+  /// How many tabs of indentation should be written before the next text.
+  int _indentTabs = 0;
+
+  /// How many spaces of alignment should be written before the next text.
+  int _indentSpaces = 0;
 
   void traverse(Code code) {
     switch (code) {
       case _NewlineCode():
         _buffer.writeln();
         if (code._blank) _buffer.writeln();
-        _indent = code._indent;
+        _indentTabs = code._tabs;
+        _indentSpaces = code._spaces;
 
       case _TextCode():
         // Write any pending indentation.
-        _buffer.write(' ' * _indent);
-        _indent = 0;
+        _buffer.write(indent_utils.getIndent(_indentTabs, _indentSpaces));
+        _indentTabs = 0;
+        _indentSpaces = 0;
         _buffer.write(code._text);
 
       case GroupCode():
-        _indent = code._indent;
+        _indentTabs = code._indentTabs;
+        _indentSpaces = code._indentSpaces;
         for (var i = 0; i < code._children.length; i++) {
           traverse(code._children[i]);
         }
