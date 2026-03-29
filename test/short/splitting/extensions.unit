@@ -3,31 +3,31 @@
 extension SomeExtension on SomeLongClass {}
 <<<
 extension SomeExtension
-    on SomeLongClass {}
+		on SomeLongClass {}
 >>>
 extension Extension<VeryLongTypeParameterName> on C {}
 <<<
 extension Extension<
-    VeryLongTypeParameterName> on C {}
+		VeryLongTypeParameterName> on C {}
 >>>
 extension Extension<VeryLongTypeParameterName> on BaseClass {}
 <<<
 extension Extension<
-        VeryLongTypeParameterName>
-    on BaseClass {}
+				VeryLongTypeParameterName>
+		on BaseClass {}
 >>>
 extension Extension on C<VeryLongTypeArgumentName> {}
 <<<
 extension Extension
-    on C<VeryLongTypeArgumentName> {}
+		on C<VeryLongTypeArgumentName> {}
 >>>
 extension Extension on BaseClass<VeryLongTypeArgumentName> {}
 <<<
 extension Extension on BaseClass<
-    VeryLongTypeArgumentName> {}
+		VeryLongTypeArgumentName> {}
 >>>
 extension Extension on VeryLongBaseClass<VeryLongTypeArgumentName> {}
 <<<
 extension Extension
-    on VeryLongBaseClass<
-        VeryLongTypeArgumentName> {}
+		on VeryLongBaseClass<
+				VeryLongTypeArgumentName> {}

@@ -11,13 +11,13 @@ switch (obj) {
 }
 <<<
 switch (obj) {
-  case == other:
-  case != other:
-  case < other:
-  case <= other:
-  case > other:
-  case >= other:
-    body;
+	case == other:
+	case != other:
+	case < other:
+	case <= other:
+	case > other:
+	case >= other:
+		body;
 }
 >>> Relational pattern as subpattern.
 if (o case  >  1  &&  <   2 && (  ==   3 )) {}
@@ -27,7 +27,7 @@ if (o case > 1 && < 2 && (== 3)) {}
 if (object case != veryLongConstant + expressionThatSplits) {;}
 <<<
 if (object
-    case != veryLongConstant +
-        expressionThatSplits) {
-  ;
+		case != veryLongConstant +
+				expressionThatSplits) {
+	;
 }

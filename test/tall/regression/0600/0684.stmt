@@ -2,19 +2,19 @@
 var a = 'Multiline strings keep leading space\n' 'I write adjacent strings.\n';
 <<<
 var a =
-    'Multiline strings keep leading space\n'
-    'I write adjacent strings.\n';
+		'Multiline strings keep leading space\n'
+		'I write adjacent strings.\n';
 >>>
 var a = '$bar' r'$money' 'newline\n' r'regexp \s*\d+\Z';
 <<<
 var a =
-    '$bar'
-    r'$money'
-    'newline\n'
-    r'regexp \s*\d+\Z';
+		'$bar'
+		r'$money'
+		'newline\n'
+		r'regexp \s*\d+\Z';
 >>>
 var b = 'text' /* comment */ 'more text' /* comment */;
 <<<
 var b =
-    'text' /* comment */
-    'more text' /* comment */;
+		'text' /* comment */
+		'more text' /* comment */;

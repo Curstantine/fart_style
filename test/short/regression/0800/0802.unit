@@ -7,10 +7,10 @@ class C {
 }
 <<<
 class C {
-  @override
-  String get message =>
-      'Unrecognized keys: [${unrecognizedKeys.join(', ')}]; supported keys: '
-      '[${allowedKeys.join(', ')}]';
+	@override
+	String get message =>
+			'Unrecognized keys: [${unrecognizedKeys.join(', ')}]; supported keys: '
+			'[${allowedKeys.join(', ')}]';
 }
 >>>
 String _link(String version, String owner, String name) =>
@@ -19,6 +19,6 @@ String _link(String version, String owner, String name) =>
         'json_annotation/$owner/$name.html';
 <<<
 String _link(String version, String owner, String name) =>
-    '${_anchorUriForName(owner, name)}: '
-    'https://pub.dev/documentation/json_annotation/$version/'
-    'json_annotation/$owner/$name.html';
+		'${_anchorUriForName(owner, name)}: '
+		'https://pub.dev/documentation/json_annotation/$version/'
+		'json_annotation/$owner/$name.html';

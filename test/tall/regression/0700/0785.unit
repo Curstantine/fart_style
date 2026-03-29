@@ -10,12 +10,12 @@ class C {
 }
 <<<
 class C {
-  static HandlerResponse<RouteState> handleRouteReplaced(
-    ReplaceRoute action,
-    RouteState state,
-  ) => HandlerResponse.updateOnly(
-    state.copy(active: action.route, history: state.history),
-  );
+	static HandlerResponse<RouteState> handleRouteReplaced(
+		ReplaceRoute action,
+		RouteState state,
+	) => HandlerResponse.updateOnly(
+		state.copy(active: action.route, history: state.history),
+	);
 }
 >>>
 class C {
@@ -28,9 +28,9 @@ class C {
 }
 <<<
 class C {
-  @override
-  Future<void> report({
-    String tag,
-    String messageVeryLongParameterToForceSplit,
-  }) => Future.value(null);
+	@override
+	Future<void> report({
+		String tag,
+		String messageVeryLongParameterToForceSplit,
+	}) => Future.value(null);
 }

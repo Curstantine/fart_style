@@ -5,5 +5,5 @@ when(mockLoader.loadData(expectedRequestMetricInitialDateCTR))
 <<<
 ### TODO(rnystrom): I think it would look better to split the method chain.
 when(
-  mockLoader.loadData(expectedRequestMetricInitialDateCTR),
+	mockLoader.loadData(expectedRequestMetricInitialDateCTR),
 ).thenReturn(_buildMinimalResponseFuture(MetricType.CTR, metricRequest));

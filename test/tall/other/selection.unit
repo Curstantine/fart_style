@@ -20,7 +20,7 @@ class Foo {}
   body(   )  ;}›
 <<<
 ‹main() {
-  body();
+	body();
 }›
 >>> With trailing comment.
    ma‹in() {}
@@ -38,12 +38,12 @@ veryLongMethodCall(›veryLongArgumentName);
 }
 <<<
 main() {
-  veryLongMethodCall(
-    ‹veryLongArgumentName,
-  );
-  veryLongMethodCall(›
-    veryLongArgumentName,
-  );
+	veryLongMethodCall(
+		‹veryLongArgumentName,
+	);
+	veryLongMethodCall(›
+		veryLongArgumentName,
+	);
 }
 >>> In split-inserted space.
 main() {shortCall(argument, ‹  argument);
@@ -51,19 +51,19 @@ shortCall(argument,  › argument);
 }
 <<<
 main() {
-  shortCall(argument, ‹argument);
-  shortCall(argument, ›argument);
+	shortCall(argument, ‹argument);
+	shortCall(argument, ›argument);
 }
 >>> In inserted mandatory newline.
 foo() {body;  ‹  }
 bar() {body;  ›  }
 <<<
 foo() {
-  body;
+	body;
 ‹}
 
 bar() {
-  body;›
+	body;›
 }
 >>> In inserted mandatory space.
 main() async {
@@ -72,8 +72,8 @@ throw›(2);
 }
 <<<
 main() async {
-  await ‹(1);
-  throw› (2);
+	await ‹(1);
+	throw› (2);
 }
 >>> Across pieces that get solved separately.
 foo() {
@@ -85,11 +85,11 @@ foo() {
 bar() {sec›ond();}
 <<<
 foo() {
-  fir‹st();
+	fir‹st();
 }
 
 bar() {
-  sec›ond();
+	sec›ond();
 }
 >>> Only whitespace in newline selected.
 foo() {} ‹  › bar() {}

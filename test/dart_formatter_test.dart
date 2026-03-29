@@ -104,8 +104,8 @@ another);}
 // @dart=3.6
 main() {
   f(
-      argument, // comment
-      another);
+    	argument, // comment
+    	another);
 }
 ''';
 
@@ -164,8 +164,8 @@ var variable = condition
 // @dart=3.7
 var variable =
     condition
-        ? thenBranch // Comment to force split.
-        : elseBranch;
+    		? thenBranch // Comment to force split.
+    		: elseBranch;
 ''';
 
     expect(formatter.format(before), after);

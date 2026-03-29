@@ -4,95 +4,95 @@
 compiler.property.property.method().method().method();
 <<<
 compiler.property.property
-    .method()
-    .method()
-    .method();
+		.method()
+		.method()
+		.method();
 >>> Don't split leading properties even if other properties split.
 compiler.property.method().property.method();
 <<<
 compiler.property
-    .method()
-    .property
-    .method();
+		.method()
+		.property
+		.method();
 >>> Split properties after a method chain.
 compiler.method().method().method().property.property;
 <<<
 compiler
-    .method()
-    .method()
-    .method()
-    .property
-    .property;
+		.method()
+		.method()
+		.method()
+		.property
+		.property;
 >>> Split properties inside a method chain.
 compiler.method().property.method().property.method();
 <<<
 compiler
-    .method()
-    .property
-    .method()
-    .property
-    .method();
+		.method()
+		.property
+		.method()
+		.property
+		.method();
 >>> Split all properties if any split.
 avian.bovine.canine.equine.feline.piscine;
 <<<
 avian
-    .bovine
-    .canine
-    .equine
-    .feline
-    .piscine;
+		.bovine
+		.canine
+		.equine
+		.feline
+		.piscine;
 >>> Split all leading properties if any split.
 avian.bovine.canine.equine.feline.piscine.method();
 <<<
 avian
-    .bovine
-    .canine
-    .equine
-    .feline
-    .piscine
-    .method();
+		.bovine
+		.canine
+		.equine
+		.feline
+		.piscine
+		.method();
 >>> Prefer splitting an assignment over splitting a pure property chain.
 variable = avian.bovine.canine.equine.feline;
 <<<
 variable =
-    avian.bovine.canine.equine.feline;
+		avian.bovine.canine.equine.feline;
 >>> Split the property chain if moving it to the next line still doesn't fit.
 variable = avian.bovine.canine.equine.feline.galline;
 <<< 3.7
 variable =
-    avian
-        .bovine
-        .canine
-        .equine
-        .feline
-        .galline;
+		avian
+				.bovine
+				.canine
+				.equine
+				.feline
+				.galline;
 <<< 3.8
 variable = avian
-    .bovine
-    .canine
-    .equine
-    .feline
-    .galline;
+		.bovine
+		.canine
+		.equine
+		.feline
+		.galline;
 >>> Don't prefer splitting an assignment if there are methods in the chain.
 variable = avian.bovine.canine.equine.feline();
 <<< 3.7
 variable =
-    avian.bovine.canine.equine.feline();
+		avian.bovine.canine.equine.feline();
 <<< 3.8
 variable = avian.bovine.canine.equine
-    .feline();
+		.feline();
 >>> Don't prefer splitting an assignment if there are methods in the chain.
 variable = avian.bovine().canine.equine().feline;
 <<< 3.7
 variable =
-    avian
-        .bovine()
-        .canine
-        .equine()
-        .feline;
+		avian
+				.bovine()
+				.canine
+				.equine()
+				.feline;
 <<< 3.8
 variable = avian
-    .bovine()
-    .canine
-    .equine()
-    .feline;
+		.bovine()
+		.canine
+		.equine()
+		.feline;

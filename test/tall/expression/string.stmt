@@ -7,8 +7,8 @@
 {""""""; '''''';}
 <<<
 {
-  """""";
-  '''''';
+	"""""";
+	'''''';
 }
 >>> Blank lines in multi-line.
 '''
@@ -68,7 +68,7 @@ multiline
 }
 <<<
 {
-  """
+	"""
 multiline
 """;
 }
@@ -81,8 +81,8 @@ string""");
 }
 <<<
 main() {
-  inner() {
-    function("""
+	inner() {
+		function("""
 string""");
-  }
+	}
 }

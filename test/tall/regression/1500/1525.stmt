@@ -8,11 +8,11 @@ SomeWidget(
 );
 <<<
 SomeWidget(
-  children: [
-    long,
-    list,
-    literal, // Force split.
-  ],
+	children: [
+		long,
+		list,
+		literal, // Force split.
+	],
 );
 >>>
 SomeWidget(children: [
@@ -20,9 +20,9 @@ SomeWidget(children: [
 ]);
 <<<
 SomeWidget(
-  children: [
-    for (final o in objects) o, // Force split.
-  ],
+	children: [
+		for (final o in objects) o, // Force split.
+	],
 );
 >>>
 map((innerMap) => innerMap..addAll({
@@ -31,17 +31,17 @@ map((innerMap) => innerMap..addAll({
 }));
 <<< 3.7
 map(
-  (innerMap) =>
-      innerMap..addAll({
-        'something': someMap['something'],
-        //...
-      }),
+	(innerMap) =>
+			innerMap..addAll({
+				'something': someMap['something'],
+				//...
+			}),
 );
 <<< 3.8
 map(
-  (innerMap) => innerMap
-    ..addAll({
-      'something': someMap['something'],
-      //...
-    }),
+	(innerMap) => innerMap
+		..addAll({
+			'something': someMap['something'],
+			//...
+		}),
 );

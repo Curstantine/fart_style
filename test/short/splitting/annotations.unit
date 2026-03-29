@@ -8,32 +8,32 @@ int i = 0;
 @BigLongClassName<First, Second, Third>() int i = 0;
 <<<
 @BigLongClassName<First, Second,
-    Third>()
+		Third>()
 int i = 0;
 >>> split before first if needed
 @BigLongClassName<FirstTypeArgumentIsLong, Second>() int i = 0;
 <<<
 @BigLongClassName<
-    FirstTypeArgumentIsLong, Second>()
+		FirstTypeArgumentIsLong, Second>()
 int i = 0;
 >>> split in middle if fit in two lines
 @BigLongClassName<First, Second, Third, Fourth, Fifth, Sixth, Seventh>() int i = 0;
 <<<
 @BigLongClassName<First, Second, Third,
-    Fourth, Fifth, Sixth, Seventh>()
+		Fourth, Fifth, Sixth, Seventh>()
 int i = 0;
 >>> split one per line if they don't fit in two lines
 @BigLongClassName<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth>() int i = 0;
 <<<
 @BigLongClassName<
-    First,
-    Second,
-    Third,
-    Fourth,
-    Fifth,
-    Sixth,
-    Seventh,
-    Eighth>()
+		First,
+		Second,
+		Third,
+		Fourth,
+		Fifth,
+		Sixth,
+		Seventh,
+		Eighth>()
 int i = 0;
 >>> prefers to not split at type arguments
 @SomeBigClass<
@@ -41,38 +41,38 @@ int i = 0;
 int i = 0;
 <<<
 @SomeBigClass<TypeArgument>(
-    valueArgument)
+		valueArgument)
 int i = 0;
 >>> split both type and value arguments
 @SomeBigClass<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth>(first, second, third, fourth, fifth, sixth, seventh, eighth) int i = 0;
 <<<
 @SomeBigClass<
-        First,
-        Second,
-        Third,
-        Fourth,
-        Fifth,
-        Sixth,
-        Seventh,
-        Eighth>(
-    first,
-    second,
-    third,
-    fourth,
-    fifth,
-    sixth,
-    seventh,
-    eighth)
+				First,
+				Second,
+				Third,
+				Fourth,
+				Fifth,
+				Sixth,
+				Seventh,
+				Eighth>(
+		first,
+		second,
+		third,
+		fourth,
+		fifth,
+		sixth,
+		seventh,
+		eighth)
 int i = 0;
 >>> prefer to split at arguments rather than prefix
 @veryLongPrefix.VeryLongClassName<VeryLongTypeArgument,OtherVeryLongTypeArgument>(veryLongArgument,otherVeryLongArgument,thirdVeryLongArgument) int i = 0;
 <<<
 @veryLongPrefix.VeryLongClassName<
-        VeryLongTypeArgument,
-        OtherVeryLongTypeArgument>(
-    veryLongArgument,
-    otherVeryLongArgument,
-    thirdVeryLongArgument)
+				VeryLongTypeArgument,
+				OtherVeryLongTypeArgument>(
+		veryLongArgument,
+		otherVeryLongArgument,
+		thirdVeryLongArgument)
 int i = 0;
 >>> nested type arguments, no splitting required
 @A<B<C,D>,E<F,G>>() int i = 0;
@@ -83,15 +83,15 @@ int i = 0;
 @Aaaa<Bbbb<Cccc,Dddd>,Eeee<Ffff,Gggg>>() int i = 0;
 <<<
 @Aaaa<Bbbb<Cccc, Dddd>,
-    Eeee<Ffff, Gggg>>()
+		Eeee<Ffff, Gggg>>()
 int i = 0;
 >>> nested type arguments, split at inner level when necessary
 @Aaaaaaaaa<Bbbbbbbbbbb<Ccccccccccc,Ddddddddddd>,Eeeeeeeee<Fffffffff,Ggggggggg>>() int i = 0;
 <<<
 @Aaaaaaaaa<
-    Bbbbbbbbbbb<Ccccccccccc,
-        Ddddddddddd>,
-    Eeeeeeeee<Fffffffff, Ggggggggg>>()
+		Bbbbbbbbbbb<Ccccccccccc,
+				Ddddddddddd>,
+		Eeeeeeeee<Fffffffff, Ggggggggg>>()
 int i = 0;
 >>> on unsplit function type parameters
 Function(@a @b int c, int d) func;
@@ -101,10 +101,10 @@ Function(@a @b int c, int d) func;
 Function(@annotation int param1, int param2, @annotation int param3, int param4) func;
 <<<
 Function(
-    @annotation int param1,
-    int param2,
-    @annotation int param3,
-    int param4) func;
+		@annotation int param1,
+		int param2,
+		@annotation int param3,
+		int param4) func;
 >>> on unsplit record type field
 (@a int, {@a double d}) record;
 <<<
@@ -113,7 +113,7 @@ Function(
 (@anno @tation int, @annotation String s, {@annotation double d}) record;
 <<<
 (
-  @anno @tation int,
-  @annotation String s, {
-  @annotation double d
+	@anno @tation int,
+	@annotation String s, {
+	@annotation double d
 }) record;

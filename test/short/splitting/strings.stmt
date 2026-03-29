@@ -35,7 +35,7 @@ multiline
 }
 <<<
 {
-  """
+	"""
 multiline
 """;
 }
@@ -52,7 +52,7 @@ someMethod("""first line does not fits here
 """);
 <<<
 someMethod(
-    """first line does not fits here
+		"""first line does not fits here
 """);
 >>> format multiline as a block with a leading argument
 someMethod("foo", """
@@ -61,8 +61,8 @@ someMethod("foo", """
 """);
 <<<
 someMethod("foo", """
-  some
-  text
+	some
+	text
 """);
 >>> format multiline as a block with a trailing argument
 someMethod("""
@@ -71,8 +71,8 @@ someMethod("""
 """, "foo");
 <<<
 someMethod("""
-  some
-  text
+	some
+	text
 """, "foo");
 >>> format multiline as a block with leading and trailing arguments
 someMethod(
@@ -84,12 +84,12 @@ someMethod(
   "foo");
 <<<
 someMethod(
-    "foo",
-    """
-  some
-  text
-  """,
-    "foo");
+		"foo",
+		"""
+	some
+	text
+	""",
+		"foo");
 >>> format multiple multilines as blocks
 someMethod("""
   some
@@ -102,13 +102,13 @@ someMethod("""
 """);
 <<<
 someMethod("""
-  some
-  text
+	some
+	text
 """, """
-  some
-  more
+	some
+	more
 """, """
-  even more
+	even more
 """);
 >>> format multilines with other blocks as blocks
 someMethod("""
@@ -126,24 +126,24 @@ someMethod("""
 ]);
 <<<
 someMethod("""
-  some
-  text
+	some
+	text
 """, () {
-  some;
-  function;
+	some;
+	function;
 }, [
-  "some",
-  "collection",
-  "with",
-  "many",
-  "elements"
+	"some",
+	"collection",
+	"with",
+	"many",
+	"elements"
 ]);
 >>> interpolation is not split even when line is too long
 someMethod("some text that is pretty long ${    interpolate +
 a + thing   } more text");
 <<<
 someMethod(
-    "some text that is pretty long ${interpolate + a + thing} more text");
+		"some text that is pretty long ${interpolate + a + thing} more text");
 >>> multi-line string interpolation does not split
 someMethod("foo", """
   some text that is pretty long
@@ -151,23 +151,23 @@ someMethod("foo", """
 """);
 <<<
 someMethod("foo", """
-  some text that is pretty long
-  some more text that is pretty long ${interpolate + a + thing} more text
+	some text that is pretty long
+	some more text that is pretty long ${interpolate + a + thing} more text
 """);
 >>> nested interpolation is not split
 someMethod("some text that is ${pretty +  'long ${    interpolate +
 a + thing   } more'} text", "another arg");
 <<<
 someMethod(
-    "some text that is ${pretty + 'long ${interpolate + a + thing} more'} text",
-    "another arg");
+		"some text that is ${pretty + 'long ${interpolate + a + thing} more'} text",
+		"another arg");
 >>> hard splits are split in interpolation
 someMethod("before ${(){statement();statement();statement();}} after");
 <<<
 someMethod("before ${() {
-  statement();
-  statement();
-  statement();
+	statement();
+	statement();
+	statement();
 }} after");
 >>> collections split in interpolation if needed
 method(
@@ -175,14 +175,14 @@ method(
 "before ${[first, second, third, fourth, {fifth: sixth}]} after");
 <<<
 method(
-    "b ${[1, 2, 3, 4, 5, 6]} a",
-    "before ${[
-      first,
-      second,
-      third,
-      fourth,
-      {fifth: sixth}
-    ]} after");
+		"b ${[1, 2, 3, 4, 5, 6]} a",
+		"before ${[
+			first,
+			second,
+			third,
+			fourth,
+			{fifth: sixth}
+		]} after");
 >>> nested multiline strings are not merged in interpolation
 "before ${"""a
 b"""} ${aft
@@ -217,10 +217,10 @@ j ${k + l}''';
 c"""; d(); }} after";
 <<<
 "before ${() {
-  a();
-  """b
+	a();
+	"""b
 c""";
-  d();
+	d();
 }} after";
 >>> comment inside interpolation
 "before ${// comment
@@ -231,14 +231,14 @@ b
 c} after";
 <<<
 "before ${ // comment
-    a + b + // another
-        c} after";
+		a + b + // another
+				c} after";
 >>>
 function(
   "long string long string ${interpolated + interpolated} long string",
   longLongLongLongObject.longLongLongLongMethod());
 <<<
 function(
-    "long string long string ${interpolated + interpolated} long string",
-    longLongLongLongObject
-        .longLongLongLongMethod());
+		"long string long string ${interpolated + interpolated} long string",
+		longLongLongLongObject
+				.longLongLongLongMethod());

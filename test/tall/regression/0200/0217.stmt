@@ -4,17 +4,17 @@ Annotation _getAnnotation(AnnotatedNode node, String name) => nodeMetadata
         orElse: () => null);
 <<<
 Annotation _getAnnotation(AnnotatedNode node, String name) =>
-    nodeMetadata.firstWhere(
-      (annotation) => _isAnnotationType(annotation, name),
-      orElse: () => null,
-    );
+		nodeMetadata.firstWhere(
+			(annotation) => _isAnnotationType(annotation, name),
+			orElse: () => null,
+		);
 >>> (indent 2)
   Annotation _getAnnotation(AnnotatedNode node, String name) => nodeMetadata
       .firstWhere((annotation) => _isAnnotationType(annotation, name),
           orElse: () => null);
 <<<
-  Annotation _getAnnotation(AnnotatedNode node, String name) =>
-      nodeMetadata.firstWhere(
-        (annotation) => _isAnnotationType(annotation, name),
-        orElse: () => null,
-      );
+	Annotation _getAnnotation(AnnotatedNode node, String name) =>
+			nodeMetadata.firstWhere(
+				(annotation) => _isAnnotationType(annotation, name),
+				orElse: () => null,
+			);

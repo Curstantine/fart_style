@@ -10,11 +10,11 @@ main() {
 }
 <<<
 main() {
-  addTask(
-      "publish",
-      createProcessTask("pub",
-          args: ["publish", "-f"], description: "Publishes a New Version"),
-      dependencies: ["version"]);
+	addTask(
+			"publish",
+			createProcessTask("pub",
+					args: ["publish", "-f"], description: "Publishes a New Version"),
+			dependencies: ["version"]);
 }
 >>>
 Widget build() {
@@ -28,10 +28,10 @@ Widget build() {
 }
 <<<
 Widget build() {
-  var text = textData;
-  <AccountValue, Function>{
-    AccountValue.start: () {
-      ;
-    },
-  };
+	var text = textData;
+	<AccountValue, Function>{
+		AccountValue.start: () {
+			;
+		},
+	};
 }

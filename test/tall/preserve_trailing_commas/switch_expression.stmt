@@ -7,5 +7,5 @@
 e = switch(y){0=>a,};
 <<<
 e = switch (y) {
-  0 => a,
+	0 => a,
 };

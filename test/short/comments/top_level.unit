@@ -178,13 +178,13 @@ library a//
 .b.c;
 <<<
 library a //
-    .b.c;
+		.b.c;
 >>> line comment after "." in library
 library a.//
 b.c;
 <<<
 library a. //
-    b.c;
+		b.c;
 >>> comment within unnamed library
 library/* c */;
 <<<
@@ -219,4 +219,4 @@ var b = 2;
 import 'a' if (/**/a/**/./**/b/**/) 'c';
 <<<
 import 'a'
-    if (/**/ a /**/ . /**/ b /**/) 'c';
+		if (/**/ a /**/ . /**/ b /**/) 'c';

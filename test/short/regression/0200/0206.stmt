@@ -4,4 +4,4 @@ when(mockLoader.loadData(expectedRequestMetricInitialDateCTR))
          _buildMinimalResponseFuture(MetricType.CTR, metricRequest));
 <<<
 when(mockLoader.loadData(expectedRequestMetricInitialDateCTR))
-    .thenReturn(_buildMinimalResponseFuture(MetricType.CTR, metricRequest));
+		.thenReturn(_buildMinimalResponseFuture(MetricType.CTR, metricRequest));

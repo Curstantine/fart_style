@@ -43,7 +43,7 @@ verylongIdentifier[someParticularlyLongArgument];
 verylongIdentifier[someParticularly + longArgument];
 <<<
 verylongIdentifier[someParticularly +
-    longArgument];
+		longArgument];
 >>> Nested index expressions.
 verylongIdentifier[longIdentifier[someParticularlyLongArgument]];
 <<<

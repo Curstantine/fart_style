@@ -4,22 +4,22 @@ variable = . // Comment.
 whoDoesThis();
 <<< 3.10
 variable =
-    . // Comment.
-    whoDoesThis();
+		. // Comment.
+		whoDoesThis();
 >>> Block comment after dot.
 variable = ./* Comment. */whoDoesThis();
 <<< 3.10
 variable =
-    . /* Comment. */ whoDoesThis();
+		. /* Comment. */ whoDoesThis();
 >>> Line comment after `const`.
 variable = const // Comment.
 . whoDoesThis();
 <<< 3.10
 variable =
-    const // Comment.
-    .whoDoesThis();
+		const // Comment.
+		.whoDoesThis();
 >>> Block comment after `const`.
 variable = const/* Comment. */.whoDoesThis();
 <<< 3.10
 variable =
-    const /* Comment. */ .whoDoesThis();
+		const /* Comment. */ .whoDoesThis();

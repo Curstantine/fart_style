@@ -7,55 +7,55 @@ new Foo<A, B, C, D>();
 new LongClassName<First, Second, Third>();
 <<<
 new LongClassName<First, Second,
-    Third>();
+		Third>();
 >>> split before first if needed
 new LongClassName<FirstTypeArgumentIsLong, Second>();
 <<<
 new LongClassName<
-    FirstTypeArgumentIsLong, Second>();
+		FirstTypeArgumentIsLong, Second>();
 >>> split in middle if fit in two lines
 new LongClassName<First, Second, Third, Fourth, Fifth, Sixth, Seventh>();
 <<<
 new LongClassName<First, Second, Third,
-    Fourth, Fifth, Sixth, Seventh>();
+		Fourth, Fifth, Sixth, Seventh>();
 >>> split one per line if they don't fit in two lines
 new LongClassName<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth>();
 <<<
 new LongClassName<
-    First,
-    Second,
-    Third,
-    Fourth,
-    Fifth,
-    Sixth,
-    Seventh,
-    Eighth>();
+		First,
+		Second,
+		Third,
+		Fourth,
+		Fifth,
+		Sixth,
+		Seventh,
+		Eighth>();
 >>> prefers to not split at type arguments
 new SomeClass<
     TypeArgument>(valueArgument);
 <<<
 new SomeClass<TypeArgument>(
-    valueArgument);
+		valueArgument);
 >>> split both type and value arguments
 new SomeClass<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth>(first, second, third, fourth, fifth, sixth, seventh, eighth);
 <<<
 new SomeClass<
-        First,
-        Second,
-        Third,
-        Fourth,
-        Fifth,
-        Sixth,
-        Seventh,
-        Eighth>(
-    first,
-    second,
-    third,
-    fourth,
-    fifth,
-    sixth,
-    seventh,
-    eighth);
+				First,
+				Second,
+				Third,
+				Fourth,
+				Fifth,
+				Sixth,
+				Seventh,
+				Eighth>(
+		first,
+		second,
+		third,
+		fourth,
+		fifth,
+		sixth,
+		seventh,
+		eighth);
 >>> newline before typed collection should not force <> to split
 {
   <int>[];
@@ -63,8 +63,8 @@ new SomeClass<
 }
 <<<
 {
-  <int>[];
-  <int>[];
+	<int>[];
+	<int>[];
 }
 >>> type arguments on invocation expressions, all on one line
 (fn)<T, S>(1, 2);
@@ -74,27 +74,27 @@ new SomeClass<
 (longFunction)<TypeArgument>(valueArgument);
 <<<
 (longFunction)<TypeArgument>(
-    valueArgument);
+		valueArgument);
 >>> type arguments on invocation expressions split both type and value arguments
 (longFunction)<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth>(first, second, third, fourth, fifth, sixth, seventh, eighth);
 <<<
 (longFunction)<
-        First,
-        Second,
-        Third,
-        Fourth,
-        Fifth,
-        Sixth,
-        Seventh,
-        Eighth>(
-    first,
-    second,
-    third,
-    fourth,
-    fifth,
-    sixth,
-    seventh,
-    eighth);
+				First,
+				Second,
+				Third,
+				Fourth,
+				Fifth,
+				Sixth,
+				Seventh,
+				Eighth>(
+		first,
+		second,
+		third,
+		fourth,
+		fifth,
+		sixth,
+		seventh,
+		eighth);
 >>> generic instantiation all fit on one line
 Foo<A,B,C,D>;
 <<<
@@ -103,60 +103,60 @@ Foo<A, B, C, D>;
 LongClassName<First, Second, Third, Fourth>;
 <<<
 LongClassName<First, Second, Third,
-    Fourth>;
+		Fourth>;
 >>> generic instantiation split before first if needed
 LongClassName<FirstTypeArgumentIsTooLong, Second>;
 <<<
 LongClassName<
-    FirstTypeArgumentIsTooLong, Second>;
+		FirstTypeArgumentIsTooLong, Second>;
 >>> generic instantiation split in middle if fit in two lines
 LongClassName<First, Second, Third, Fourth, Fifth, Sixth, Seventh>;
 <<<
 LongClassName<First, Second, Third,
-    Fourth, Fifth, Sixth, Seventh>;
+		Fourth, Fifth, Sixth, Seventh>;
 >>> generic instantiation split one per line if they don't fit in two lines
 LongClassName<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth>;
 <<<
 LongClassName<
-    First,
-    Second,
-    Third,
-    Fourth,
-    Fifth,
-    Sixth,
-    Seventh,
-    Eighth>;
+		First,
+		Second,
+		Third,
+		Fourth,
+		Fifth,
+		Sixth,
+		Seventh,
+		Eighth>;
 >>> generic instantiation indent nested type arguments
 LongClassName<First, Inner<Second, Third, Fourth, Fifth, Sixth, Seventh>, Eighth>;
 <<<
 LongClassName<
-    First,
-    Inner<Second, Third, Fourth, Fifth,
-        Sixth, Seventh>,
-    Eighth>;
+		First,
+		Inner<Second, Third, Fourth, Fifth,
+				Sixth, Seventh>,
+		Eighth>;
 >>> split in inner type argument list forces outer to split
 LongClassName<First, Inner<
     Second, Third, Fourth, Fifth>>;
 <<<
 LongClassName<
-    First,
-    Inner<Second, Third, Fourth,
-        Fifth>>;
+		First,
+		Inner<Second, Third, Fourth,
+				Fifth>>;
 >>> don't split after "<" in list literal
 var list = <Inner<First, Second, Third, Fourth, Fifth>, Sixth>[];
 <<<
 var list = <Inner<First, Second, Third,
-        Fourth, Fifth>,
-    Sixth>[];
+				Fourth, Fifth>,
+		Sixth>[];
 >>> don't split after "<" in set literal
 var set = <Inner<First, Second, Third, Fourth, Fifth>, Sixth>{};
 <<<
 var set = <Inner<First, Second, Third,
-        Fourth, Fifth>,
-    Sixth>{};
+				Fourth, Fifth>,
+		Sixth>{};
 >>> don't split after "<" in map literal
 var map = <First, Inner<Second, Third, Fourth, Fifth, Sixth>>{};
 <<<
 var map = <First,
-    Inner<Second, Third, Fourth, Fifth,
-        Sixth>>{};
+		Inner<Second, Third, Fourth, Fifth,
+				Sixth>>{};

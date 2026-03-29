@@ -12,16 +12,16 @@ Future<TextureAtlas> load(String url, BitmapDataLoadOptions bitmapDataLoadOption
 }
 <<<
 Future<TextureAtlas> load(
-    String url, BitmapDataLoadOptions bitmapDataLoadOptions) {
-  HttpRequest.getString(url).then((textureAtlasJson) {
-    ;
+		String url, BitmapDataLoadOptions bitmapDataLoadOptions) {
+	HttpRequest.getString(url).then((textureAtlasJson) {
+		;
 
-    loader.then(() {
-      ;
-    }).catchError(() {
-      ;
-    });
-  });
+		loader.then(() {
+			;
+		}).catchError(() {
+			;
+		});
+	});
 }
 >>>
 class SoundSprite {
@@ -41,18 +41,18 @@ class SoundSprite {
 }
 <<<
 class SoundSprite {
-  static Future<SoundSprite> load(String url,
-      [SoundLoadOptions soundLoadOptions = null]) {
-    HttpRequest.getString(url).then((soundSpriteJson) {
-      if (segments is Map) {}
+	static Future<SoundSprite> load(String url,
+			[SoundLoadOptions soundLoadOptions = null]) {
+		HttpRequest.getString(url).then((soundSpriteJson) {
+			if (segments is Map) {}
 
-      Sound.load(soundUrl, soundLoadOptions).then((Sound sound) {
-        ;
-      }).catchError((error) {
-        ;
-      });
-    });
-  }
+			Sound.load(soundUrl, soundLoadOptions).then((Sound sound) {
+				;
+			}).catchError((error) {
+				;
+			});
+		});
+	}
 }
 >>> don't split method multisplits too early because of pending line after ";"
 main() {
@@ -65,12 +65,12 @@ main() {
 }
 <<<
 main() {
-  ;
-  receiver.a(() {
-    ;
-  }).b(() {
-    ;
-  });
+	;
+	receiver.a(() {
+		;
+	}).b(() {
+		;
+	});
 }
 >>> don't nest too early because of comment before method chain
 main() {
@@ -83,10 +83,10 @@ main() {
 }
 <<<
 main() {
-  //
-  receiver.a(() {
-    ;
-  }).b(() {
-    ;
-  });
+	//
+	receiver.a(() {
+		;
+	}).b(() {
+		;
+	});
 }

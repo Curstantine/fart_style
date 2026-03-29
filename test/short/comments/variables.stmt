@@ -23,18 +23,18 @@ var // c
 (x, y) = o;
 <<<
 var // c
-    (x, y) = o;
+		(x, y) = o;
 >>> in delimited pattern in pattern variable
 var (x,// c
 y) = o;
 <<<
 var (
-  x, // c
-  y
+	x, // c
+	y
 ) = o;
 >>> in infix pattern in pattern assignment
 var (x &&// c
 y) = o;
 <<<
 var (x && // c
-    y) = o;
+		y) = o;

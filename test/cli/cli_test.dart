@@ -137,10 +137,10 @@ void main() {
       await expectLater(
         process.stdout,
         emitsInOrder([
-          '   main() {',
-          "     '''",
+          '\t\t\tmain() {',
+          "\t\t\t\t'''",
           "a flush left multi-line string''';",
-          '   }',
+          '\t\t\t}',
         ]),
       );
       await process.shouldExit(0);

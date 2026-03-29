@@ -7,21 +7,21 @@ class SomeClass = Base with Mixin;
 class SomeClass = Base with VeryLongMixin;
 <<<
 class SomeClass = Base
-    with VeryLongMixin;
+		with VeryLongMixin;
 >>> Split at `with` but not between mixins.
 class SomeClass = Base with Mixin, AnotherOne;
 <<<
 class SomeClass = Base
-    with Mixin, AnotherOne;
+		with Mixin, AnotherOne;
 >>> Split at `with` and mixins.
 class SomeClass = Base with Mixin, Another, Third, FourthOne;
 <<<
 class SomeClass = Base
-    with
-        Mixin,
-        Another,
-        Third,
-        FourthOne;
+		with
+				Mixin,
+				Another,
+				Third,
+				FourthOne;
 >>> Unsplit generic mixin.
 class C = Object with M<int>;
 <<<
@@ -30,50 +30,50 @@ class C = Object with M<int>;
 class C = Object with Mixin<SomeLongClass>;
 <<<
 class C = Object
-    with Mixin<SomeLongClass>;
+		with Mixin<SomeLongClass>;
 >>> Split in generic mixin.
 class C = Object with Mixin<VeryLongType, AnotherLongType>;
 <<<
 class C = Object
-    with
-        Mixin<
-          VeryLongType,
-          AnotherLongType
-        >;
+		with
+				Mixin<
+					VeryLongType,
+					AnotherLongType
+				>;
 >>> Split within `with` but not `implements`.
 class C = Object with Mixin, Another, Third, Fourth, Fifth implements Interface;
 <<<
 class C = Object
-    with
-        Mixin,
-        Another,
-        Third,
-        Fourth,
-        Fifth
-    implements Interface;
+		with
+				Mixin,
+				Another,
+				Third,
+				Fourth,
+				Fifth
+		implements Interface;
 >>> Split within `implements` but not `with`.
 class C = Object with Mixin implements Interface, Another, Third;
 <<<
 class C = Object
-    with Mixin
-    implements
-        Interface,
-        Another,
-        Third;
+		with Mixin
+		implements
+				Interface,
+				Another,
+				Third;
 >>> Split within both `with` and `implements`.
 class C = Object with Mixin, Another, Third, Fourth, Fifth implements Interface, Another, Third;
 <<<
 class C = Object
-    with
-        Mixin,
-        Another,
-        Third,
-        Fourth,
-        Fifth
-    implements
-        Interface,
-        Another,
-        Third;
+		with
+				Mixin,
+				Another,
+				Third,
+				Fourth,
+				Fifth
+		implements
+				Interface,
+				Another,
+				Third;
 >>> Modifiers.
 class C1 = Object with Mixin;
 base  class C2 = Object with Mixin;
@@ -96,15 +96,15 @@ final class C4 = Object with Mixin;
 sealed class C5 = Object with Mixin;
 abstract class C6 = Object with Mixin;
 abstract base class C7 = Object
-    with Mixin;
+		with Mixin;
 abstract interface class C8 = Object
-    with Mixin;
+		with Mixin;
 abstract final class C9 = Object
-    with Mixin;
+		with Mixin;
 mixin class C10 = Object with Mixin;
 base mixin class C11 = Object
-    with Mixin;
+		with Mixin;
 abstract mixin class C12 = Object
-    with Mixin;
+		with Mixin;
 abstract base mixin class C13 = Object
-    with Mixin;
+		with Mixin;

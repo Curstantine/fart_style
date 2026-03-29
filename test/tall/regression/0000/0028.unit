@@ -5,6 +5,6 @@ bool _hasLibraryDirective(String code) =>
 <<<
 ### TODO(rnystrom): I think the before was better here.
 bool _hasLibraryDirective(String code) => parseDirectives(
-  code,
-  suppressErrors: true,
+	code,
+	suppressErrors: true,
 ).directives.any((d) => d is LibraryDirective);

@@ -11,7 +11,7 @@
 "first string ${has + interpolation}" + "another ${inter + polated}";
 <<<
 "first string ${has + interpolation}" +
-    "another ${inter + polated}";
+		"another ${inter + polated}";
 >>> Don't split interpolation in multi-line string.
 """
 some text that is pretty long
@@ -31,9 +31,9 @@ a + thing   } more'} text";
 "before ${(){statement();statement();statement();}} after";
 <<<
 "before ${() {
-  statement();
-  statement();
-  statement();
+	statement();
+	statement();
+	statement();
 }} after";
 >>> Deeply nested interpolation.
 '''a
@@ -68,7 +68,7 @@ a + // comment
 b} after";
 <<<
 "before ${a + // comment
-    b} after";
+		b} after";
 >>> Multiline string inside splittable expression inside interpolation.
 var x = f('''
 ${operand + """
@@ -88,6 +88,6 @@ ${operand + (){;}}
 <<<
 var x = f('''
 ${operand + () {
-      ;
-    }}
+			;
+		}}
 ''');

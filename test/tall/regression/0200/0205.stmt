@@ -4,12 +4,12 @@ activity
   requestDeserialization] = '${stopwatch.elapsedMilliseconds}';
 <<<
 activity
-  ..parameters[requestDeserialization] = '${stopwatch.elapsedMilliseconds}';
+	..parameters[requestDeserialization] = '${stopwatch.elapsedMilliseconds}';
 >>> (indent 6)
       activity
         ..parameters[
         requestDeserialization] = '${stopwatch.elapsedMilliseconds}';
 <<<
-      activity
-        ..parameters[requestDeserialization] =
-            '${stopwatch.elapsedMilliseconds}';
+			activity
+				..parameters[requestDeserialization] =
+						'${stopwatch.elapsedMilliseconds}';

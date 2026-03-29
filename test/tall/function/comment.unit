@@ -14,13 +14,13 @@ main() {
 }
 <<<
 main() {
-  // comment
-  {
-    // block
-    {
-      // nested
-    }
-  }
+	// comment
+	{
+		// block
+		{
+			// nested
+		}
+	}
 }
 >>> Don't split return type if comment before.
 // Comment.
@@ -28,5 +28,5 @@ int f() {;}
 <<<
 // Comment.
 int f() {
-  ;
+	;
 }

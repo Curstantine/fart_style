@@ -70,5 +70,5 @@ part of 'uri.dart';
 import 'foo.dart' if (config == 'value') 'other.dart' as foo;
 <<<
 import 'foo.dart'
-    if (config == 'value') 'other.dart'
-    as foo;
+		if (config == 'value') 'other.dart'
+		as foo;

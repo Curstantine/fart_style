@@ -9,6 +9,6 @@ class CharacterOffset with _$CharacterOffset {
 <<<
 @freezed
 class CharacterOffset with _$CharacterOffset {
-  factory CharacterOffset({required int offset, @Default('') String name}) =
-      _CharacterOffset;
+	factory CharacterOffset({required int offset, @Default('') String name}) =
+			_CharacterOffset;
 }

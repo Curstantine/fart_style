@@ -6,9 +6,9 @@ function(
     "string");
 <<<
 function(
-    notString,
-    "adjacent"
-    "string");
+		notString,
+		"adjacent"
+		"string");
 >>> do not indent adjacent strings if other args are not strings
 function(
     notString,
@@ -16,9 +16,9 @@ function(
     "string",);
 <<<
 function(
-  notString,
-  "adjacent"
-  "string",
+	notString,
+	"adjacent"
+	"string",
 );
 >>> do indent adjacent strings if other arg is string
 function(
@@ -28,10 +28,10 @@ function(
     "string");
 <<<
 function(
-    "string",
-    notString,
-    "adjacent"
-        "string");
+		"string",
+		notString,
+		"adjacent"
+				"string");
 >>> do indent adjacent strings if other arg is string
 function(
     "string",
@@ -40,10 +40,10 @@ function(
     "string",);
 <<<
 function(
-  "string",
-  notString,
-  "adjacent"
-      "string",
+	"string",
+	notString,
+	"adjacent"
+			"string",
 );
 >>> do indent adjacent strings if other arg is string interpolation
 function(
@@ -53,10 +53,10 @@ function(
     "string");
 <<<
 function(
-    "${str}${ing}",
-    notString,
-    "adjacent"
-        "string");
+		"${str}${ing}",
+		notString,
+		"adjacent"
+				"string");
 >>> do indent adjacent strings if other arg is adjacent string
 function(
     "adjacent"
@@ -66,11 +66,11 @@ function(
     "string");
 <<<
 function(
-    "adjacent"
-        "string",
-    notString,
-    "adjacent"
-        "string");
+		"adjacent"
+				"string",
+		notString,
+		"adjacent"
+				"string");
 >>> always indent adjacent strings in list
 var list = [
   "adjacent"
@@ -81,11 +81,11 @@ var list = [
 ];
 <<<
 var list = [
-  "adjacent"
-      "string",
-  "another"
-      "adjacent"
-      "string"
+	"adjacent"
+			"string",
+	"another"
+			"adjacent"
+			"string"
 ];
 >>> always indent adjacent strings in map key
 var map = {
@@ -97,11 +97,11 @@ var map = {
 };
 <<<
 var map = {
-  "adjacent"
-      "string": value,
-  "another"
-      "adjacent"
-      "string": value
+	"adjacent"
+			"string": value,
+	"another"
+			"adjacent"
+			"string": value
 };
 >>> always indent adjacent strings in map value
 var map = {
@@ -113,11 +113,11 @@ var map = {
 };
 <<<
 var map = {
-  key: "adjacent"
-      "string",
-  key: "another"
-      "adjacent"
-      "string"
+	key: "adjacent"
+			"string",
+	key: "another"
+			"adjacent"
+			"string"
 };
 >>> always indent adjacent strings in set
 var set = {
@@ -129,11 +129,11 @@ var set = {
 };
 <<<
 var set = {
-  "adjacent"
-      "string",
-  "another"
-      "adjacent"
-      "string"
+	"adjacent"
+			"string",
+	"another"
+			"adjacent"
+			"string"
 };
 >>> don't indent in => body
 main() => "adjacent"
@@ -141,17 +141,17 @@ main() => "adjacent"
 "another";
 <<<
 main() => "adjacent"
-    "string"
-    "another";
+		"string"
+		"another";
 >>> don't indent in long => body
 main() => "very very very very long adjacent"
 "string"
 "another";
 <<<
 main() =>
-    "very very very very long adjacent"
-    "string"
-    "another";
+		"very very very very long adjacent"
+		"string"
+		"another";
 >>> don't indent in => lambda
 function(
   (parameter) => "string"
@@ -161,42 +161,42 @@ function(
   another);
 <<<
 function(
-    (parameter) => "string"
-        "adjacent",
-    (parameter) =>
-        "long long long long string"
-        "adjacent",
-    another);
+		(parameter) => "string"
+				"adjacent",
+		(parameter) =>
+				"long long long long string"
+				"adjacent",
+		another);
 >>> indent in then branch of ?:
 var string = c ? "adjacent"
 "string" : "other";
 <<<
 var string = c
-    ? "adjacent"
-        "string"
-    : "other";
+		? "adjacent"
+				"string"
+		: "other";
 >>> indent in else branch of ?:
 var string = c ? "other" : "adjacent"
 "string";
 <<<
 var string = c
-    ? "other"
-    : "adjacent"
-        "string";
+		? "other"
+		: "adjacent"
+				"string";
 >>> don't indent in initializer
 var longVariableName = "very long adjacent"
 "string";
 <<<
 var longVariableName =
-    "very long adjacent"
-    "string";
+		"very long adjacent"
+		"string";
 >>> don't indent assignment in statement position
 long.receiver.expression = "very long adjacent"
 "string";
 <<<
 long.receiver.expression =
-    "very long adjacent"
-    "string";
+		"very long adjacent"
+		"string";
 >>> string interpolation counts as a string
 function(
     "adjacent"
@@ -204,9 +204,9 @@ function(
     "${str}${ing}");
 <<<
 function(
-    "adjacent"
-        "string",
-    "${str}${ing}");
+		"adjacent"
+				"string",
+		"${str}${ing}");
 >>> another adjacent string counts as a string
 function(
     "adjacent"
@@ -215,10 +215,10 @@ function(
     "adjacent");
 <<<
 function(
-    "adjacent"
-        "string",
-    "another"
-        "adjacent");
+		"adjacent"
+				"string",
+		"another"
+				"adjacent");
 >>> do not indent adjacent strings in assert if other args are not strings
 assert(
     condition,
@@ -226,9 +226,9 @@ assert(
     "string");
 <<<
 assert(
-    condition,
-    "adjacent"
-    "string");
+		condition,
+		"adjacent"
+		"string");
 >>> don't need extra indentation inside named arguments
 function(named: "adjacent"
 "string",
@@ -237,11 +237,11 @@ another: "adjacent"
 "more");
 <<<
 function(
-    named: "adjacent"
-        "string",
-    another: "adjacent"
-        "string"
-        "more");
+		named: "adjacent"
+				"string",
+		another: "adjacent"
+				"string"
+				"more");
 >>> don't need extra indentation inside named arguments
 function(named: "adjacent"
 "string",
@@ -250,11 +250,11 @@ another: "adjacent"
 "more",);
 <<<
 function(
-  named: "adjacent"
-      "string",
-  another: "adjacent"
-      "string"
-      "more",
+	named: "adjacent"
+			"string",
+	another: "adjacent"
+			"string"
+			"more",
 );
 >>> inside interpolation
 var x = '${"a" "b"}';

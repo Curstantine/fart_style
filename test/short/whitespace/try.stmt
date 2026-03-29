@@ -7,9 +7,9 @@ print(e);
 }
 <<<
 try {
-  doSomething();
+	doSomething();
 } catch (e) {
-  print(e);
+	print(e);
 }
 >>>
 try{
@@ -19,7 +19,7 @@ print(e);
 }
 <<<
 try {
-  doSomething();
+	doSomething();
 } on Exception catch (e) {
-  print(e);
+	print(e);
 }

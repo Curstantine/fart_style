@@ -5,8 +5,8 @@
       ),
     };
 <<<
-    return switch (_advance().type) {
-      TokenType.float ||
-      TokenType.int ||
-      TokenType.string => LiteralExpression(_previous.value!),
-    };
+		return switch (_advance().type) {
+			TokenType.float ||
+			TokenType.int ||
+			TokenType.string => LiteralExpression(_previous.value!),
+		};

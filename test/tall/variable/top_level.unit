@@ -7,12 +7,12 @@
 late final longVariable = 1, anotherVariable = 2;
 <<<
 late final longVariable = 1,
-    anotherVariable = 2;
+		anotherVariable = 2;
 >>> Typed.
 SomeLongTypeName longVariable = longInitializer;
 <<<
 SomeLongTypeName longVariable =
-    longInitializer;
+		longInitializer;
 >>> Late top level variable.
 late var x = 1;
 late int y = 2;

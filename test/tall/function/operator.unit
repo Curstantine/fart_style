@@ -7,13 +7,13 @@ class A {
 }
 <<<
 class A {
-  bool operator ==(Object other) =>
-      true;
-  int operator +(int other) {
-    return value + other;
-  }
+	bool operator ==(Object other) =>
+			true;
+	int operator +(int other) {
+		return value + other;
+	}
 
-  int operator -() {
-    return -value;
-  }
+	int operator -() {
+		return -value;
+	}
 }

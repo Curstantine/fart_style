@@ -9,12 +9,12 @@ const {first, second};
 ({first, second, third, fourth, fifth, sixth});
 <<<
 ({
-  first,
-  second,
-  third,
-  fourth,
-  fifth,
-  sixth,
+	first,
+	second,
+	third,
+	fourth,
+	fifth,
+	sixth,
 });
 >>> With type argument.
 <  int  >  {  1  ,  2  };
@@ -24,26 +24,26 @@ const {first, second};
 var set = <Inner<First, Second, Third, Fourth, Fifth, Sixth>>{};
 <<<
 var set =
-    <
-      Inner<
-        First,
-        Second,
-        Third,
-        Fourth,
-        Fifth,
-        Sixth
-      >
-    >{};
+		<
+			Inner<
+				First,
+				Second,
+				Third,
+				Fourth,
+				Fifth,
+				Sixth
+			>
+		>{};
 >>> Force split because of contained block.
 var s = {first, 1, fn, () {"fn";},third,fourth};
 <<<
 var s = {
-  first,
-  1,
-  fn,
-  () {
-    "fn";
-  },
-  third,
-  fourth,
+	first,
+	1,
+	fn,
+	() {
+		"fn";
+	},
+	third,
+	fourth,
 };

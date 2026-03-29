@@ -4,18 +4,18 @@ String type = status == 'OK'
     : status == 'NO' ? 'warnings' : status == 'BAD' ? 'errors' : '';
 <<< 3.7
 String type =
-    status == 'OK'
-        ? 'notices'
-        : status == 'NO'
-        ? 'warnings'
-        : status == 'BAD'
-        ? 'errors'
-        : '';
+		status == 'OK'
+				? 'notices'
+				: status == 'NO'
+				? 'warnings'
+				: status == 'BAD'
+				? 'errors'
+				: '';
 <<< 3.8
 String type = status == 'OK'
-    ? 'notices'
-    : status == 'NO'
-    ? 'warnings'
-    : status == 'BAD'
-    ? 'errors'
-    : '';
+		? 'notices'
+		: status == 'NO'
+		? 'warnings'
+		: status == 'BAD'
+		? 'errors'
+		: '';

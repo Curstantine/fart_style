@@ -8,11 +8,11 @@ class RouteDefinition {
 }
 <<<
 class RouteDefinition {
-  const factory RouteDefinition.fork(
-    String path,
-    List<RouteDefinition> children, {
-    @required String defaultTo,
-  }) = ForkedRouteDefinition._;
+	const factory RouteDefinition.fork(
+		String path,
+		List<RouteDefinition> children, {
+		@required String defaultTo,
+	}) = ForkedRouteDefinition._;
 }
 >>>
 class RouteDefinition {
@@ -25,12 +25,12 @@ class RouteDefinition {
 }
 <<<
 class RouteDefinition {
-  const factory RouteDefinition.fork(
-    String path,
-    List<RouteDefinition> children, {
-    @Required('When `path` is navigated to, what path within `children` to use')
-    String defaultTo,
-  }) = ForkedRouteDefinition._;
+	const factory RouteDefinition.fork(
+		String path,
+		List<RouteDefinition> children, {
+		@Required('When `path` is navigated to, what path within `children` to use')
+		String defaultTo,
+	}) = ForkedRouteDefinition._;
 }
 >>>
 void reallyLongFunctionName0(
@@ -46,16 +46,16 @@ void fn1(
 }
 <<<
 void reallyLongFunctionName0(
-  @Deprecated('This has been deprecated for many interesting reasons...') arg1,
+	@Deprecated('This has been deprecated for many interesting reasons...') arg1,
 ) {
-  return;
+	return;
 }
 
 void fn1({
-  @Deprecated('This has been deprecated for many interesting reasons...')
-  String argument1,
+	@Deprecated('This has been deprecated for many interesting reasons...')
+	String argument1,
 }) {
-  return;
+	return;
 }
 >>>
 void reallyLongFunctionName0(
@@ -71,15 +71,15 @@ void fn1(
 }
 <<<
 void reallyLongFunctionName0(
-  @Deprecated('This has been deprecated for many many interesting reasons...')
-  arg1,
+	@Deprecated('This has been deprecated for many many interesting reasons...')
+	arg1,
 ) {
-  return;
+	return;
 }
 
 void fn1({
-  @Deprecated('This has been deprecated for many many interesting reasons...')
-  String argument1,
+	@Deprecated('This has been deprecated for many many interesting reasons...')
+	String argument1,
 }) {
-  return;
+	return;
 }

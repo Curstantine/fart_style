@@ -5,14 +5,14 @@ main() {
 }
 <<<
 main() {
-  // comment
+	// comment
 }
 >>> line comment on opening line
 main() { // comment
 }
 <<<
 main() {
-  // comment
+	// comment
 }
 >>> indented block comment
 main() {
@@ -20,21 +20,21 @@ main() {
 }
 <<<
 main() {
-  /* comment */
+	/* comment */
 }
 >>> block comment with trailing newline
 main() {/* comment */
 }
 <<<
 main() {
-  /* comment */
+	/* comment */
 }
 >>> block comment with leading newline
 main() {
   /* comment */}
 <<<
 main() {
-  /* comment */
+	/* comment */
 }
 >>> inline block comment
 main() {  /* comment */  }
@@ -45,7 +45,7 @@ main() { /* first */ // second
 }
 <<<
 main() {
-  /* first */ // second
+	/* first */ // second
 }
 >>> multiple inline block comments
 main() {  /* 1 */   /* 2 */   /* 3 */  }
@@ -56,7 +56,7 @@ main() {  /* comment
 */  }
 <<<
 main() {
-  /* comment
+	/* comment
 */
 }
 >>> line comments at the start of the line in a function
@@ -69,7 +69,7 @@ main() {
 main() {
 //  print(1);
 //  print(2);
-  print(3);
+	print(3);
 }
 >>> before "," in param list
 main(a/* c */,b) {}
@@ -115,7 +115,7 @@ main({arg} /* c */) {}
 longFunction(/* a very long block comment */) {}
 <<<
 longFunction(
-    /* a very long block comment */) {}
+		/* a very long block comment */) {}
 >>> remove blank lines before beginning of body
 main() {
 
@@ -125,7 +125,7 @@ main() {
 }
 <<<
 main() {
-  // comment
+	// comment
 }
 >>> remove blank lines after end of body
 main() {
@@ -136,24 +136,24 @@ main() {
 }
 <<<
 main() {
-  // comment
+	// comment
 }
 >>> comment before "]" with trailing comma
 function([parameter,/* c */]) {;}
 <<<
 function([
-  parameter,
-  /* c */
+	parameter,
+	/* c */
 ]) {
-  ;
+	;
 }
 >>> comment before ")" with trailing comma
 function([parameter,]/* c */) {;}
 <<<
 function([
-  parameter,
+	parameter,
 ] /* c */) {
-  ;
+	;
 }
 >>>
 function(
@@ -163,9 +163,9 @@ function(
 }
 <<<
 function(
-    /* comment */ int a, int b, int c,
-    [direction]) {
-  ;
+		/* comment */ int a, int b, int c,
+		[direction]) {
+	;
 }
 >>>
 function(
@@ -174,8 +174,8 @@ function(
 }
 <<<
 function(
-    /* comment */ int a, int b, int c) {
-  ;
+		/* comment */ int a, int b, int c) {
+	;
 }
 >>>
 function(
@@ -184,8 +184,8 @@ function(
 }
 <<<
 function(/* comment */ int a, int b,
-    int c, int d) {
-  ;
+		int c, int d) {
+	;
 }
 >>> blank line before comment at beginning of optional parameters
 function([
@@ -194,10 +194,10 @@ function([
   a]) {;}
 <<<
 function(
-    [
-    // comment
-    a]) {
-  ;
+		[
+		// comment
+		a]) {
+	;
 }
 >>> blank line before comment at beginning of named parameters
 function({
@@ -206,10 +206,10 @@ function({
   a}) {;}
 <<<
 function(
-    {
-    // comment
-    a}) {
-  ;
+		{
+		// comment
+		a}) {
+	;
 }
 >>> blank line before comment at beginning of trailing comma optional parameters
 function([
@@ -218,10 +218,10 @@ function([
   a,]) {;}
 <<<
 function([
-  // comment
-  a,
+	// comment
+	a,
 ]) {
-  ;
+	;
 }
 >>> blank line before comment at beginning of trailing comma named parameters
 function({
@@ -230,10 +230,10 @@ function({
   a,}) {;}
 <<<
 function({
-  // comment
-  a,
+	// comment
+	a,
 }) {
-  ;
+	;
 }
 >>> splitting in none parameter's metadata doesn't force others to split
 function(@Annotation longParameter,
@@ -241,10 +241,10 @@ function(@Annotation longParameter,
 @Annotation @Other @Third longParameter2,) {}
 <<<
 function(
-  @Annotation longParameter,
-  // Comment.
-  @Annotation
-  @Other
-  @Third
-  longParameter2,
+	@Annotation longParameter,
+	// Comment.
+	@Annotation
+	@Other
+	@Third
+	longParameter2,
 ) {}

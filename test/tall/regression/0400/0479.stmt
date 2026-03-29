@@ -2,6 +2,6 @@
 _actions..insert.listen(_insert)..delete.listen(_delete)..editable.listen(_makeEditable);
 <<<
 _actions
-  ..insert.listen(_insert)
-  ..delete.listen(_delete)
-  ..editable.listen(_makeEditable);
+	..insert.listen(_insert)
+	..delete.listen(_delete)
+	..editable.listen(_makeEditable);

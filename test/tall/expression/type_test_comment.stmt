@@ -4,7 +4,7 @@ foo// c
 as Bar;
 <<<
 foo // c
-    as Bar;
+		as Bar;
 >>> Unsplit inline block comment before `as` operator.
 foo/* c */as Bar;
 <<<
@@ -13,7 +13,7 @@ foo /* c */ as Bar;
 veryLongOperand/* c */as VeryLongTypeName;
 <<<
 veryLongOperand /* c */
-    as VeryLongTypeName;
+		as VeryLongTypeName;
 >>> Line comment after `as` operator.
 foo as// c
 Bar;
@@ -23,8 +23,8 @@ Bar;
 ### TODO(rnystrom): Consider whether we want to move comments when they occur
 ### in weird locations.
 foo
-    as // c
-    Bar;
+		as // c
+		Bar;
 >>> Unsplit inline block comment after `as` operator.
 foo as/* c */Bar;
 <<<
@@ -33,13 +33,13 @@ foo as /* c */ Bar;
 veryLongOperand as/* c */VeryLongTypeName;
 <<<
 veryLongOperand
-    as /* c */ VeryLongTypeName;
+		as /* c */ VeryLongTypeName;
 >>> Line comment before `is` operator.
 foo// c
 is Bar;
 <<<
 foo // c
-    is Bar;
+		is Bar;
 >>> Unsplit inline block comment before `is` operator.
 foo/* c */is Bar;
 <<<
@@ -48,7 +48,7 @@ foo /* c */ is Bar;
 veryLongOperand/* c */is VeryLongTypeName;
 <<<
 veryLongOperand /* c */
-    is VeryLongTypeName;
+		is VeryLongTypeName;
 >>> Line comment after `is` operator.
 foo is// c
 Bar;
@@ -58,8 +58,8 @@ Bar;
 ### TODO(rnystrom): Consider whether we want to move comments when they occur
 ### in weird locations.
 foo
-    is // c
-    Bar;
+		is // c
+		Bar;
 >>> Unsplit inline block comment after `is` operator.
 foo is/* c */Bar;
 <<<
@@ -68,13 +68,13 @@ foo is /* c */ Bar;
 veryLongOperand is/* c */VeryLongTypeName;
 <<<
 veryLongOperand
-    is /* c */ VeryLongTypeName;
+		is /* c */ VeryLongTypeName;
 >>> Line comment before `is!` operator.
 foo// c
 is! Bar;
 <<<
 foo // c
-    is! Bar;
+		is! Bar;
 >>> Unsplit inline block comment before `is!` operator.
 foo/* c */is! Bar;
 <<<
@@ -83,7 +83,7 @@ foo /* c */ is! Bar;
 veryLongOperand/* c */is! VeryLongTypeName;
 <<<
 veryLongOperand /* c */
-    is! VeryLongTypeName;
+		is! VeryLongTypeName;
 >>> Line comment inside `is!` operator.
 foo is // c
 ! Bar;
@@ -92,8 +92,8 @@ foo is // c
 ### TODO(rnystrom): Consider whether we want to move comments when they occur
 ### in weird locations.
 foo
-    is // c
-    ! Bar;
+		is // c
+		! Bar;
 >>> Unsplit inline block comment inside `is!` operator.
 foo is/* c */!Bar;
 <<<
@@ -102,7 +102,7 @@ foo is /* c */ ! Bar;
 veryLongOperand is/* c */!VeryLongTypeName;
 <<<
 veryLongOperand
-    is /* c */ ! VeryLongTypeName;
+		is /* c */ ! VeryLongTypeName;
 >>> Line comment after `is!` operator.
 foo is!// c
 Bar;
@@ -112,8 +112,8 @@ Bar;
 ### TODO(rnystrom): Consider whether we want to move comments when they occur
 ### in weird locations.
 foo
-    is! // c
-    Bar;
+		is! // c
+		Bar;
 >>> Unsplit inline block comment after `is!` operator.
 foo is!/* c */Bar;
 <<<
@@ -122,20 +122,20 @@ foo is! /* c */ Bar;
 veryLongOperand is!/* c */VeryLongTypeName;
 <<<
 veryLongOperand
-    is! /* c */ VeryLongTypeName;
+		is! /* c */ VeryLongTypeName;
 >>> Don't split `as` with leading line comment before first operand.
 value =
     // comment
     a as Foo;
 <<<
 value =
-    // comment
-    a as Foo;
+		// comment
+		a as Foo;
 >>> Don't split `is` with leading line comment before first operand.
 value =
     // comment
     a is Foo;
 <<<
 value =
-    // comment
-    a is Foo;
+		// comment
+		a is Foo;

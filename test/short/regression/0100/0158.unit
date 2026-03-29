@@ -8,12 +8,12 @@ void foo() {
 }
 <<<
 void foo() {
-  if (bar) {
-    if (baz) {
-      _sources[uri] =
-          src = new _MockSdkSource(uri, 'library dart.${uri.path};');
-    }
-  }
+	if (bar) {
+		if (baz) {
+			_sources[uri] =
+					src = new _MockSdkSource(uri, 'library dart.${uri.path};');
+		}
+	}
 }
 >>>
 class Foo {
@@ -23,10 +23,10 @@ class Foo {
 }
 <<<
 class Foo {
-  static LibrarySummary parse(Map json) => new LibrarySummary(
-      json['library_name'],
-      json['messages'].map(MessageSummary.parse).toList(),
-      json['lines']);
+	static LibrarySummary parse(Map json) => new LibrarySummary(
+			json['library_name'],
+			json['messages'].map(MessageSummary.parse).toList(),
+			json['lines']);
 }
 >>>
 class ResultSet {
@@ -36,8 +36,8 @@ class ResultSet {
 }
 <<<
 class ResultSet {
-  factory ResultSet.fromJson(Map json) => new ResultSet(
-      json['platform'],
-      json['release'],
-      json['results'].map((result) => new Result.fromJson(result)).toList());
+	factory ResultSet.fromJson(Map json) => new ResultSet(
+			json['platform'],
+			json['release'],
+			json['results'].map((result) => new Result.fromJson(result)).toList());
 }

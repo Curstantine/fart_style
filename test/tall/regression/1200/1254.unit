@@ -6,7 +6,7 @@ enum EE {
 }
 <<<
 enum EE {
-  a,
-  b, // 'b'
-  c,
+	a,
+	b, // 'b'
+	c,
 }

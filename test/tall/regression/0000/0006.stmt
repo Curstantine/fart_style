@@ -3,13 +3,13 @@ return _provideDirectorySources(graph.packages[package], "bin").then((_) => Barb
         this, _hostname, 0, package: package, rootDirectory: "bin"));
 <<<
 return _provideDirectorySources(graph.packages[package], "bin").then(
-  (_) => BarbackServer.bind(
-    this,
-    _hostname,
-    0,
-    package: package,
-    rootDirectory: "bin",
-  ),
+	(_) => BarbackServer.bind(
+		this,
+		_hostname,
+		0,
+		package: package,
+		rootDirectory: "bin",
+	),
 );
 >>>
 messageMentionsAsset(id) =>
@@ -17,5 +17,5 @@ messageMentionsAsset(id) =>
     messageMentions(path.fromUri(entry.assetId.path));
 <<<
 messageMentionsAsset(id) =>
-    messageMentions(id.toString()) ||
-    messageMentions(path.fromUri(entry.assetId.path));
+		messageMentions(id.toString()) ||
+		messageMentions(path.fromUri(entry.assetId.path));

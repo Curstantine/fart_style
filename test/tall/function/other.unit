@@ -11,17 +11,17 @@ var x = 1;
 c() {;}d(){;}
 <<<
 a() {
-  ;
+	;
 }
 
 var x = 1;
 
 c() {
-  ;
+	;
 }
 
 d() {
-  ;
+	;
 }
 >>> Do not force blank line after empty top-level function.
 a() {} b() {}

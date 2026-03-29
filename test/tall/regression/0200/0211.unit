@@ -6,18 +6,18 @@
         isConst ? keywordToken('const') : null);
   }
 <<<
-  LiteralMap mapLiteral(List<LiteralMapEntry> entries, {bool isConst: false}) {
-    return new LiteralMap(
-      null, // Type arguments.
-      new NodeList(
-        symbolToken(OPEN_CURLY_BRACKET_INFO),
-        linkedList(entries),
-        symbolToken(CLOSE_CURLY_BRACKET_INFO),
-        ',',
-      ),
-      isConst ? keywordToken('const') : null,
-    );
-  }
+	LiteralMap mapLiteral(List<LiteralMapEntry> entries, {bool isConst: false}) {
+		return new LiteralMap(
+			null, // Type arguments.
+			new NodeList(
+				symbolToken(OPEN_CURLY_BRACKET_INFO),
+				linkedList(entries),
+				symbolToken(CLOSE_CURLY_BRACKET_INFO),
+				',',
+			),
+			isConst ? keywordToken('const') : null,
+		);
+	}
 >>>
 void defineProperty(var obj, String property, var value) {
   JS('void', 'Object.defineProperty(#, #, '
@@ -26,14 +26,14 @@ void defineProperty(var obj, String property, var value) {
 }
 <<<
 void defineProperty(var obj, String property, var value) {
-  JS(
-    'void',
-    'Object.defineProperty(#, #, '
-        '{value: #, enumerable: false, writable: true, configurable: true})',
-    obj,
-    property,
-    value,
-  );
+	JS(
+		'void',
+		'Object.defineProperty(#, #, '
+				'{value: #, enumerable: false, writable: true, configurable: true})',
+		obj,
+		property,
+		value,
+	);
 }
 >>> (indent 4)
     main() {
@@ -44,14 +44,14 @@ void defineProperty(var obj, String property, var value) {
       });
     }
 <<<
-    main() {
-      return searchEngine.searchTopLevelDeclarations('').then((
-        List<SearchMatch> matches,
-      ) {
-        _addNonImportedElementSuggestions(matches, excludedLibs);
-        return true;
-      });
-    }
+		main() {
+			return searchEngine.searchTopLevelDeclarations('').then((
+				List<SearchMatch> matches,
+			) {
+				_addNonImportedElementSuggestions(matches, excludedLibs);
+				return true;
+			});
+		}
 >>> (indent 2)
   test_getRelationships_empty() {
     return store.getRelationships(elementA, relationship).then(
@@ -60,13 +60,13 @@ void defineProperty(var obj, String property, var value) {
     });
   }
 <<<
-  test_getRelationships_empty() {
-    return store.getRelationships(elementA, relationship).then((
-      List<Location> locations,
-    ) {
-      expect(locations, isEmpty);
-    });
-  }
+	test_getRelationships_empty() {
+		return store.getRelationships(elementA, relationship).then((
+			List<Location> locations,
+		) {
+			expect(locations, isEmpty);
+		});
+	}
 >>> (indent 2)
   _asRuntimeType() {
     return [
@@ -74,8 +74,8 @@ void defineProperty(var obj, String property, var value) {
     ].addAll(typeArguments.map((t) => t._asRuntimeType()));
   }
 <<<
-  _asRuntimeType() {
-    return [
-      _class._jsConstructor,
-    ].addAll(typeArguments.map((t) => t._asRuntimeType()));
-  }
+	_asRuntimeType() {
+		return [
+			_class._jsConstructor,
+		].addAll(typeArguments.map((t) => t._asRuntimeType()));
+	}

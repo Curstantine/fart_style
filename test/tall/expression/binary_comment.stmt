@@ -9,10 +9,10 @@
 ### TODO(rnystrom): Consider whether we want to move comments when they occur
 ### in weird locations.
 1 // a
-    +
-    2 // b
-    -
-    3;
+		+
+		2 // b
+		-
+		3;
 >>> Unsplit inline block comments before operators.
 1/* a */+2/* b */%3;
 <<<
@@ -21,16 +21,16 @@
 longOperand/* a */||longOperand/* b */||longOperand;
 <<<
 longOperand /* a */ ||
-    longOperand /* b */ ||
-    longOperand;
+		longOperand /* b */ ||
+		longOperand;
 >>> Line comments after operators.
 1+// a
 2-// b
 3;
 <<<
 1 + // a
-    2 - // b
-    3;
+		2 - // b
+		3;
 >>> Unsplit inline block comments after operators.
 1+/* a */2%/* b */3;
 <<<
@@ -39,8 +39,8 @@ longOperand /* a */ ||
 longOperand-/* a */longOperand+/* b */longOperand;
 <<<
 longOperand - /* a */
-    longOperand + /* b */
-    longOperand;
+		longOperand + /* b */
+		longOperand;
 >>> Discard newlines before line comment inside expression.
 foo
 
@@ -49,9 +49,9 @@ foo
     + bar;
 <<<
 foo
-    // comment
-    +
-    bar;
+		// comment
+		+
+		bar;
 >>>
 foo &&
 
@@ -61,8 +61,8 @@ foo &&
   bar;
 <<<
 foo &&
-    // comment
-    bar;
+		// comment
+		bar;
 >>> Line comment before binary operator expression statement.
 {
       // comment
@@ -70,8 +70,8 @@ foo &&
 }
 <<<
 {
-  // comment
-  1 + 2;
+	// comment
+	1 + 2;
 }
 >>> Multiple line comments in expression.
 a + // one
@@ -82,19 +82,19 @@ a + // one
 b;
 <<<
 a + // one
-    // two
-    // three
-    // four
-    // five
-    b;
+		// two
+		// three
+		// four
+		// five
+		b;
 >>> Don't split infix operator with leading line comment before first operand.
 value =
     // comment
     a + b + c;
 <<<
 value =
-    // comment
-    a + b + c;
+		// comment
+		a + b + c;
 >>> Comment before unsplit call chain operand.
 firstOperand &&
     // Comment.
@@ -102,9 +102,9 @@ firstOperand &&
     lastOperand;
 <<<
 firstOperand &&
-    // Comment.
-    longTarget.someLongProperty &&
-    lastOperand;
+		// Comment.
+		longTarget.someLongProperty &&
+		lastOperand;
 >>> Comment before split call chain operand.
 firstOperand &&
     // Comment.
@@ -112,8 +112,8 @@ firstOperand &&
     lastOperand;
 <<<
 firstOperand &&
-    // Comment.
-    longTarget
-        .someLongProperty
-        .anotherProperty &&
-    lastOperand;
+		// Comment.
+		longTarget
+				.someLongProperty
+				.anotherProperty &&
+		lastOperand;

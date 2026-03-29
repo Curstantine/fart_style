@@ -4,7 +4,7 @@ main() {
 }
 <<<
 main() {
-  print(- -2);
+	print(- -2);
 }
 >>>
 main() {
@@ -12,5 +12,5 @@ main() {
 }
 <<<
 main() {
-  var x = - --y;
+	var x = - --y;
 }

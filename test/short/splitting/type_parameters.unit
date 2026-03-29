@@ -7,34 +7,34 @@ class Foo<A, B, C, D> {}
 class LongClassName<First, Second, Third> {}
 <<<
 class LongClassName<First, Second,
-    Third> {}
+		Third> {}
 >>> split before first if needed
 class LongClassName<FirstTypeParameterIsLong, Second> {}
 <<<
 class LongClassName<
-    FirstTypeParameterIsLong, Second> {}
+		FirstTypeParameterIsLong, Second> {}
 >>> split in middle if fit in two lines
 class LongClassName<First, Second, Third, Fourth, Fifth, Sixth> {}
 <<<
 class LongClassName<First, Second,
-    Third, Fourth, Fifth, Sixth> {}
+		Third, Fourth, Fifth, Sixth> {}
 >>> split one per line if they don't fit in two lines
 class LongClassName<First, Second, Third, Fourth, Fifth, Sixth, Seventh> {}
 <<<
 class LongClassName<
-    First,
-    Second,
-    Third,
-    Fourth,
-    Fifth,
-    Sixth,
-    Seventh> {}
+		First,
+		Second,
+		Third,
+		Fourth,
+		Fifth,
+		Sixth,
+		Seventh> {}
 >>> prefers to not split at type arguments
 class SomeClass<
     TypeArgument> extends Base {}
 <<<
 class SomeClass<TypeArgument>
-    extends Base {}
+		extends Base {}
 >>> generic function declaration
 foo<A,B,C,D>() {}
 <<<
@@ -45,10 +45,10 @@ class Foo {
 }
 <<<
 class Foo {
-  foo<A, B, C, D>() {}
+	foo<A, B, C, D>() {}
 }
 >>> split type parameters
 class Foo extends GenericBaseClass<TypeParameter> {}
 <<<
 class Foo extends GenericBaseClass<
-    TypeParameter> {}
+		TypeParameter> {}

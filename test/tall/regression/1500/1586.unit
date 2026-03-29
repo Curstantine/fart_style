@@ -5,6 +5,6 @@ main() {
 }
 <<<
 main() {
-  /// Doc comment.
-  final (a, b) = c;
+	/// Doc comment.
+	final (a, b) = c;
 }

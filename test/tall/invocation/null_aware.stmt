@@ -7,7 +7,7 @@ receiver?.method()?.getter;
 object?.method().method()?.method().method();
 <<<
 object
-    ?.method()
-    .method()
-    ?.method()
-    .method();
+		?.method()
+		.method()
+		?.method()
+		.method();

@@ -5,6 +5,6 @@ void main() {
 }
 <<<
 void main() {
-  expect(testFiles.containsKey('/main.dart'), isTrue,
-      reason: '`/main.dart` is missing in testFiles');
+	expect(testFiles.containsKey('/main.dart'), isTrue,
+			reason: '`/main.dart` is missing in testFiles');
 }

@@ -6,7 +6,7 @@ class FormatterBugTest {
 }
 <<<
 class FormatterBugTest {
-  final String _test;
+	final String _test;
 
-  FormatterBugTest(@deprecated this._test);
+	FormatterBugTest(@deprecated this._test);
 }

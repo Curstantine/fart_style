@@ -15,32 +15,32 @@ foo is! Bar;
 extremelyLongIdentifier as VeryLongTypeName;
 <<<
 extremelyLongIdentifier
-    as VeryLongTypeName;
+		as VeryLongTypeName;
 >>> Split `is` before operator.
 extremelyLongIdentifier is VeryLongTypeName;
 <<<
 extremelyLongIdentifier
-    is VeryLongTypeName;
+		is VeryLongTypeName;
 >>> Split `is!` before operator.
 extremelyLongIdentifier is ! VeryLongTypeName;
 <<<
 extremelyLongIdentifier
-    is! VeryLongTypeName;
+		is! VeryLongTypeName;
 >>> Indent type after `is` when split inside an assignment.
 variable = veryLongExpression is VeryLongTypeName;
 <<<
 variable =
-    veryLongExpression
-        is VeryLongTypeName;
+		veryLongExpression
+				is VeryLongTypeName;
 >>> Indent type after `is!` when split inside an assignment.
 variable = veryLongExpression is! VeryLongTypeName;
 <<<
 variable =
-    veryLongExpression
-        is! VeryLongTypeName;
+		veryLongExpression
+				is! VeryLongTypeName;
 >>> Indent type after `as` when split inside an assignment.
 variable = veryLongExpression as VeryLongTypeName;
 <<<
 variable =
-    veryLongExpression
-        as VeryLongTypeName;
+		veryLongExpression
+				as VeryLongTypeName;

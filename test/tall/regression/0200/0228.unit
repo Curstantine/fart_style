@@ -5,11 +5,11 @@ class SomeLongNameForAComponent implements AttachAware, ShadowRootAware,
 }
 <<<
 class SomeLongNameForAComponent
-    implements
-        AttachAware,
-        ShadowRootAware,
-        DetachAware,
-        SomeExternalViewFactory,
-        AnotherInterface {
-  // ...
+		implements
+				AttachAware,
+				ShadowRootAware,
+				DetachAware,
+				SomeExternalViewFactory,
+				AnotherInterface {
+	// ...
 }

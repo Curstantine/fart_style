@@ -6,7 +6,7 @@ class Foo {
 }
 <<<
 class Foo {
-  final bar;
-  final baz;
-  Foo(int this.bar(), this.baz);
+	final bar;
+	final baz;
+	Foo(int this.bar(), this.baz);
 }

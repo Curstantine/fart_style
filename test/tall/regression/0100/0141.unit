@@ -6,11 +6,11 @@
     ;
   }
 <<<
-  void buildComplexSwitchStatement(
-    ast.SwitchStatement node,
-    Map<ast.CaseMatch, ConstantValue> constants,
-    Map<ast.SwitchCase, int> caseIndex,
-    bool hasDefault,
-  ) {
-    ;
-  }
+	void buildComplexSwitchStatement(
+		ast.SwitchStatement node,
+		Map<ast.CaseMatch, ConstantValue> constants,
+		Map<ast.SwitchCase, int> caseIndex,
+		bool hasDefault,
+	) {
+		;
+	}

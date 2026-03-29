@@ -14,7 +14,7 @@ stuff = [
 ];
 <<<
 stuff = [
-  extremelyGratuitouslyLongElementThatDoesNotFit,
+	extremelyGratuitouslyLongElementThatDoesNotFit,
 
-  extremelyGratuitouslyLongElementThatDoesNotFit,
+	extremelyGratuitouslyLongElementThatDoesNotFit,
 ];

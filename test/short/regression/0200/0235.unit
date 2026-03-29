@@ -7,7 +7,7 @@ class _MultiSelectionModelImpl<T>
 }
 <<<
 class _MultiSelectionModelImpl<T> extends ChangeNotifier
-    with SelectionChangeNotifier<T>
-    implements SelectionModel<T> {
-  // ...
+		with SelectionChangeNotifier<T>
+		implements SelectionModel<T> {
+	// ...
 }

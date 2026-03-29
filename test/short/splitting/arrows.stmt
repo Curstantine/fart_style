@@ -3,7 +3,7 @@
 doSomethingWithFn((argument) => functionBodyTooLong());
 <<<
 doSomethingWithFn((argument) =>
-    functionBodyTooLong());
+		functionBodyTooLong());
 >>> newline before fn expression should not force => to split
 {
   () => one;
@@ -11,8 +11,8 @@ doSomethingWithFn((argument) =>
 }
 <<<
 {
-  () => one;
-  () => two;
+	() => one;
+	() => two;
 }
 >>> indent entire block body
 SomeLongFunctionName(
@@ -23,10 +23,10 @@ SomeLongFunctionName(
 );
 <<<
 SomeLongFunctionName(
-  (longParameterName______) =>
-      <LongTypeArgument>[
-    longListElement,
-  ],
+	(longParameterName______) =>
+			<LongTypeArgument>[
+		longListElement,
+	],
 );
 >>>
 SomeLongFunctionName(
@@ -37,8 +37,8 @@ SomeLongFunctionName(
 );
 <<<
 SomeLongFunctionName(
-  (longParameterName______) =>
-      switch (value) {
-    constant => body,
-  },
+	(longParameterName______) =>
+			switch (value) {
+		constant => body,
+	},
 );

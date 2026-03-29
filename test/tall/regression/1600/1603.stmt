@@ -3,18 +3,18 @@
         ..anInt = 3
         ..aString = 'four');
 <<< 3.7
-      final value = Value(
-        (b) =>
-            b
-              ..anInt = 3
-              ..aString = 'four',
-      );
+			final value = Value(
+				(b) =>
+						b
+							..anInt = 3
+							..aString = 'four',
+			);
 <<< 3.8
-      final value = Value(
-        (b) => b
-          ..anInt = 3
-          ..aString = 'four',
-      );
+			final value = Value(
+				(b) => b
+					..anInt = 3
+					..aString = 'four',
+			);
 >>>
 final value = Value((b) {
   b
@@ -23,11 +23,11 @@ final value = Value((b) {
 });
 <<<
 final value = Value((b) {
-  b
-    ..anInt = 3
-    ..aString = 'four';
+	b
+		..anInt = 3
+		..aString = 'four';
 });
 >>> (indent 4)
     print((b) => b..x = 3);
 <<<
-    print((b) => b..x = 3);
+		print((b) => b..x = 3);

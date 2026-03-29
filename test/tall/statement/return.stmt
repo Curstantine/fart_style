@@ -11,4 +11,4 @@ return value;
 return  veryLongExpression + anotherLongOne;
 <<<
 return veryLongExpression +
-    anotherLongOne;
+		anotherLongOne;

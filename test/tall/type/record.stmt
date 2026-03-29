@@ -35,16 +35,16 @@
 ( VeryVeryLongType_____  veryLongName___________________  , ) x;
 <<<
 (
-  VeryVeryLongType_____
-  veryLongName___________________,
+	VeryVeryLongType_____
+	veryLongName___________________,
 )
 x;
 >>> Split named positional fields.
 ( int  longValue  ,  String  veryVeryLongLabel  , ) x;
 <<<
 (
-  int longValue,
-  String veryVeryLongLabel,
+	int longValue,
+	String veryVeryLongLabel,
 )
 x;
 >>> Unsplit unnamed positional fields have no trailing comma.
@@ -55,15 +55,15 @@ x;
 (  {  int  longValue  ,  String  anotherLongLabel  ,  } ) x;
 <<<
 ({
-  int longValue,
-  String anotherLongLabel,
+	int longValue,
+	String anotherLongLabel,
 })
 x;
 >>> Empty record types don't split.
 someLongFunctionName__________________(() x) {}
 <<<
 someLongFunctionName__________________(
-  () x,
+	() x,
 ) {}
 >>> Unsplit short single positional field.
 (TypeName,
@@ -79,44 +79,44 @@ x;
 (TypeName1,TypeName2,TypeName3,TypeName4) x;
 <<<
 (
-  TypeName1,
-  TypeName2,
-  TypeName3,
-  TypeName4,
+	TypeName1,
+	TypeName2,
+	TypeName3,
+	TypeName4,
 )
 x;
 >>> Split named types.
 ({TypeName a,TypeName b,TypeName c,TypeName d}) x;
 <<<
 ({
-  TypeName a,
-  TypeName b,
-  TypeName c,
-  TypeName d,
+	TypeName a,
+	TypeName b,
+	TypeName c,
+	TypeName d,
 })
 x;
 >>> Split named if positional splits.
 (TypeName,TypeName,TypeName,TypeName,{TypeName a,TypeName b}) x;
 <<<
 (
-  TypeName,
-  TypeName,
-  TypeName,
-  TypeName, {
-  TypeName a,
-  TypeName b,
+	TypeName,
+	TypeName,
+	TypeName,
+	TypeName, {
+	TypeName a,
+	TypeName b,
 })
 x;
 >>> Split positional if named splits.
 (TypeName,TypeName,{TypeName a,TypeName b,TypeName c,TypeName d}) x;
 <<<
 (
-  TypeName,
-  TypeName, {
-  TypeName a,
-  TypeName b,
-  TypeName c,
-  TypeName d,
+	TypeName,
+	TypeName, {
+	TypeName a,
+	TypeName b,
+	TypeName c,
+	TypeName d,
 })
 x;
 >>> Single named field has no trailing comma.
@@ -131,25 +131,25 @@ x;
 ((TypeName,TypeName,TypeName,TypeName),TypeName) x;
 <<<
 (
-  (
-    TypeName,
-    TypeName,
-    TypeName,
-    TypeName,
-  ),
-  TypeName,
+	(
+		TypeName,
+		TypeName,
+		TypeName,
+		TypeName,
+	),
+	TypeName,
 )
 x;
 >>> Split outer type argument list if inner record splits.
 Map<String, (TypeName,TypeName,TypeName,TypeName)> map;
 <<<
 Map<
-  String,
-  (
-    TypeName,
-    TypeName,
-    TypeName,
-    TypeName,
-  )
+	String,
+	(
+		TypeName,
+		TypeName,
+		TypeName,
+		TypeName,
+	)
 >
 map;

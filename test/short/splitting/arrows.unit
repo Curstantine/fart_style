@@ -3,4 +3,4 @@
 myFunction() => argument + anotherArgument;
 <<<
 myFunction() =>
-    argument + anotherArgument;
+		argument + anotherArgument;

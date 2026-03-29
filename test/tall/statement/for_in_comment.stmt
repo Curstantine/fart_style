@@ -6,7 +6,7 @@ int  x  in  list  )  {  body;  }
 <<<
 for ( // comment
 int x in list) {
-  body;
+	body;
 }
 >>> Non-hanging line comment before declared variable.
 for  (
@@ -16,15 +16,15 @@ int  x  in  list  )  {  body;  }
 for (
 // comment
 int x in list) {
-  body;
+	body;
 }
 >>> Hanging line comment after declared variable.
 for  (  int  x  // comment
 in  list  )  {  body;  }
 <<<
 for (int x // comment
-    in list) {
-  body;
+		in list) {
+	body;
 }
 >>> Non-hanging line comment after declared variable.
 for  (  int  x
@@ -32,9 +32,9 @@ for  (  int  x
 in  list  )  {  body;  }
 <<<
 for (int x
-    // comment
-    in list) {
-  body;
+		// comment
+		in list) {
+	body;
 }
 >>> Hanging line comment before existing variable.
 for  (  // comment
@@ -42,7 +42,7 @@ x  in  list  )  {  body;  }
 <<<
 for ( // comment
 x in list) {
-  body;
+	body;
 }
 >>> Non-hanging line comment before existing variable.
 for  (
@@ -52,15 +52,15 @@ x  in  list  )  {  body;  }
 for (
 // comment
 x in list) {
-  body;
+	body;
 }
 >>> Hanging line comment after existing variable.
 for  (  x  // comment
 in  list  )  {  body;  }
 <<<
 for (x // comment
-    in list) {
-  body;
+		in list) {
+	body;
 }
 >>> Non-hanging line comment after existing variable.
 for  (  x
@@ -68,9 +68,9 @@ for  (  x
 in  list  )  {  body;  }
 <<<
 for (x
-    // comment
-    in list) {
-  body;
+		// comment
+		in list) {
+	body;
 }
 >>> Hanging line comment before pattern variable.
 for  (  // comment
@@ -78,7 +78,7 @@ var  [x]  in  list  )  {  body;  }
 <<<
 for ( // comment
 var [x] in list) {
-  body;
+	body;
 }
 >>> Non-hanging line comment before pattern variable.
 for  (
@@ -88,15 +88,15 @@ var  [x]  in  list  )  {  body;  }
 for (
 // comment
 var [x] in list) {
-  body;
+	body;
 }
 >>> Hanging line comment after pattern variable.
 for  (  var  [x]  // comment
 in  list  )  {  body;  }
 <<<
 for (var [x] // comment
-    in list) {
-  body;
+		in list) {
+	body;
 }
 >>> Non-hanging line comment after pattern variable.
 for  (  var  [x]
@@ -104,18 +104,18 @@ for  (  var  [x]
 in  list  )  {  body;  }
 <<<
 for (var [x]
-    // comment
-    in list) {
-  body;
+		// comment
+		in list) {
+	body;
 }
 >>> Hanging line comment after `in`.
 for  (  int  x  in  // comment
 list  )  {  body;  }
 <<<
 for (int x
-    in // comment
-    list) {
-  body;
+		in // comment
+		list) {
+	body;
 }
 >>> Non-hanging line comment after `in`.
 for  (  int  x  in
@@ -123,19 +123,19 @@ for  (  int  x  in
 list  )  {  body;  }
 <<<
 for (int x
-    in
-    // comment
-    list) {
-  body;
+		in
+		// comment
+		list) {
+	body;
 }
 >>> Hanging line comment after sequence.
 for  (  int  x  in  list  // comment
 )  {  body;  }
 <<<
 for (int x
-    in list // comment
-    ) {
-  body;
+		in list // comment
+		) {
+	body;
 }
 >>> Non-hanging line comment after sequence.
 for  (  int  x  in  list
@@ -145,5 +145,5 @@ for  (  int  x  in  list
 for (int x in list
 // comment
 ) {
-  body;
+	body;
 }

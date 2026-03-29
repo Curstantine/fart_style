@@ -8,13 +8,13 @@ var x = '${jsonEncode([
 ])}';
 <<<
 var x = '${jsonEncode([
-      1,
-    ])}';
+			1,
+		])}';
 >>>
 main() {
   patch..[entityId].removeWhere();
 }
 <<<
 main() {
-  patch..[entityId].removeWhere();
+	patch..[entityId].removeWhere();
 }

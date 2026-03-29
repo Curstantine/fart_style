@@ -12,13 +12,13 @@ class C {
 }
 <<<
 class C {
-  T visitVariableDeclarationList(VariableDeclarationList node) =>
-      visitExpression(node);
+	T visitVariableDeclarationList(VariableDeclarationList node) =>
+			visitExpression(node);
 
-  T visitAssignment(Assignment node) => visitExpression(node);
+	T visitAssignment(Assignment node) => visitExpression(node);
 
-  T visitVariableInitialization(VariableInitialization node) =>
-      visitExpression(node);
+	T visitVariableInitialization(VariableInitialization node) =>
+			visitExpression(node);
 }
 >>>
 class C {
@@ -28,8 +28,8 @@ class C {
 }
 <<<
 class C {
-  Instantiator visitLiteralStatement(LiteralStatement node) =>
-      TODO('visitLiteralStatement');
+	Instantiator visitLiteralStatement(LiteralStatement node) =>
+			TODO('visitLiteralStatement');
 }
 >>>
 ModifiableCssSupportsRule copyWithoutChildren() => ModifiableCssSupportsRule(
@@ -38,4 +38,4 @@ ModifiableCssSupportsRule copyWithoutChildren() => ModifiableCssSupportsRule(
 );
 <<<
 ModifiableCssSupportsRule copyWithoutChildren() =>
-    ModifiableCssSupportsRule(condition, span);
+		ModifiableCssSupportsRule(condition, span);

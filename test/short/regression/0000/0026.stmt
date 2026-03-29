@@ -5,5 +5,5 @@ experimentalBootstrap = document
     'import' && link.attributes['href'] == POLYMER_EXPERIMENTAL_HTML);
 <<<
 experimentalBootstrap = document.querySelectorAll('link').any((link) =>
-    link.attributes['rel'] == 'import' &&
-    link.attributes['href'] == POLYMER_EXPERIMENTAL_HTML);
+		link.attributes['rel'] == 'import' &&
+		link.attributes['href'] == POLYMER_EXPERIMENTAL_HTML);

@@ -7,7 +7,7 @@ getSomeFoo(
 }
 <<<
 getSomeFoo({
-  fooooooooooooooooooooo: const ['baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'],
+	fooooooooooooooooooooo: const ['baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'],
 }) {
-  return 'rhubarb';
+	return 'rhubarb';
 }

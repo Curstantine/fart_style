@@ -4,28 +4,28 @@ if (obj case // c
 constant as Type) {;}
 <<<
 if (obj
-    case // c
-        constant as Type) {
-  ;
+		case // c
+				constant as Type) {
+	;
 }
 >>> Line comment before 'as'.
 if (obj case constant // c
 as Type) {;}
 <<<
 if (obj
-    case constant // c
-        as Type) {
-  ;
+		case constant // c
+				as Type) {
+	;
 }
 >>> Line comment after 'as'.
 if (obj case constant as // c
 Type) {;}
 <<<
 if (obj
-    case constant
-        as // c
-        Type) {
-  ;
+		case constant
+				as // c
+				Type) {
+	;
 }
 >>> Don't split `as` with leading line comment before first operand.
 if (obj case
@@ -33,8 +33,8 @@ if (obj case
   constant as Type) {;}
 <<<
 if (obj
-    case
-        // comment
-        constant as Type) {
-  ;
+		case
+				// comment
+				constant as Type) {
+	;
 }

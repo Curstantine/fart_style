@@ -15,31 +15,31 @@ enum E with M implements I { a, b, c }
 enum VeryLongEnumTypeName with LongMixin {a,b,c}
 <<<
 enum VeryLongEnumTypeName
-    with LongMixin {
-  a,
-  b,
-  c,
+		with LongMixin {
+	a,
+	b,
+	c,
 }
 >>> Split implements clause.
 enum VeryLongEnumTypeName implements LongInterface {a,b,c}
 <<<
 enum VeryLongEnumTypeName
-    implements LongInterface {
-  a,
-  b,
-  c,
+		implements LongInterface {
+	a,
+	b,
+	c,
 }
 >>> Both clauses split.
 enum SomeEnum with SomeLongMixin, AnotherMixin<int> implements SomeInterface<String, bool>, AnotherInterface {a}
 <<<
 enum SomeEnum
-    with
-        SomeLongMixin,
-        AnotherMixin<int>
-    implements
-        SomeInterface<String, bool>,
-        AnotherInterface {
-  a,
+		with
+				SomeLongMixin,
+				AnotherMixin<int>
+		implements
+				SomeInterface<String, bool>,
+				AnotherInterface {
+	a,
 }
 >>> (experiment primary-constructors) Unsplit with clause with empty body.
 enum E with M ;
@@ -57,19 +57,19 @@ enum E with M implements I;
 enum VeryLongEnumTypeName with LongMixin ;
 <<<
 enum VeryLongEnumTypeName
-    with LongMixin;
+		with LongMixin;
 >>> (experiment primary-constructors) Split implements clause with empty body.
 enum VeryLongEnumTypeName implements LongInterface ;
 <<<
 enum VeryLongEnumTypeName
-    implements LongInterface;
+		implements LongInterface;
 >>> (experiment primary-constructors) Both clauses split with empty body.
 enum SomeEnum with SomeLongMixin, AnotherMixin<int> implements SomeInterface<String, bool>, AnotherInterface ;
 <<<
 enum SomeEnum
-    with
-        SomeLongMixin,
-        AnotherMixin<int>
-    implements
-        SomeInterface<String, bool>,
-        AnotherInterface;
+		with
+				SomeLongMixin,
+				AnotherMixin<int>
+		implements
+				SomeInterface<String, bool>,
+				AnotherInterface;
