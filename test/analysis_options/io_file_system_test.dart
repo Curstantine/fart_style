@@ -12,10 +12,7 @@ void main() {
 	group('makePath()', () {
 		test('creates a relative path', () async {
 			var fs = IOFileSystem();
-			expect(
-				(await fs.makePath('relative/path.txt')).path,
-				'relative/path.txt',
-			);
+			expect((await fs.makePath('relative/path.txt')).path, 'relative/path.txt');
 		});
 
 		test('creates an absolute path', () async {
@@ -31,15 +28,11 @@ void main() {
 
 			var fs = IOFileSystem();
 			expect(
-				await fs.fileExists(
-					await fs.makePath(p.join(d.sandbox, 'dir', 'exists.txt')),
-				),
+				await fs.fileExists(await fs.makePath(p.join(d.sandbox, 'dir', 'exists.txt'))),
 				isTrue,
 			);
 			expect(
-				await fs.fileExists(
-					await fs.makePath(p.join(d.sandbox, 'dir', 'nope.txt')),
-				),
+				await fs.fileExists(await fs.makePath(p.join(d.sandbox, 'dir', 'nope.txt'))),
 				isFalse,
 			);
 		});
@@ -49,9 +42,7 @@ void main() {
 
 			var fs = IOFileSystem();
 			expect(
-				await fs.fileExists(
-					await fs.makePath(p.join(d.sandbox, 'dir', 'sub')),
-				),
+				await fs.fileExists(await fs.makePath(p.join(d.sandbox, 'dir', 'sub'))),
 				isFalse,
 			);
 		});
@@ -70,10 +61,7 @@ void main() {
 			var fs = IOFileSystem();
 
 			var absolutePath = p.style == p.Style.posix ? '/abs' : 'C:\\abs';
-			expect(
-				(await fs.join(await fs.makePath('dir'), absolutePath)).ioPath,
-				absolutePath,
-			);
+			expect((await fs.join(await fs.makePath('dir'), absolutePath)).ioPath, absolutePath);
 		});
 	});
 
@@ -91,10 +79,7 @@ void main() {
 				p.absolute(p.join('dir', 'sub')),
 			);
 
-			expect(
-				await parent(p.join('dir', 'sub')),
-				p.absolute(p.join('dir')),
-			);
+			expect(await parent(p.join('dir', 'sub')), p.absolute(p.join('dir')));
 		});
 
 		test('returns null at the root directory (POSIX)', () async {
@@ -112,18 +97,12 @@ void main() {
 
 			var fs = IOFileSystem();
 			expect(
-				await fs.readFile(
-					await fs.makePath(
-						p.join(d.sandbox, 'dir', 'some_file.txt'),
-					),
-				),
+				await fs.readFile(await fs.makePath(p.join(d.sandbox, 'dir', 'some_file.txt'))),
 				'contents',
 			);
 			expect(
 				await fs.readFile(
-					await fs.makePath(
-						p.join(d.sandbox, 'dir', 'sub', 'another.txt'),
-					),
+					await fs.makePath(p.join(d.sandbox, 'dir', 'sub', 'another.txt')),
 				),
 				'more',
 			);
@@ -137,18 +116,12 @@ void main() {
 
 			var fs = IOFileSystem();
 			expect(
-				await fs.readFile(
-					await fs.makePath(
-						p.join(d.sandbox, 'dir', 'some_file.txt'),
-					),
-				),
+				await fs.readFile(await fs.makePath(p.join(d.sandbox, 'dir', 'some_file.txt'))),
 				'contents',
 			);
 			expect(
 				await fs.readFile(
-					await fs.makePath(
-						p.join(d.sandbox, 'dir', 'sub', 'another.txt'),
-					),
+					await fs.makePath(p.join(d.sandbox, 'dir', 'sub', 'another.txt')),
 				),
 				'more',
 			);

@@ -57,10 +57,8 @@ final class DelimitedListBuilder {
 		// here since they would be in the [_elements] list if there were any.
 		if (_elements.isEmpty) {
 			return _visitor.pieces.build(() {
-				if (_leftBracket case var bracket?)
-					_visitor.pieces.add(bracket);
-				if (_rightBracket case var bracket?)
-					_visitor.pieces.add(bracket);
+				if (_leftBracket case var bracket?) _visitor.pieces.add(bracket);
+				if (_rightBracket case var bracket?) _visitor.pieces.add(bracket);
 			});
 		}
 
@@ -170,10 +168,7 @@ final class DelimitedListBuilder {
 	/// then become an element in a surrounding [DelimitedListBuilder]. It ensures
 	/// that any comments around a trailing comma after [inner] don't get lost and
 	/// are instead hoisted up to be captured by this builder.
-	void addInnerBuilder(
-		DelimitedListBuilder inner, {
-		bool forceSplit = false,
-	}) {
+	void addInnerBuilder(DelimitedListBuilder inner, {bool forceSplit = false}) {
 		// Add the elements of the line to this builder.
 		add(inner.build(forceSplit: forceSplit));
 
@@ -198,9 +193,7 @@ final class DelimitedListBuilder {
 
 		var nextToken = element.endToken.next!;
 		if (nextToken.lexeme == ',') {
-			_commentsBeforeComma = _visitor.comments.takeCommentsBefore(
-				nextToken,
-			);
+			_commentsBeforeComma = _visitor.comments.takeCommentsBefore(nextToken);
 		}
 	}
 
@@ -257,10 +250,7 @@ final class DelimitedListBuilder {
 	/// If [hasElementAfter] is `true` then another element will be written after
 	/// these comments. Otherwise, we are at the comments after the last element
 	/// before the closing delimiter.
-	void _addComments(
-		CommentSequence comments, {
-		required bool hasElementAfter,
-	}) {
+	void _addComments(CommentSequence comments, {required bool hasElementAfter}) {
 		// Early out if there's nothing to do.
 		if (_commentsBeforeComma.isEmpty &&
 		    comments.isEmpty &&
@@ -357,16 +347,11 @@ final class DelimitedListBuilder {
 		CommentSequence separate,
 		CommentSequence leading,
 	})
-	_splitCommaComments(
-		CommentSequence commentsBeforeElement, {
-		required bool hasElementAfter,
-	}) {
+	_splitCommaComments(CommentSequence commentsBeforeElement, {required bool hasElementAfter}) {
 		// If we're on the final comma after the last element, the comma isn't
 		// meaningful because there can't be leading comments after it.
 		if (!hasElementAfter) {
-			_commentsBeforeComma = _commentsBeforeComma.concatenate(
-				commentsBeforeElement,
-			);
+			_commentsBeforeComma = _commentsBeforeComma.concatenate(commentsBeforeElement);
 			commentsBeforeElement = CommentSequence.empty;
 		}
 
@@ -392,8 +377,7 @@ final class DelimitedListBuilder {
 			while (inlineCommentCount < _commentsBeforeComma.length) {
 				// Once we hit a single non-inline comment, the rest won't be either.
 				if (!_commentsBeforeComma.isHanging(inlineCommentCount) ||
-				    _commentsBeforeComma[inlineCommentCount].type !=
-				        CommentType.inlineBlock) {
+				    _commentsBeforeComma[inlineCommentCount].type != CommentType.inlineBlock) {
 					break;
 				}
 
@@ -401,24 +385,23 @@ final class DelimitedListBuilder {
 			}
 		}
 
-		var (inlineComments, remainingCommentsBeforeComma) =
-		    _commentsBeforeComma.splitAt(inlineCommentCount);
+		var (inlineComments, remainingCommentsBeforeComma) = _commentsBeforeComma.splitAt(
+			inlineCommentCount,
+		);
 
 		var hangingCommentCount = 0;
 		if (_elements.isNotEmpty) {
 			while (hangingCommentCount < remainingCommentsBeforeComma.length) {
 				// Once we hit a single non-hanging comment, the rest won't be either.
-				if (!remainingCommentsBeforeComma.isHanging(
-					hangingCommentCount,
-				))
-					break;
+				if (!remainingCommentsBeforeComma.isHanging(hangingCommentCount)) break;
 
 				hangingCommentCount++;
 			}
 		}
 
-		var (hangingComments, separateCommentsBeforeComma) =
-		    remainingCommentsBeforeComma.splitAt(hangingCommentCount);
+		var (hangingComments, separateCommentsBeforeComma) = remainingCommentsBeforeComma.splitAt(
+			hangingCommentCount,
+		);
 
 		// Inline block comments on the same line as the next element lead at the
 		// beginning of that line, as in:
@@ -432,18 +415,14 @@ final class DelimitedListBuilder {
 			while (leadingCommentCount < commentsBeforeElement.length) {
 				// Count backwards from the end. Once we hit a non-leading comment, the
 				// preceding ones aren't either.
-				var commentIndex =
-				    commentsBeforeElement.length - leadingCommentCount - 1;
+				var commentIndex = commentsBeforeElement.length - leadingCommentCount - 1;
 				if (!commentsBeforeElement.isLeading(commentIndex)) break;
 
 				leadingCommentCount++;
 			}
 		}
 
-		var (
-			separateCommentsAfterComma,
-			leadingComments,
-		) = commentsBeforeElement.splitAt(
+		var (separateCommentsAfterComma, leadingComments) = commentsBeforeElement.splitAt(
 			commentsBeforeElement.length - leadingCommentCount,
 		);
 
@@ -456,9 +435,7 @@ final class DelimitedListBuilder {
 		//       argument,
 		//       // another
 		//     );
-		var separateComments = separateCommentsBeforeComma.concatenate(
-			separateCommentsAfterComma,
-		);
+		var separateComments = separateCommentsBeforeComma.concatenate(separateCommentsAfterComma);
 
 		return (
 			inline: inlineComments,
@@ -534,12 +511,10 @@ final class DelimitedListBuilder {
 		    arguments[0] is! NamedExpression) {
 			var firstArgumentFormatType = arguments[0].blockFormatType;
 			if (firstArgumentFormatType
-			    case BlockFormat.unindentedAdjacentStrings ||
-			        BlockFormat.indentedAdjacentStrings) {
+			    case BlockFormat.unindentedAdjacentStrings || BlockFormat.indentedAdjacentStrings) {
 				// The adjacent strings.
 				_elements[0].allowNewlinesWhenUnsplit = true;
-				if (firstArgumentFormatType ==
-				    BlockFormat.unindentedAdjacentStrings) {
+				if (firstArgumentFormatType == BlockFormat.unindentedAdjacentStrings) {
 					_elements[0].indentWhenBlockFormatted = true;
 				}
 

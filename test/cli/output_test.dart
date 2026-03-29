@@ -30,10 +30,7 @@ void main() {
 					'Formatted ${p.join('code', 'c.dart')}',
 				]),
 			);
-			await expectLater(
-				process.stdout,
-				emits(startsWith('Formatted 3 files (2 changed)')),
-			);
+			await expectLater(process.stdout, emits(startsWith('Formatted 3 files (2 changed)')));
 			await process.shouldExit(0);
 		});
 
@@ -45,10 +42,7 @@ void main() {
 			]).create();
 
 			var process = await runFormatterOnDir(['--show=none']);
-			await expectLater(
-				process.stdout,
-				emits(startsWith('Formatted 3 files (2 changed)')),
-			);
+			await expectLater(process.stdout, emits(startsWith('Formatted 3 files (2 changed)')));
 			await process.shouldExit(0);
 		});
 
@@ -67,10 +61,7 @@ void main() {
 					'Formatted ${p.join('code', 'c.dart')}',
 				]),
 			);
-			await expectLater(
-				process.stdout,
-				emits(startsWith('Formatted 3 files (2 changed)')),
-			);
+			await expectLater(process.stdout, emits(startsWith('Formatted 3 files (2 changed)')));
 			await process.shouldExit(0);
 		});
 	});
@@ -84,10 +75,7 @@ void main() {
 				]).create();
 
 				var process = await runFormatterOnDir(['--output=show']);
-				await expectLater(
-					process.stdout,
-					emitsInOrder([formattedOutput, formattedOutput]),
-				);
+				await expectLater(process.stdout, emitsInOrder([formattedOutput, formattedOutput]));
 				await expectLater(
 					process.stdout,
 					emits(startsWith('Formatted 2 files (1 changed)')),
@@ -95,9 +83,7 @@ void main() {
 				await process.shouldExit(0);
 
 				// Does not overwrite files.
-				await d.dir('code', [
-					d.file('a.dart', unformattedSource),
-				]).validate();
+				await d.dir('code', [d.file('a.dart', unformattedSource)]).validate();
 			});
 
 			test('with --show=all prints all files and names first', () async {
@@ -106,10 +92,7 @@ void main() {
 					d.file('b.dart', formattedSource),
 				]).create();
 
-				var process = await runFormatterOnDir([
-					'--output=show',
-					'--show=all',
-				]);
+				var process = await runFormatterOnDir(['--output=show', '--show=all']);
 				await expectLater(
 					process.stdout,
 					emitsInOrder([
@@ -126,9 +109,7 @@ void main() {
 				await process.shouldExit(0);
 
 				// Does not overwrite files.
-				await d.dir('code', [
-					d.file('a.dart', unformattedSource),
-				]).validate();
+				await d.dir('code', [d.file('a.dart', unformattedSource)]).validate();
 			});
 
 			test('with --show=changed prints only changed files', () async {
@@ -137,16 +118,10 @@ void main() {
 					d.file('b.dart', formattedSource),
 				]).create();
 
-				var process = await runFormatterOnDir([
-					'--output=show',
-					'--show=changed',
-				]);
+				var process = await runFormatterOnDir(['--output=show', '--show=changed']);
 				await expectLater(
 					process.stdout,
-					emitsInOrder([
-						'Changed ${p.join('code', 'a.dart')}',
-						formattedOutput,
-					]),
+					emitsInOrder(['Changed ${p.join('code', 'a.dart')}', formattedOutput]),
 				);
 				await expectLater(
 					process.stdout,
@@ -155,9 +130,7 @@ void main() {
 				await process.shouldExit(0);
 
 				// Does not overwrite files.
-				await d.dir('code', [
-					d.file('a.dart', unformattedSource),
-				]).validate();
+				await d.dir('code', [d.file('a.dart', unformattedSource)]).validate();
 			});
 		});
 
@@ -187,10 +160,7 @@ void main() {
 			});
 
 			test('errors if the summary is not none', () async {
-				var process = await runFormatterOnDir([
-					'--output=json',
-					'--summary=line',
-				]);
+				var process = await runFormatterOnDir(['--output=json', '--summary=line']);
 				await process.shouldExit(64);
 			});
 		});
@@ -202,10 +172,7 @@ void main() {
 					d.file('b.dart', formattedSource),
 				]).create();
 
-				var process = await runFormatterOnDir([
-					'--output=none',
-					'--show=all',
-				]);
+				var process = await runFormatterOnDir(['--output=none', '--show=all']);
 				await expectLater(
 					process.stdout,
 					emitsInOrder([
@@ -220,9 +187,7 @@ void main() {
 				await process.shouldExit(0);
 
 				// Does not overwrite files.
-				await d.dir('code', [
-					d.file('a.dart', unformattedSource),
-				]).validate();
+				await d.dir('code', [d.file('a.dart', unformattedSource)]).validate();
 			});
 
 			test('with --show=changed prints only changed names', () async {
@@ -231,14 +196,8 @@ void main() {
 					d.file('b.dart', formattedSource),
 				]).create();
 
-				var process = await runFormatterOnDir([
-					'--output=none',
-					'--show=changed',
-				]);
-				await expectLater(
-					process.stdout,
-					emits('Changed ${p.join('code', 'a.dart')}'),
-				);
+				var process = await runFormatterOnDir(['--output=none', '--show=changed']);
+				await expectLater(process.stdout, emits('Changed ${p.join('code', 'a.dart')}'));
 				await expectLater(
 					process.stdout,
 					emits(startsWith('Formatted 2 files (1 changed)')),
@@ -246,9 +205,7 @@ void main() {
 				await process.shouldExit(0);
 
 				// Does not overwrite files.
-				await d.dir('code', [
-					d.file('a.dart', unformattedSource),
-				]).validate();
+				await d.dir('code', [d.file('a.dart', unformattedSource)]).validate();
 			});
 		});
 	});
@@ -261,17 +218,10 @@ void main() {
 			]).create();
 
 			var process = await runFormatterOnDir(['--summary=line']);
+			await expectLater(process.stdout, emits('Formatted ${p.join('code', 'a.dart')}'));
 			await expectLater(
 				process.stdout,
-				emits('Formatted ${p.join('code', 'a.dart')}'),
-			);
-			await expectLater(
-				process.stdout,
-				emits(
-					matches(
-						r'Formatted 2 files \(1 changed\) in \d+\.\d+ seconds.',
-					),
-				),
+				emits(matches(r'Formatted 2 files \(1 changed\) in \d+\.\d+ seconds.')),
 			);
 			await process.shouldExit(0);
 		});

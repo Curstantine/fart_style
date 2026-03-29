@@ -57,12 +57,10 @@ final class FormattingStyle {
 	///
 	/// They always should have, but they were overlooked. We already do this for
 	/// classes, enums, and extensions.
-	bool get blankLineAroundMixinAndExtensionTypes =>
-	    _languageVersion >= Version(3, 13, 0);
+	bool get blankLineAroundMixinAndExtensionTypes => _languageVersion >= Version(3, 13, 0);
 
 	/// Whether there is a trailing comma at the end of the list delimited by
 	/// [rightBracket] which should be preserved by this style.
 	bool preserveTrailingCommaBefore(Token rightBracket) =>
-	    _formatter.trailingCommas == TrailingCommas.preserve &&
-	    rightBracket.hasCommaBefore;
+	    _formatter.trailingCommas == TrailingCommas.preserve && rightBracket.hasCommaBefore;
 }

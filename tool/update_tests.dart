@@ -88,8 +88,7 @@ Future<void> _updateTestFile(TestFile testFile) async {
 	}
 
 	// Write the file level options.
-	if (_optionStrings(testFile.options) case var options
-	    when options.isNotEmpty) {
+	if (_optionStrings(testFile.options) case var options when options.isNotEmpty) {
 		buffer.writeln(options.join(' '));
 	}
 
@@ -120,13 +119,8 @@ Future<void> _updateTestFile(TestFile testFile) async {
 				var versions = outputs.keys.toList()..sort();
 
 				// The outputs were reordered, the test was changed.
-				if (!const DeepCollectionEquality().equals(
-					versions,
-					outputs.keys.toList(),
-				)) {
-					print(
-						'Re-ordered outputs for ${testFile.path} ${formatTest.label}',
-					);
+				if (!const DeepCollectionEquality().equals(versions, outputs.keys.toList())) {
+					print('Re-ordered outputs for ${testFile.path} ${formatTest.label}');
 				}
 
 				// Write the outputs at their versions.
@@ -157,8 +151,7 @@ Future<void> _updateTestFile(TestFile testFile) async {
 List<String> _optionStrings(TestOptions options) => [
 	for (var experiment in options.experimentFlags) '(experiment $experiment)',
 	if (options.leadingIndent case var indent?) '(indent $indent)',
-	if (options.trailingCommas == TrailingCommas.preserve)
-		'(trailing_commas preserve)',
+	if (options.trailingCommas == TrailingCommas.preserve) '(trailing_commas preserve)',
 ];
 
 void _writeComments(StringBuffer buffer, List<String> comments) {
@@ -191,10 +184,7 @@ bool _writeOutput(
 	    ? DartFormatter.latestLanguageVersion
 	    : DartFormatter.latestShortStyleLanguageVersion;
 
-	var formatter = testFile.formatterForTest(
-		formatTest,
-		version ?? defaultVersion,
-	);
+	var formatter = testFile.formatterForTest(formatTest, version ?? defaultVersion);
 
 	var actual = formatter.formatSource(formatTest.input.code);
 

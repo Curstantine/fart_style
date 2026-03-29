@@ -17,15 +17,11 @@ void main() {
 	var followOptions = FormatterOptions(followLinks: true);
 
 	test('handles directory ending in ".dart"', () async {
-		await d.dir('code.dart', [
-			d.file('a.dart', unformattedSource),
-		]).create();
+		await d.dir('code.dart', [d.file('a.dart', unformattedSource)]).create();
 
 		await formatPaths(overwriteOptions, [d.sandbox]);
 
-		await d.dir('code.dart', [
-			d.file('a.dart', formattedSource),
-		]).validate();
+		await d.dir('code.dart', [d.file('a.dart', formattedSource)]).validate();
 	});
 
 	test("doesn't touch unchanged files", () async {
@@ -34,8 +30,7 @@ void main() {
 			d.file('good.dart', formattedSource),
 		]).create();
 
-		DateTime modTime(String file) =>
-		    File(p.join(d.sandbox, 'code', file)).statSync().modified;
+		DateTime modTime(String file) => File(p.join(d.sandbox, 'code', file)).statSync().modified;
 
 		var badBefore = modTime('bad.dart');
 		var goodBefore = modTime('good.dart');
@@ -66,32 +61,21 @@ void main() {
 		]).validate();
 	});
 
-	test(
-		"traverses given directory even if its name starts with '.'",
-		() async {
-			await d.dir('.code', [
-				d.file('a.dart', unformattedSource),
-			]).create();
+	test("traverses given directory even if its name starts with '.'", () async {
+		await d.dir('.code', [d.file('a.dart', unformattedSource)]).create();
 
-			await formatPaths(overwriteOptions, [p.join(d.sandbox, '.code')]);
+		await formatPaths(overwriteOptions, [p.join(d.sandbox, '.code')]);
 
-			await d.dir('.code', [
-				d.file('a.dart', formattedSource),
-			]).validate();
-		},
-	);
+		await d.dir('.code', [d.file('a.dart', formattedSource)]).validate();
+	});
 
 	test("doesn't follow directory symlinks by default", () async {
 		await d.dir('code', [d.file('a.dart', unformattedSource)]).create();
 
-		await d.dir('target_dir', [
-			d.file('b.dart', unformattedSource),
-		]).create();
+		await d.dir('target_dir', [d.file('b.dart', unformattedSource)]).create();
 
 		// Create a link to the target directory in the code directory.
-		Link(
-			p.join(d.sandbox, 'code', 'linked_dir'),
-		).createSync(p.join(d.sandbox, 'target_dir'));
+		Link(p.join(d.sandbox, 'code', 'linked_dir')).createSync(p.join(d.sandbox, 'target_dir'));
 
 		await formatPaths(overwriteOptions, [p.join(d.sandbox, 'code')]);
 
@@ -104,14 +88,10 @@ void main() {
 	test("follows directory symlinks when 'followLinks' is true", () async {
 		await d.dir('code', [d.file('a.dart', unformattedSource)]).create();
 
-		await d.dir('target_dir', [
-			d.file('b.dart', unformattedSource),
-		]).create();
+		await d.dir('target_dir', [d.file('b.dart', unformattedSource)]).create();
 
 		// Create a link to the target directory in the code directory.
-		Link(
-			p.join(d.sandbox, 'code', 'linked_dir'),
-		).createSync(p.join(d.sandbox, 'target_dir'));
+		Link(p.join(d.sandbox, 'code', 'linked_dir')).createSync(p.join(d.sandbox, 'target_dir'));
 
 		await formatPaths(followOptions, [p.join(d.sandbox, 'code')]);
 
@@ -146,9 +126,7 @@ void main() {
 
 			await formatPaths(overwriteOptions, [p.join(d.sandbox, 'code')]);
 
-			await d.dir('code', [
-				d.file('linked_file.dart', unformattedSource),
-			]).validate();
+			await d.dir('code', [d.file('linked_file.dart', unformattedSource)]).validate();
 		});
 
 		test("follows file symlinks when 'followLinks' is true", () async {
@@ -162,9 +140,7 @@ void main() {
 
 			await formatPaths(followOptions, [p.join(d.sandbox, 'code')]);
 
-			await d.dir('code', [
-				d.file('linked_file.dart', formattedSource),
-			]).validate();
+			await d.dir('code', [d.file('linked_file.dart', formattedSource)]).validate();
 		});
 	}
 }

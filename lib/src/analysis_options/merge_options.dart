@@ -26,14 +26,8 @@ Object? merge(Object? defaults, Object? overrides) {
 			defaults,
 			_promoteList(list),
 		),
-		(Map defaultsMap, Map overridesMap) => _mergeMap(
-			defaultsMap,
-			overridesMap,
-		),
-		(List defaultsList, List overridesList) => _mergeList(
-			defaultsList,
-			overridesList,
-		),
+		(Map defaultsMap, Map overridesMap) => _mergeMap(defaultsMap, overridesMap),
+		(List defaultsList, List overridesList) => _mergeList(defaultsList, overridesList),
 		(_, null) =>
 			// Default to override, unless the overriding value is `null`.
 			defaults,
@@ -53,18 +47,11 @@ List<Object?> _mergeList(List<Object?> defaults, List<Object?> overrides) {
 }
 
 /// Merge maps (recursively).
-Map<Object?, Object?> _mergeMap(
-	Map<Object?, Object?> defaults,
-	Map<Object?, Object?> overrides,
-) {
+Map<Object?, Object?> _mergeMap(Map<Object?, Object?> defaults, Map<Object?, Object?> overrides) {
 	var merged = {...defaults};
 
 	overrides.forEach((key, value) {
-		merged.update(
-			key,
-			(defaultValue) => merge(defaultValue, value),
-			ifAbsent: () => value,
-		);
+		merged.update(key, (defaultValue) => merge(defaultValue, value), ifAbsent: () => value);
 	});
 
 	return merged;

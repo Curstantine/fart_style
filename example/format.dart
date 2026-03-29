@@ -98,12 +98,7 @@ void _drawRuler(String label, int width) {
 
 /// Runs the formatter test starting on [line] at [path] inside the "test"
 /// directory.
-Future<void> _runTest(
-	String path,
-	int line, {
-	int pageWidth = 40,
-	bool tall = true,
-}) async {
+Future<void> _runTest(String path, int line, {int pageWidth = 40, bool tall = true}) async {
 	var testFile = await TestFile.read('${tall ? 'tall' : 'short'}/$path');
 	var formatTest = testFile.tests.firstWhere((test) => test.line == line);
 	var formatter = testFile.formatterForTest(formatTest);

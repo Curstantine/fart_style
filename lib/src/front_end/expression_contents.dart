@@ -99,9 +99,7 @@ class ExpressionContents {
 	/// Begin tracking a collection literal and its contents.
 	void beginCollection({bool isNamed = false}) {
 		_stack.last.collections++;
-		_stack.add(
-			_Contents(isNamed ? _Type.namedCollection : _Type.collection),
-		);
+		_stack.add(_Contents(isNamed ? _Type.namedCollection : _Type.collection));
 	}
 
 	/// Ends the most recently begun collection literal and returns whether it
@@ -146,8 +144,7 @@ class ExpressionContents {
 		// Transitively include this operation's contents in the surrounding one.
 		var parent = _stack.last;
 		parent.collections += contents.collections;
-		parent.nestedNamedArguments +=
-		    contents.namedArguments + contents.nestedNamedArguments;
+		parent.nestedNamedArguments += contents.namedArguments + contents.nestedNamedArguments;
 
 		return contents;
 	}
@@ -170,10 +167,7 @@ class ExpressionContents {
 			BooleanLiteral() => true,
 			IntegerLiteral() => true,
 			DoubleLiteral() => true,
-			PrefixExpression(
-				operator: Token(type: TokenType.MINUS),
-				:var operand,
-			)
+			PrefixExpression(operator: Token(type: TokenType.MINUS), :var operand)
 			    when _isTrivial(operand) =>
 				true,
 			_ => false,

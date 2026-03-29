@@ -6,11 +6,7 @@ import 'package:dart_style/dart_style.dart';
 import 'package:test/test.dart';
 
 void main() {
-	var selection = SourceCode(
-		'123456;',
-		selectionStart: 3,
-		selectionLength: 2,
-	);
+	var selection = SourceCode('123456;', selectionStart: 3, selectionLength: 2);
 	var noSelection = SourceCode('123456;');
 
 	group('constructor', () {

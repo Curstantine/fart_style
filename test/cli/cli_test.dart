@@ -29,10 +29,7 @@ void main() {
 					'Formatted ${p.join('code', 'c.dart')}',
 				]),
 			);
-			await expectLater(
-				process.stdout,
-				emits(startsWith('Formatted 3 files (2 changed)')),
-			);
+			await expectLater(process.stdout, emits(startsWith('Formatted 3 files (2 changed)')));
 			await process.shouldExit(0);
 
 			// Overwrites the files.
@@ -47,10 +44,7 @@ void main() {
 				d.file('c.dart', unformattedSource),
 			]).create();
 
-			var process = await runFormatter([
-				p.join('code', 'subdir'),
-				p.join('code', 'c.dart'),
-			]);
+			var process = await runFormatter([p.join('code', 'subdir'), p.join('code', 'c.dart')]);
 			await expectLater(
 				process.stdout,
 				emitsInOrder([
@@ -58,10 +52,7 @@ void main() {
 					'Formatted ${p.join('code', 'c.dart')}',
 				]),
 			);
-			await expectLater(
-				process.stdout,
-				emits(startsWith('Formatted 2 files (2 changed)')),
-			);
+			await expectLater(process.stdout, emits(startsWith('Formatted 2 files (2 changed)')));
 			await process.shouldExit(0);
 
 			// Overwrites the selected files.
@@ -79,9 +70,7 @@ void main() {
 	});
 
 	test('exits with 65 on a parse error', () async {
-		await d.dir('code', [
-			d.file('a.dart', 'herp derp i are a dart'),
-		]).create();
+		await d.dir('code', [d.file('a.dart', 'herp derp i are a dart')]).create();
 
 		var process = await runFormatterOnDir();
 		await process.shouldExit(65);
@@ -91,56 +80,32 @@ void main() {
 		var process = await runFormatter(['--version']);
 
 		// Match something roughly semver-like.
-		await expectLater(
-			process.stdout,
-			emits(matches(RegExp(r'\d+\.\d+\.\d+.*'))),
-		);
+		await expectLater(process.stdout, emits(matches(RegExp(r'\d+\.\d+\.\d+.*'))));
 		await process.shouldExit(0);
 	});
 
 	group('--help', () {
 		test('non-verbose shows description and common options', () async {
 			var process = await runFormatter(['--help']);
-			await expectLater(
-				process.stdout,
-				emits('Idiomatically format Dart source code.'),
-			);
-			await expectLater(
-				process.stdout,
-				emitsThrough(contains('-o, --output')),
-			);
-			await expectLater(
-				process.stdout,
-				neverEmits(contains('--summary')),
-			);
+			await expectLater(process.stdout, emits('Idiomatically format Dart source code.'));
+			await expectLater(process.stdout, emitsThrough(contains('-o, --output')));
+			await expectLater(process.stdout, neverEmits(contains('--summary')));
 			await process.shouldExit(0);
 		});
 
 		test('verbose shows description and all options', () async {
 			var process = await runFormatter(['--help', '--verbose']);
-			await expectLater(
-				process.stdout,
-				emits('Idiomatically format Dart source code.'),
-			);
-			await expectLater(
-				process.stdout,
-				emitsThrough(contains('-o, --output')),
-			);
+			await expectLater(process.stdout, emits('Idiomatically format Dart source code.'));
+			await expectLater(process.stdout, emitsThrough(contains('-o, --output')));
 			await expectLater(process.stdout, emitsThrough(contains('--show')));
-			await expectLater(
-				process.stdout,
-				emitsThrough(contains('--summary')),
-			);
+			await expectLater(process.stdout, emitsThrough(contains('--summary')));
 			await process.shouldExit(0);
 		});
 	});
 
 	test('--verbose errors if not used with --help', () async {
 		var process = await runFormatterOnDir(['--verbose']);
-		expect(
-			await process.stderr.next,
-			'Can only use --verbose with --help.',
-		);
+		expect(await process.stderr.next, 'Can only use --verbose with --help.');
 		await process.shouldExit(64);
 	});
 
@@ -187,20 +152,12 @@ void main() {
 			await process.shouldExit(1);
 		});
 
-		test(
-			'gives exit code 1 if there are changes when not writing',
-			() async {
-				await d.dir('code', [
-					d.file('a.dart', unformattedSource),
-				]).create();
+		test('gives exit code 1 if there are changes when not writing', () async {
+			await d.dir('code', [d.file('a.dart', unformattedSource)]).create();
 
-				var process = await runFormatterOnDir([
-					'--set-exit-if-changed',
-					'--show=none',
-				]);
-				await process.shouldExit(1);
-			},
-		);
+			var process = await runFormatterOnDir(['--set-exit-if-changed', '--show=none']);
+			await process.shouldExit(1);
+		});
 	});
 
 	group('--selection', () {
@@ -223,10 +180,7 @@ void main() {
 		});
 
 		test('updates selection', () async {
-			var process = await runFormatter([
-				'--output=json',
-				'--selection=6:10',
-			]);
+			var process = await runFormatter(['--output=json', '--selection=6:10']);
 			process.stdin.writeln(unformattedSource);
 			await process.stdin.close();
 
@@ -243,9 +197,7 @@ void main() {
 
 	group('--enable-experiment', () {
 		test('passes experiment flags to parser', () async {
-			var process = await runFormatter([
-				'--enable-experiment=test-experiment,variance',
-			]);
+			var process = await runFormatter(['--enable-experiment=test-experiment,variance']);
 			process.stdin.writeln('class Writer<in T> {}');
 			await process.stdin.close();
 
@@ -253,10 +205,7 @@ void main() {
 			// but we want to test that the experiment flags are passed all the way
 			// to the parser, so just test that it parses the variance annotation
 			// without errors and then fails to format.
-			expect(
-				await process.stderr.next,
-				'Hit a bug in the formatter when formatting stdin.',
-			);
+			expect(await process.stderr.next, 'Hit a bug in the formatter when formatting stdin.');
 			expect(
 				await process.stderr.next,
 				'Please report at: github.com/dart-lang/dart_style/issues',

@@ -136,13 +136,7 @@ final class Solution implements Comparable<Solution> {
 		return solution;
 	}
 
-	Solution._(
-		Piece root,
-		this._cost,
-		this._pieceStates,
-		this._allowedStates, [
-		State? rootState,
-	]) {
+	Solution._(Piece root, this._cost, this._pieceStates, this._allowedStates, [State? rootState]) {
 		Profile.count('create Solution');
 
 		// If we're formatting a subtree of a larger Piece tree that binds [root]
@@ -173,12 +167,10 @@ final class Solution implements Comparable<Solution> {
 	/// The state that [piece] is pinned to or that this solution selects.
 	///
 	/// If no state has been selected, returns `null`.
-	State? pieceStateIfBound(Piece piece) =>
-	    piece.pinnedState ?? _pieceStates[piece];
+	State? pieceStateIfBound(Piece piece) => piece.pinnedState ?? _pieceStates[piece];
 
 	/// Whether [piece] has been bound to a state in this set (or is pinned).
-	bool isBound(Piece piece) =>
-	    piece.pinnedState != null || _pieceStates.containsKey(piece);
+	bool isBound(Piece piece) => piece.pinnedState != null || _pieceStates.containsKey(piece);
 
 	/// Increases the total overflow for this solution by [overflow].
 	///
@@ -249,15 +241,8 @@ final class Solution implements Comparable<Solution> {
 			// the expanding piece to that state (along with any further pieces
 			// constrained by that one).
 			var expandPiece = _expandPieces[i];
-			for (var state
-			    in _allowedStates[expandPiece] ??
-			        expandPiece.additionalStates) {
-				var expanded = Solution._(
-					root,
-					_cost,
-					{..._pieceStates},
-					{..._allowedStates},
-				);
+			for (var state in _allowedStates[expandPiece] ?? expandPiece.additionalStates) {
+				var expanded = Solution._(root, _cost, {..._pieceStates}, {..._allowedStates});
 
 				// Bind all preceding expand pieces to their unsplit state. Their
 				// other states have already been expanded by earlier iterations of
@@ -314,8 +299,7 @@ final class Solution implements Comparable<Solution> {
 		// overflow, so we want to explore in cost order.
 		if (cost != other.cost) return cost.compareTo(other.cost);
 
-		if (overflow != other.overflow)
-			return overflow.compareTo(other.overflow);
+		if (overflow != other.overflow) return overflow.compareTo(other.overflow);
 
 		// If all else is equal, prefer lower states in earlier bound pieces.
 		for (var piece in _pieceStates.keys) {
@@ -331,9 +315,7 @@ final class Solution implements Comparable<Solution> {
 	String toString() {
 		var states = [
 			for (var MapEntry(key: piece, value: state) in _pieceStates.entries)
-				if (piece.additionalStates.isNotEmpty &&
-				    piece.pinnedState == null)
-					'$piece$state',
+				if (piece.additionalStates.isNotEmpty && piece.pinnedState == null) '$piece$state',
 		];
 
 		return [
@@ -407,12 +389,8 @@ final class Solution implements Comparable<Solution> {
 						// If the child can't have newlines in any shape, then constrain it.
 						// TODO(rnystrom): We can probably constrain this more specifically
 						// by asking what shapes the child might have.
-						var allowedShapes = piece.allowedChildShapes(
-							state,
-							child,
-						);
-						if (allowedShapes.length == 1 &&
-						    allowedShapes.contains(Shape.inline)) {
+						var allowedShapes = piece.allowedChildShapes(state, child);
+						if (allowedShapes.length == 1 && allowedShapes.contains(Shape.inline)) {
 							_constrainOffspring(child);
 						}
 					});

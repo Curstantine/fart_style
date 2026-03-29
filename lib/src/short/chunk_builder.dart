@@ -155,11 +155,7 @@ final class ChunkBuilder {
 	/// `true`, the next line will start at column 1 and ignore indentation and
 	/// nesting. If [nest] is `true` then the next line will use expression
 	/// nesting.
-	void writeNewline({
-		bool isDouble = false,
-		bool flushLeft = false,
-		bool nest = false,
-	}) {
+	void writeNewline({bool isDouble = false, bool flushLeft = false, bool nest = false}) {
 		_pendingNewlines = isDouble ? 2 : 1;
 		_pendingFlushLeft = flushLeft;
 		_pendingNested = nest;
@@ -202,11 +198,7 @@ final class ChunkBuilder {
 	///
 	/// [linesBeforeToken] is the number of lines between the last comment (or
 	/// previous token if there are no comments) and the next token.
-	void writeComments(
-		List<SourceComment> comments,
-		int linesBeforeToken,
-		String token,
-	) {
+	void writeComments(List<SourceComment> comments, int linesBeforeToken, String token) {
 		// Edge case: if we require a blank line, but there exists one between
 		// some of the comments, or after the last one, then we don't need to
 		// enforce one before the first comment. Example:
@@ -246,9 +238,7 @@ final class ChunkBuilder {
 		//     /* a */ /* b */ import 'a.dart';
 		if (linesBeforeToken == 0 &&
 		    _pendingNewlines > comments.first.linesBefore &&
-		    comments.every(
-			    (comment) => comment.type == CommentType.inlineBlock,
-		    )) {
+		    comments.every((comment) => comment.type == CommentType.inlineBlock)) {
 			comments.first.linesBefore = _pendingNewlines;
 		}
 
@@ -271,40 +261,30 @@ final class ChunkBuilder {
 				// Split before the comment if it starts a line.
 				if (_pendingNewlines == 0) {
 					if (comment.linesBefore > 0 &&
-					    (_afterComment ||
-					        comment.type != CommentType.inlineBlock)) {
+					    (_afterComment || comment.type != CommentType.inlineBlock)) {
 						writeNewline(
 							isDouble: _needsBlankLineBeforeComment(comment),
 							flushLeft: comment.flushLeft,
 							nest: true,
 						);
 					} else if (_chunks.isNotEmpty) {
-						_pendingSpace = _needsSpaceBeforeComment(
-							comment,
-							_chunks.last,
-						);
+						_pendingSpace = _needsSpaceBeforeComment(comment, _chunks.last);
 					}
 				} else {
 					_pendingFlushLeft = comment.flushLeft;
 				}
 
-				_emitPendingWhitespace(
-					isDouble: _needsBlankLineBeforeComment(comment),
-				);
+				_emitPendingWhitespace(isDouble: _needsBlankLineBeforeComment(comment));
 			}
 
 			_writeText(comment.text, chunk);
 
 			if (comment.selectionStart != null) {
-				startSelectionFromEnd(
-					comment.text.length - comment.selectionStart!,
-				);
+				startSelectionFromEnd(comment.text.length - comment.selectionStart!);
 			}
 
 			if (comment.selectionEnd != null) {
-				endSelectionFromEnd(
-					comment.text.length - comment.selectionEnd!,
-				);
+				endSelectionFromEnd(comment.text.length - comment.selectionEnd!);
 			}
 
 			// Make sure there is at least one newline after a line comment and allow
@@ -327,10 +307,7 @@ final class ChunkBuilder {
 			}
 
 			if (linesAfter > 0) {
-				writeNewline(
-					isDouble: _pendingNewlines == 2 || linesAfter > 1,
-					nest: true,
-				);
+				writeNewline(isDouble: _pendingNewlines == 2 || linesAfter > 1, nest: true);
 			}
 		}
 
@@ -501,11 +478,7 @@ final class ChunkBuilder {
 	/// Starts a new block chunk and returns the [ChunkBuilder] for it.
 	///
 	/// Nested blocks are handled using their own independent [LineWriter].
-	ChunkBuilder startBlock({
-		Chunk? argumentChunk,
-		bool indent = true,
-		bool space = false,
-	}) {
+	ChunkBuilder startBlock({Chunk? argumentChunk, bool indent = true, bool space = false}) {
 		// Start a block chunk for the block. It will contain the chunks for the
 		// contents of the block, and its own text will be the closing block
 		// delimiter.
@@ -593,9 +566,7 @@ final class ChunkBuilder {
 		Profile.begin('ChunkBuilder run line splitter');
 
 		var writer = LineWriter(_formatter, _chunks);
-		var result = writer.writeLines(
-			isCompilationUnit: _source.isCompilationUnit,
-		);
+		var result = writer.writeLines(isCompilationUnit: _source.isCompilationUnit);
 
 		Profile.end('ChunkBuilder run line splitter');
 
@@ -635,18 +606,11 @@ final class ChunkBuilder {
 	///
 	/// This should only be called after source lines have been preserved to turn
 	/// any ambiguous whitespace into a concrete choice.
-	void _emitPendingWhitespace({
-		bool isDouble = false,
-		bool mergeEmptySplits = true,
-	}) {
+	void _emitPendingWhitespace({bool isDouble = false, bool mergeEmptySplits = true}) {
 		if (_pendingNewlines == 0) return;
 
 		if (_pendingNewlines == 2) isDouble = true;
-		_writeSplit(
-			isDouble: isDouble,
-			nest: _pendingNested,
-			mergeEmptySplits: mergeEmptySplits,
-		);
+		_writeSplit(isDouble: isDouble, nest: _pendingNested, mergeEmptySplits: mergeEmptySplits);
 	}
 
 	/// Tries to find an existing chunk to append [comment] to.
@@ -724,15 +688,12 @@ final class ChunkBuilder {
 		if (comment.type == CommentType.line) return true;
 
 		// Magic generic method comments like "Foo/*<T>*/" don't get spaces.
-		if (_isGenericMethodComment(comment) &&
-		    _trailingIdentifierChar.hasMatch(text)) {
+		if (_isGenericMethodComment(comment) && _trailingIdentifierChar.hasMatch(text)) {
 			return false;
 		}
 
 		// Block comments do not get a space if following a grouping character.
-		return !text.endsWith('(') &&
-		    !text.endsWith('[') &&
-		    !text.endsWith('{');
+		return !text.endsWith('(') && !text.endsWith('[') && !text.endsWith('{');
 	}
 
 	/// Returns `true` if a space should be output after the last comment which
@@ -787,15 +748,12 @@ final class ChunkBuilder {
 		// still empty) then update that split with the new information. This avoids
 		// duplicate splits when line comments occur in places where SourceVisitor
 		// also inserts splits.
-		if (mergeEmptySplits &&
-		    _chunks.isNotEmpty &&
-		    _chunks.last.text.isEmpty) {
+		if (mergeEmptySplits && _chunks.isNotEmpty && _chunks.last.text.isEmpty) {
 			chunk = _chunks.last;
 
 			// Don't allow a blank newline at the top of a block.
 			if (isDouble) {
-				if (_chunks.length > 1 &&
-				    _chunks[_chunks.length - 2].text.endsWith('{')) {
+				if (_chunks.length > 1 && _chunks[_chunks.length - 2].text.endsWith('{')) {
 					isDouble = false;
 				}
 			}
@@ -922,8 +880,7 @@ final class ChunkBuilder {
 				if (other == rule) continue;
 
 				if (!other.isHardened &&
-				    rule.constrain(rule.fullySplitValue, other) ==
-				        other.fullySplitValue) {
+				    rule.constrain(rule.fullySplitValue, other) == other.fullySplitValue) {
 					walkConstraints(other);
 				}
 			}

@@ -55,10 +55,7 @@ void main() {
 		];
 		for (var rune in whitespaceRunes) {
 			expect(
-				equalIgnoringWhitespace(
-					'foo${String.fromCharCode(rune)}bar',
-					'foo    bar',
-				),
+				equalIgnoringWhitespace('foo${String.fromCharCode(rune)}bar', 'foo    bar'),
 				isTrue,
 			);
 		}
@@ -80,36 +77,21 @@ void main() {
 	});
 
 	test('ignore differences from "[" and "]"', () {
-		expect(
-			equalIgnoringWhitespace('f([a]/* c */)', 'f([a /* c */])'),
-			isTrue,
-		);
-		expect(
-			equalIgnoringWhitespace('f(/* c */[a])', 'f([/* c */ a])'),
-			isTrue,
-		);
+		expect(equalIgnoringWhitespace('f([a]/* c */)', 'f([a /* c */])'), isTrue);
+		expect(equalIgnoringWhitespace('f(/* c */[a])', 'f([/* c */ a])'), isTrue);
 		expect(equalIgnoringWhitespace('a]b][c][[]', 'abc'), isTrue);
 		expect(equalIgnoringWhitespace('a]b][c][[]', 'cba'), isFalse);
 	});
 
 	test('ignore differences from "{" and "}"', () {
-		expect(
-			equalIgnoringWhitespace('f({a}/* c */)', 'f({a /* c */})'),
-			isTrue,
-		);
-		expect(
-			equalIgnoringWhitespace('f(/* c */{a})', 'f({/* c */ a})'),
-			isTrue,
-		);
+		expect(equalIgnoringWhitespace('f({a}/* c */)', 'f({a /* c */})'), isTrue);
+		expect(equalIgnoringWhitespace('f(/* c */{a})', 'f({/* c */ a})'), isTrue);
 		expect(equalIgnoringWhitespace('a}b}{c}{{}', 'abc'), isTrue);
 		expect(equalIgnoringWhitespace('a}b}{c}{{}', 'cba'), isFalse);
 	});
 
 	test('ignore differences from ";"', () {
-		expect(
-			equalIgnoringWhitespace('enum E { a; }', 'enum E { a }'),
-			isTrue,
-		);
+		expect(equalIgnoringWhitespace('enum E { a; }', 'enum E { a }'), isTrue);
 		expect(equalIgnoringWhitespace('a;b;;c;;', 'abc'), isTrue);
 		expect(equalIgnoringWhitespace('a;b;c;;', 'cba'), isFalse);
 	});

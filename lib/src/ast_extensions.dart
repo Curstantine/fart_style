@@ -10,8 +10,7 @@ extension AstNodeExtensions on AstNode {
 	/// When this node is in an argument list, what kind of block formatting
 	/// category it belongs to.
 	BlockFormat get blockFormatType => switch (this) {
-		AdjacentStrings(indentStrings: true) =>
-			BlockFormat.indentedAdjacentStrings,
+		AdjacentStrings(indentStrings: true) => BlockFormat.indentedAdjacentStrings,
 		AdjacentStrings() => BlockFormat.unindentedAdjacentStrings,
 		Expression(:var blockFormatType) => blockFormatType,
 		_ => BlockFormat.none,
@@ -28,22 +27,18 @@ extension AstNodeExtensions on AstNode {
 		return switch (this) {
 			// If the node is annotated, skip past the doc comments, but not the
 			// metadata.
-			AnnotatedNode(metadata: [var annotation, ...]) =>
-				annotation.beginToken,
-			AnnotatedNode(firstTokenAfterCommentAndMetadata: var token) =>
-				token,
+			AnnotatedNode(metadata: [var annotation, ...]) => annotation.beginToken,
+			AnnotatedNode(firstTokenAfterCommentAndMetadata: var token) => token,
 
 			// The inner [NormalFormalParameter] is an [AnnotatedNode].
-			DefaultFormalParameter(:var parameter) =>
-				parameter.firstNonCommentToken,
+			DefaultFormalParameter(:var parameter) => parameter.firstNonCommentToken,
 
 			// The inner [PatternVariableDeclaration] is an [AnnotatedNode].
 			PatternVariableDeclarationStatement(:var declaration) =>
 				declaration.firstNonCommentToken,
 
 			// The inner [VariableDeclarationList] is an [AnnotatedNode].
-			VariableDeclarationStatement(:var variables) =>
-				variables.firstNonCommentToken,
+			VariableDeclarationStatement(:var variables) => variables.firstNonCommentToken,
 
 			// Otherwise, we don't have to worry about doc comments.
 			_ => beginToken,
@@ -57,8 +52,7 @@ extension AstNodeExtensions on AstNode {
 
 		// TODO(sdk#38990): endToken doesn't include the "?" on a nullable
 		// function-typed formal, so check for that case and handle it.
-		if (next.type == TokenType.QUESTION &&
-		    next.next!.type == TokenType.COMMA) {
+		if (next.type == TokenType.QUESTION && next.next!.type == TokenType.COMMA) {
 			return next.next;
 		}
 
@@ -153,8 +147,7 @@ extension AstIterableExtensions on Iterable<AstNode> {
 	///
 	/// We disallow splitting for entirely empty delimited constructs like `[]`,
 	/// but allow a split if there are elements or comments inside.
-	bool canSplit(Token rightBracket) =>
-	    isNotEmpty || rightBracket.precedingComments != null;
+	bool canSplit(Token rightBracket) => isNotEmpty || rightBracket.precedingComments != null;
 
 	/// Returns `true` if the collection containing these elements and terminated
 	/// by [rightBracket] contains any line comments before, between, or after
@@ -181,8 +174,7 @@ extension ExpressionExtensions on Expression {
 	/// Thus it makes sense for the formatter to be looser about splitting list,
 	/// map, and set literals, while trying to avoid splitting argument lists and
 	/// records.
-	bool get isHomogeneousCollectionBody =>
-	    this is ListLiteral || this is SetOrMapLiteral;
+	bool get isHomogeneousCollectionBody => this is ListLiteral || this is SetOrMapLiteral;
 
 	// TODO(rnystrom): We're moving towards using child piece shape to determine
 	// how a parent is formatted and how it indents its children. Once all pieces
@@ -248,25 +240,19 @@ extension ExpressionExtensions on Expression {
 			RecordLiteral(:var fields, :var rightParenthesis)
 			    when fields.canSplit(rightParenthesis) =>
 				BlockFormat.collection,
-			SwitchExpression(:var cases, :var rightBracket)
-			    when cases.canSplit(rightBracket) =>
+			SwitchExpression(:var cases, :var rightBracket) when cases.canSplit(rightBracket) =>
 				BlockFormat.collection,
 
 			// Function calls can block split if their argument lists can.
-			InstanceCreationExpression(:var argumentList) ||
-			MethodInvocation(:var argumentList)
-			    when argumentList.arguments.canSplit(
-				    argumentList.rightParenthesis,
-			    ) =>
+			InstanceCreationExpression(:var argumentList) || MethodInvocation(:var argumentList)
+			    when argumentList.arguments.canSplit(argumentList.rightParenthesis) =>
 				BlockFormat.invocation,
 
 			// Note: Using a separate case instead of `||` for this type because
 			// Dart 3.0 reports an error that [argumentList] has a different type
 			// here than in the previous two clauses.
 			FunctionExpressionInvocation(:var argumentList)
-			    when argumentList.arguments.canSplit(
-				    argumentList.rightParenthesis,
-			    ) =>
+			    when argumentList.arguments.canSplit(argumentList.rightParenthesis) =>
 				BlockFormat.invocation,
 
 			// Multi-line strings can.
@@ -274,8 +260,7 @@ extension ExpressionExtensions on Expression {
 			SimpleStringLiteral(isMultiline: true) => BlockFormat.collection,
 
 			// Parenthesized expressions unwrap the inner expression.
-			ParenthesizedExpression(:var expression) =>
-				expression.blockFormatType,
+			ParenthesizedExpression(:var expression) => expression.blockFormatType,
 
 			// Await expressions unwrap the inner expression.
 			AwaitExpression(:var expression) => expression.blockFormatType,
@@ -322,8 +307,7 @@ extension ExpressionExtensions on Expression {
 		// A prefixed unnamed constructor call:
 		//
 		//     prefix.Foo();
-		if (node.target is SimpleIdentifier &&
-		    _looksLikeClassName(node.methodName.name)) {
+		if (node.target is SimpleIdentifier && _looksLikeClassName(node.methodName.name)) {
 			return true;
 		}
 
@@ -484,9 +468,7 @@ extension AdjacentStringsExtensions on AdjacentStrings {
 			//         "no extra"
 			//         "indent";
 			VariableDeclaration() => false,
-			AssignmentExpression(:var rightHandSide)
-			    when rightHandSide == this =>
-				false,
+			AssignmentExpression(:var rightHandSide) when rightHandSide == this => false,
 
 			// Don't indent when following `:`.
 			MapLiteralEntry(:var value) when value == this => false,
@@ -498,9 +480,8 @@ extension AdjacentStringsExtensions on AdjacentStrings {
 		};
 	}
 
-	bool _hasOtherStringArgument(List<Expression> arguments) => arguments.any(
-		(argument) => argument != this && argument is StringLiteral,
-	);
+	bool _hasOtherStringArgument(List<Expression> arguments) =>
+	    arguments.any((argument) => argument != this && argument is StringLiteral);
 }
 
 extension PatternExtensions on DartPattern {
@@ -513,17 +494,10 @@ extension PatternExtensions on DartPattern {
 	/// See [ExpressionExtensions38.canBlockSplit].
 	bool get canBlockSplit => switch (this) {
 		ConstantPattern(:var expression) => expression.canBlockSplit,
-		ListPattern(:var elements, :var rightBracket) => elements.canSplit(
-			rightBracket,
-		),
-		MapPattern(:var elements, :var rightBracket) => elements.canSplit(
-			rightBracket,
-		),
+		ListPattern(:var elements, :var rightBracket) => elements.canSplit(rightBracket),
+		MapPattern(:var elements, :var rightBracket) => elements.canSplit(rightBracket),
 		ObjectPattern(:var fields, :var rightParenthesis) ||
-		RecordPattern(
-			:var fields,
-			:var rightParenthesis,
-		) => fields.canSplit(rightParenthesis),
+		RecordPattern(:var fields, :var rightParenthesis) => fields.canSplit(rightParenthesis),
 		_ => false,
 	};
 }
@@ -534,11 +508,7 @@ extension TokenExtensions on Token {
 
 	/// Whether this token has a preceding comment that is a line comment.
 	bool get hasLineCommentBefore {
-		for (
-			Token? comment = precedingComments;
-			comment != null;
-			comment = comment.next
-		) {
+		for (Token? comment = precedingComments; comment != null; comment = comment.next) {
 			if (comment.type == TokenType.SINGLE_LINE_COMMENT) return true;
 		}
 

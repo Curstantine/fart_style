@@ -59,12 +59,9 @@ Future<void> main(List<String> arguments) async {
 		try {
 			var baselineFile = File(_baselinePath);
 			if (baselineFile.existsSync()) {
-				var data =
-				    jsonDecode(baselineFile.readAsStringSync())
-				        as Map<String, Object?>;
+				var data = jsonDecode(baselineFile.readAsStringSync()) as Map<String, Object?>;
 				data.forEach((name, metrics) {
-					var fastest =
-					    (metrics as Map<String, Object?>)['fastest'] as double;
+					var fastest = (metrics as Map<String, Object?>)['fastest'] as double;
 					_baseline[name] = fastest;
 				});
 			}
@@ -171,18 +168,10 @@ double _runTrial(
 	String? result;
 	for (var j = 0; j < _formatsPerTrial; j++) {
 		if (_isShort) {
-			var visitor = SourceVisitor(
-				formatter,
-				parseResult.lineInfo,
-				source,
-			);
+			var visitor = SourceVisitor(formatter, parseResult.lineInfo, source);
 			result = visitor.run(parseResult.unit).text;
 		} else {
-			var visitor = AstNodeVisitor(
-				FormattingStyle(formatter),
-				parseResult.lineInfo,
-				source,
-			);
+			var visitor = AstNodeVisitor(FormattingStyle(formatter), parseResult.lineInfo, source);
 			result = visitor.run(source, parseResult.unit).text;
 		}
 	}
@@ -201,11 +190,7 @@ double _runTrial(
 
 Future<List<Benchmark>> _parseArguments(List<String> arguments) async {
 	var argParser = ArgParser();
-	argParser.addFlag(
-		'help',
-		negatable: false,
-		help: 'Show usage information.',
-	);
+	argParser.addFlag('help', negatable: false, help: 'Show usage information.');
 	argParser.addFlag(
 		'aot',
 		negatable: false,
@@ -217,11 +202,7 @@ Future<List<Benchmark>> _parseArguments(List<String> arguments) async {
 		negatable: false,
 		help: 'Whether the formatter should use short or tall style.',
 	);
-	argParser.addFlag(
-		'no-warmup',
-		negatable: false,
-		help: 'Skip the JIT warmup runs.',
-	);
+	argParser.addFlag('no-warmup', negatable: false, help: 'Skip the JIT warmup runs.');
 	argParser.addFlag(
 		'write-baseline',
 		abbr: 'w',
@@ -250,9 +231,7 @@ Future<List<Benchmark>> _parseArguments(List<String> arguments) async {
 		[] => [Benchmark.read(p.join(_benchmarkDirectory, 'case/large.unit'))],
 
 		// The user-specified list of paths.
-		[...var paths] when paths.isNotEmpty => [
-			for (var path in paths) Benchmark.read(path),
-		],
+		[...var paths] when paths.isNotEmpty => [for (var path in paths) Benchmark.read(path)],
 
 		_ => _usage(argParser, exitCode: 64),
 	};

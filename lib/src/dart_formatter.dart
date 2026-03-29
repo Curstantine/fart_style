@@ -111,9 +111,7 @@ final class DartFormatter {
 			_ => throw ArgumentError('uri must be `null`, a Uri, or a String.'),
 		};
 
-		return formatSource(
-			SourceCode(source, uri: uriString, isCompilationUnit: true),
-		).text;
+		return formatSource(SourceCode(source, uri: uriString, isCompilationUnit: true)).text;
 	}
 
 	/// Formats the given [source] string containing a single Dart statement.
@@ -164,9 +162,7 @@ final class DartFormatter {
 		if (lineEnding == null) {
 			// If the first newline is "\r\n", use that. Otherwise, use "\n".
 			var lineStarts = parseResult.lineInfo.lineStarts;
-			if (lineStarts.length > 1 &&
-			    lineStarts[1] >= 2 &&
-			    text[lineStarts[1] - 2] == '\r') {
+			if (lineStarts.length > 1 && lineStarts[1] >= 2 && text[lineStarts[1] - 2] == '\r') {
 				lineEnding = '\r\n';
 			} else {
 				lineEnding = '\n';
@@ -185,8 +181,7 @@ final class DartFormatter {
 		if (source.isCompilationUnit) {
 			node = parseResult.unit;
 		} else {
-			var function =
-			    parseResult.unit.declarations[0] as FunctionDeclaration;
+			var function = parseResult.unit.declarations[0] as FunctionDeclaration;
 			var body = function.functionExpression.body as BlockFunctionBody;
 			node = body.block.statements[0];
 
@@ -227,8 +222,7 @@ final class DartFormatter {
 				comment != null;
 				comment = comment.next
 			) {
-				if (_widthCommentPattern.firstMatch(comment.lexeme)
-				    case var match?) {
+				if (_widthCommentPattern.firstMatch(comment.lexeme) case var match?) {
 					// If integer parsing fails for some reason, the returned `null`
 					// means we correctly ignore the comment.
 					pageWidthFromComment = int.tryParse(match[1]!);

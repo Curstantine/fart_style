@@ -26,21 +26,14 @@ extension type Meters(int value) {
 }
 ''';
 
-		test(
-			'uses latest language version if no surrounding package',
-			() async {
-				await d.dir('code', [
-					d.file('a.dart', extensionTypeBefore),
-				]).create();
+		test('uses latest language version if no surrounding package', () async {
+			await d.dir('code', [d.file('a.dart', extensionTypeBefore)]).create();
 
-				var process = await runFormatterOnDir();
-				await process.shouldExit(0);
+			var process = await runFormatterOnDir();
+			await process.shouldExit(0);
 
-				await d.dir('code', [
-					d.file('a.dart', extensionTypeAfter),
-				]).validate();
-			},
-		);
+			await d.dir('code', [d.file('a.dart', extensionTypeAfter)]).validate();
+		});
 
 		test('uses the given language version', () async {
 			const before = 'main() { switch (o) { case 1+2: break; } }';
@@ -65,18 +58,12 @@ main() {
 		});
 
 		test('uses the latest language version if "latest"', () async {
-			await d.dir('code', [
-				d.file('a.dart', extensionTypeBefore),
-			]).create();
+			await d.dir('code', [d.file('a.dart', extensionTypeBefore)]).create();
 
-			var process = await runFormatterOnDir([
-				'--language-version=latest',
-			]);
+			var process = await runFormatterOnDir(['--language-version=latest']);
 			await process.shouldExit(0);
 
-			await d.dir('code', [
-				d.file('a.dart', extensionTypeAfter),
-			]).validate();
+			await d.dir('code', [d.file('a.dart', extensionTypeAfter)]).validate();
 		});
 
 		test("errors if the language version can't be parsed", () async {
@@ -91,17 +78,12 @@ main() {
 			// search for it, we should get an error.
 			await d.dir('foo', [
 				d.dir('.dart_tool', [
-					d.file(
-						'package_config.json',
-						'this no good json is bad json',
-					),
+					d.file('package_config.json', 'this no good json is bad json'),
 				]),
 				d.file('main.dart', 'main(){    }'),
 			]).create();
 
-			var process = await runFormatterOnDir([
-				'--language-version=latest',
-			]);
+			var process = await runFormatterOnDir(['--language-version=latest']);
 			await process.shouldExit(0);
 
 			// Should format the file without any error reading the package config.
@@ -159,32 +141,26 @@ main() {
 			]).validate();
 		});
 
-		test(
-			'use the latest version if the package config is malformed',
-			() async {
-				await d.dir('foo', [
-				    d.dir('.dart_tool', [
-						d.file(
-							'package_config.json',
-							'this no good json is bad json',
-						),
-				    ]),
-				    d.file('main.dart', 'main() {var (a,b)=(1,2);}'),
-				]).create();
+		test('use the latest version if the package config is malformed', () async {
+			await d.dir('foo', [
+				d.dir('.dart_tool', [
+					d.file('package_config.json', 'this no good json is bad json'),
+				]),
+				d.file('main.dart', 'main() {var (a,b)=(1,2);}'),
+			]).create();
 
-				var process = await runFormatterOnDir();
-				await process.shouldExit(0);
+			var process = await runFormatterOnDir();
+			await process.shouldExit(0);
 
-				// Formats the file.
-				await d.dir('foo', [
-				    d.file('main.dart', '''
+			// Formats the file.
+			await d.dir('foo', [
+				d.file('main.dart', '''
 main() {
 	var (a, b) = (1, 2);
 }
 '''),
-				]).validate();
-			},
-		);
+			]).validate();
+		});
 	});
 
 	group('stdin', () {
@@ -192,16 +168,12 @@ main() {
 			// The package config sets the language version to 2.19, when switch
 			// cases still allowed arbitrary constant expressions like `1 + 2`.
 			// Verify that the code is formatted without error.
-			await d.dir('foo', [
-				packageConfig('foo', version: '2.19'),
-			]).create();
+			await d.dir('foo', [packageConfig('foo', version: '2.19')]).create();
 
 			var process = await runFormatter(['--stdin-name=foo/main.dart']);
 			// Write a switch whose syntax is valid in 2.19, but an error in later
 			// versions.
-			process.stdin.writeln(
-				'main() { switch (o) { case 1 + 2: break; } }',
-			);
+			process.stdin.writeln('main() { switch (o) { case 1 + 2: break; } }');
 			await process.stdin.close();
 
 			await expectLater(
@@ -223,10 +195,7 @@ main() {
 			// we search for it, we should get an error.
 			await d.dir('foo', [
 				d.dir('.dart_tool', [
-					d.file(
-						'package_config.json',
-						'this no good json is bad json',
-					),
+					d.file('package_config.json', 'this no good json is bad json'),
 				]),
 				d.file('main.dart', 'main(){    }'),
 			]).create();
@@ -238,9 +207,7 @@ main() {
 
 			// Write a switch whose syntax is valid in 2.19, but an error in later
 			// versions.
-			process.stdin.writeln(
-				'main() { switch (o) { case 1 + 2: break; } }',
-			);
+			process.stdin.writeln('main() { switch (o) { case 1 + 2: break; } }');
 			await process.stdin.close();
 
 			await expectLater(
@@ -329,15 +296,13 @@ main() {
 			await d.dir('code', [d.file('a.dart', after)]).validate();
 		});
 
-		test(
-			'language version comment override opts into short style',
-			() async {
-				const before = '''
+		test('language version comment override opts into short style', () async {
+			const before = '''
 // @dart=3.6
 main() { f(argument, // comment
 another);}
 ''';
-				const after = '''
+			const after = '''
 // @dart=3.6
 main() {
 	f(
@@ -346,16 +311,13 @@ main() {
 }
 ''';
 
-				await d.dir('code', [d.file('a.dart', before)]).create();
+			await d.dir('code', [d.file('a.dart', before)]).create();
 
-				var process = await runFormatterOnDir([
-					'--language-version=3.7',
-				]);
-				await process.shouldExit(0);
+			var process = await runFormatterOnDir(['--language-version=3.7']);
+			await process.shouldExit(0);
 
-				await d.dir('code', [d.file('a.dart', after)]).validate();
-			},
-		);
+			await d.dir('code', [d.file('a.dart', after)]).validate();
+		});
 
 		test('language version comment override opts into tall style', () async {
 			// Note that in real-world code it doesn't make sense for a language

@@ -51,17 +51,14 @@ final class TypeBuilder {
 				   _Clause(clause.extendsKeyword, [clause.superclass]),
 			   if (mixinOnClause case var clause?)
 				   _Clause(clause.onKeyword, clause.superclassConstraints),
-			   if (withClause case var clause?)
-				   _Clause(clause.withKeyword, clause.mixinTypes),
+			   if (withClause case var clause?) _Clause(clause.withKeyword, clause.mixinTypes),
 			   if (implementsClause case var clause?)
 				   _Clause(clause.implementsKeyword, clause.interfaces),
 			   if (extensionOnClause case var clause?)
 				   _Clause(clause.onKeyword, [clause.extendedType]),
-			   if (nativeClause case var clause?)
-				   _Clause(clause.nativeKeyword, [?clause.name]),
+			   if (nativeClause case var clause?) _Clause(clause.nativeKeyword, [?clause.name]),
 		   ],
-		   _allowLeadingClause =
-		       extendsClause != null || mixinOnClause != null {
+		   _allowLeadingClause = extendsClause != null || mixinOnClause != null {
 		// Can have a name part or explicit name and type parameters, but not both.
 		assert(_name == null && _typeParameters == null || _namePart == null);
 	}
@@ -70,11 +67,7 @@ final class TypeBuilder {
 	void buildClassBody(ClassBody body) {
 		Piece buildBody() => switch (body) {
 			BlockClassBody() => _visitor.pieces.build(() {
-				_visitor.writeBody(
-					body.leftBracket,
-					body.members,
-					body.rightBracket,
-				);
+				_visitor.writeBody(body.leftBracket, body.members, body.rightBracket);
 			}),
 			EmptyClassBody body => _visitor.pieces.tokenPiece(body.semicolon),
 		};
@@ -99,8 +92,7 @@ final class TypeBuilder {
 			// So always force the body to split if there is a primary constructor.
 			switch (node.body) {
 				case BlockEnumBody body:
-					if (body.members.isEmpty &&
-					    node.namePart is! PrimaryConstructorDeclaration) {
+					if (body.members.isEmpty && node.namePart is! PrimaryConstructorDeclaration) {
 						return _buildNormalBlockEnumBody(body);
 					} else {
 						return _buildEnhancedBlockEnumBody(body);
@@ -113,9 +105,7 @@ final class TypeBuilder {
 		TypeBodyType bodyType;
 		switch (node.body) {
 			case BlockEnumBody body:
-				bodyType = body.members.isEmpty
-				    ? TypeBodyType.list
-				    : TypeBodyType.block;
+				bodyType = body.members.isEmpty ? TypeBodyType.list : TypeBodyType.block;
 			case EmptyEnumBody():
 				bodyType = TypeBodyType.semicolon;
 		}
@@ -124,11 +114,7 @@ final class TypeBuilder {
 	}
 
 	/// Builds a mixin application class.
-	void buildMixinApplicationClass(
-		Token equals,
-		NamedType superclass,
-		Token semicolon,
-	) {
+	void buildMixinApplicationClass(Token equals, NamedType superclass, Token semicolon) {
 		_visitor.pieces.withMetadata(_metadata, () {
 			var header = _visitor.pieces.build(() {
 				_buildHeader();
@@ -144,11 +130,7 @@ final class TypeBuilder {
 			header = _buildClauses(header);
 
 			_visitor.pieces.add(
-				TypePiece(
-					header,
-					_visitor.tokenPiece(semicolon),
-					bodyType: TypeBodyType.semicolon,
-				),
+				TypePiece(header, _visitor.tokenPiece(semicolon), bodyType: TypeBodyType.semicolon),
 			);
 		});
 	}
@@ -160,30 +142,18 @@ final class TypeBuilder {
 					_buildHeader(includeParameters: false);
 				});
 
-				var parameters = _visitor.nodePiece(
-					constructor.formalParameters,
-				);
-				var clauses = [
-					for (var clause in _clauses) clause.build(_visitor),
-				];
+				var parameters = _visitor.nodePiece(constructor.formalParameters);
+				var clauses = [for (var clause in _clauses) clause.build(_visitor)];
 
 				var bodyPiece = buildBody();
 
 				_visitor.pieces.add(
-					PrimaryTypePiece(
-						header,
-						parameters,
-						clauses,
-						bodyPiece,
-						bodyType,
-					),
+					PrimaryTypePiece(header, parameters, clauses, bodyPiece, bodyType),
 				);
 			} else {
 				var header = _buildClauses(_visitor.pieces.build(_buildHeader));
 				var bodyPiece = buildBody();
-				_visitor.pieces.add(
-					TypePiece(header, bodyPiece, bodyType: bodyType),
-				);
+				_visitor.pieces.add(TypePiece(header, bodyPiece, bodyType: bodyType));
 			}
 		});
 	}
@@ -211,8 +181,7 @@ final class TypeBuilder {
 				_visitor.pieces.token(primary.typeName, spaceBefore: true);
 				_visitor.pieces.visit(primary.typeParameters);
 				_visitor.pieces.visit(primary.constructorName);
-				if (includeParameters)
-					_visitor.pieces.visit(primary.formalParameters);
+				if (includeParameters) _visitor.pieces.visit(primary.formalParameters);
 		}
 	}
 
@@ -231,10 +200,7 @@ final class TypeBuilder {
 	/// Formats the constants like a list. This keeps the enum declaration on one
 	/// line if it fits.
 	Piece _buildNormalBlockEnumBody(BlockEnumBody body) {
-		var builder = DelimitedListBuilder(
-			_visitor,
-			const ListStyle(spaceWhenUnsplit: true),
-		);
+		var builder = DelimitedListBuilder(_visitor, const ListStyle(spaceWhenUnsplit: true));
 
 		builder.leftBracket(body.leftBracket);
 		body.constants.forEach(builder.visit);
@@ -262,8 +228,7 @@ final class TypeBuilder {
 		// when preserved trailing commas is off: the last constant's comma
 		// is removed and the `;` is placed there instead.
 		var preserveTrailingComma =
-		    _visitor.style.preserveTrailingCommaAfterEnumValues &&
-		    body.semicolon!.hasCommaBefore;
+		    _visitor.style.preserveTrailingCommaAfterEnumValues && body.semicolon!.hasCommaBefore;
 		for (var constant in body.constants) {
 			var isLast = constant == body.constants.last;
 			builder.addCommentsBefore(constant.firstNonCommentToken);

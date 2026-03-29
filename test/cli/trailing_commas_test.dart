@@ -17,27 +17,19 @@ void main() {
 		test('preserves commas if "preserve"', () async {
 			await d.dir('foo', [d.file('main.dart', _unformatted)]).create();
 
-			var process = await runFormatterOnDir([
-				'--trailing-commas=preserve',
-			]);
+			var process = await runFormatterOnDir(['--trailing-commas=preserve']);
 			await process.shouldExit(0);
 
-			await d.dir('foo', [
-				d.file('main.dart', _formattedPreserve),
-			]).validate();
+			await d.dir('foo', [d.file('main.dart', _formattedPreserve)]).validate();
 		});
 
 		test('automates commas if "automate"', () async {
 			await d.dir('foo', [d.file('main.dart', _unformatted)]).create();
 
-			var process = await runFormatterOnDir([
-				'--trailing-commas=automate',
-			]);
+			var process = await runFormatterOnDir(['--trailing-commas=automate']);
 			await process.shouldExit(0);
 
-			await d.dir('foo', [
-				d.file('main.dart', _formattedAutomate),
-			]).validate();
+			await d.dir('foo', [d.file('main.dart', _formattedAutomate)]).validate();
 		});
 
 		test('error if any other value', () async {
@@ -46,24 +38,17 @@ void main() {
 		});
 	});
 
-	test(
-		'ignore options file if trailing commas specified on the CLI',
-		() async {
-			await d.dir('foo', [
-			    analysisOptionsFile(trailingCommas: TrailingCommas.preserve),
-			    d.file('main.dart', _unformatted),
-			]).create();
+	test('ignore options file if trailing commas specified on the CLI', () async {
+		await d.dir('foo', [
+			analysisOptionsFile(trailingCommas: TrailingCommas.preserve),
+			d.file('main.dart', _unformatted),
+		]).create();
 
-			var process = await runFormatterOnDir([
-				'--trailing-commas=automate',
-			]);
-			await process.shouldExit(0);
+		var process = await runFormatterOnDir(['--trailing-commas=automate']);
+		await process.shouldExit(0);
 
-			await d.dir('foo', [
-				d.file('main.dart', _formattedAutomate),
-			]).validate();
-		},
-	);
+		await d.dir('foo', [d.file('main.dart', _formattedAutomate)]).validate();
+	});
 
 	test('use mode from surrounding options', () async {
 		await _testWithOptions({
@@ -87,10 +72,7 @@ void main() {
 			analysisOptionsFile(include: 'other.yaml'),
 			analysisOptionsFile(name: 'other.yaml', include: 'sub/third.yaml'),
 			d.dir('sub', [
-				analysisOptionsFile(
-					name: 'third.yaml',
-					trailingCommas: TrailingCommas.preserve,
-				),
+				analysisOptionsFile(name: 'third.yaml', trailingCommas: TrailingCommas.preserve),
 			]),
 			d.file('main.dart', _unformatted),
 		]).create();
@@ -99,9 +81,7 @@ void main() {
 		await process.shouldExit(0);
 
 		// Should preserve trailing commas.
-		await d.dir('foo', [
-			d.file('main.dart', _formattedPreserve),
-		]).validate();
+		await d.dir('foo', [d.file('main.dart', _formattedPreserve)]).validate();
 	});
 
 	group('stdin', () {

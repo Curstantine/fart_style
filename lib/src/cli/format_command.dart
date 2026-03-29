@@ -57,8 +57,7 @@ final class FormatCommand extends Command<int> {
 			allowed: ['all', 'changed', 'none'],
 			allowedHelp: {
 				'all': 'All visited files and directories.',
-				'changed':
-				    'Only the names of files whose formatting is changed.',
+				'changed': 'Only the names of files whose formatting is changed.',
 				'none': 'No file names or directories.',
 			},
 			defaultsTo: 'changed',
@@ -156,13 +155,11 @@ final class FormatCommand extends Command<int> {
 			hide: !verbose,
 		);
 
-		if (verbose)
-			argParser.addSeparator('Options when formatting from stdin:');
+		if (verbose) argParser.addSeparator('Options when formatting from stdin:');
 
 		argParser.addOption(
 			'selection',
-			help:
-			    'Track selection (given as "start:length") through formatting.',
+			help: 'Track selection (given as "start:length") through formatting.',
 			hide: !verbose,
 		);
 		argParser.addOption(
@@ -203,8 +200,7 @@ final class FormatCommand extends Command<int> {
 
 		// If the user wants to print the code and didn't indicate how the files
 		// should be printed, default to only showing the code.
-		if (!argResults.wasParsed('show') &&
-		    (output == Output.show || output == Output.json)) {
+		if (!argResults.wasParsed('show') && (output == Output.show || output == Output.json)) {
 			show = Show.none;
 		}
 
@@ -229,11 +225,7 @@ final class FormatCommand extends Command<int> {
 			if (version == 'latest') {
 				languageVersion = DartFormatter.latestLanguageVersion;
 			} else if (versionPattern.firstMatch(version) case var match?) {
-				languageVersion = Version(
-					int.parse(match[1]!),
-					int.parse(match[2]!),
-					0,
-				);
+				languageVersion = Version(int.parse(match[1]!), int.parse(match[2]!), 0);
 			} else {
 				usageException(
 					'--language-version must be a version like "3.2" or '
@@ -254,13 +246,9 @@ final class FormatCommand extends Command<int> {
 		if (pageWidthString != null) {
 			pageWidth = int.tryParse(pageWidthString);
 			if (pageWidth == null) {
-				usageException(
-					'Page width must be an integer, was "$pageWidthString".',
-				);
+				usageException('Page width must be an integer, was "$pageWidthString".');
 			} else if (pageWidth <= 0) {
-				usageException(
-					'Page width must be a positive number, was $pageWidth.',
-				);
+				usageException('Page width must be a positive number, was $pageWidth.');
 			}
 		}
 
@@ -310,15 +298,11 @@ final class FormatCommand extends Command<int> {
 		}
 
 		if (argResults.rest.isEmpty && output == Output.write) {
-			usageException(
-				'Cannot use --output=write when reading from stdin.',
-			);
+			usageException('Cannot use --output=write when reading from stdin.');
 		}
 
 		if (argResults.wasParsed('stdin-name') && argResults.rest.isNotEmpty) {
-			usageException(
-				'Cannot pass --stdin-name when not reading from stdin.',
-			);
+			usageException('Cannot pass --stdin-name when not reading from stdin.');
 		}
 		var stdinName = argResults.option('stdin-name');
 
@@ -353,9 +337,7 @@ final class FormatCommand extends Command<int> {
 
 		// Can only preserve a selection when parsing from stdin.
 		if (argResults.rest.isNotEmpty) {
-			throw FormatException(
-				'Can only use --$optionName when reading from stdin.',
-			);
+			throw FormatException('Can only use --$optionName when reading from stdin.');
 		}
 
 		try {
@@ -367,9 +349,7 @@ final class FormatCommand extends Command<int> {
 				);
 			}
 
-			return coordinates
-			    .map<int>((coord) => int.parse(coord.trim()))
-			    .toList();
+			return coordinates.map<int>((coord) => int.parse(coord.trim())).toList();
 		} on FormatException catch (_) {
 			throw FormatException(
 				'--$optionName must be a colon-separated pair of integers, was '

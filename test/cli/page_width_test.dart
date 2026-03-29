@@ -84,9 +84,7 @@ void main() {
 		await d.dir('foo', [
 			analysisOptionsFile(include: 'other.yaml'),
 			analysisOptionsFile(name: 'other.yaml', include: 'sub/third.yaml'),
-			d.dir('sub', [
-				analysisOptionsFile(name: 'third.yaml', pageWidth: 30),
-			]),
+			d.dir('sub', [analysisOptionsFile(name: 'third.yaml', pageWidth: 30)]),
 			d.file('main.dart', _unformatted),
 		]).create();
 
@@ -100,21 +98,12 @@ void main() {
 	test('resolve "package:" includes', () async {
 		await d.dir('dir', [
 			d.dir('foo', [
-				packageConfig(
-					'foo',
-					packages: {'bar': '../../bar', 'baz': '../../baz'},
-				),
-				analysisOptionsFile(
-					include: 'package:bar/analysis_options.yaml',
-				),
+				packageConfig('foo', packages: {'bar': '../../bar', 'baz': '../../baz'}),
+				analysisOptionsFile(include: 'package:bar/analysis_options.yaml'),
 				d.file('main.dart', _unformatted),
 			]),
 			d.dir('bar', [
-				d.dir('lib', [
-					analysisOptionsFile(
-						include: 'package:baz/analysis_options.yaml',
-					),
-				]),
+				d.dir('lib', [analysisOptionsFile(include: 'package:baz/analysis_options.yaml')]),
 			]),
 			d.dir('baz', [
 				d.dir('lib', [analysisOptionsFile(pageWidth: 30)]),
@@ -134,9 +123,7 @@ void main() {
 		await d.dir('dir', [
 			d.dir('foo', [
 				packageConfig('foo', packages: {'bar': '../../bar'}),
-				analysisOptionsFile(
-					include: 'package:not_bar/analysis_options.yaml',
-				),
+				analysisOptionsFile(include: 'package:not_bar/analysis_options.yaml'),
 				d.file('main.dart', _unformatted),
 			]),
 		]).create();
@@ -161,11 +148,7 @@ void main() {
 			// Formats at page width 30.
 			await expectLater(
 				process.stdout,
-				emitsInOrder([
-					'var x =',
-					'    operand +',
-					'    another * andAnother;',
-				]),
+				emitsInOrder(['var x =', '    operand +', '    another * andAnother;']),
 			);
 			await process.shouldExit(0);
 		});
@@ -176,10 +159,7 @@ void main() {
 				d.file('main.dart', _unformatted),
 			]).create();
 
-			var process = await runFormatter([
-				'--page-width=30',
-				'--stdin-name=foo/main.dart',
-			]);
+			var process = await runFormatter(['--page-width=30', '--stdin-name=foo/main.dart']);
 
 			process.stdin.writeln(_unformatted);
 			await process.stdin.close();
@@ -187,11 +167,7 @@ void main() {
 			// Formats at page width 30, not 20.
 			await expectLater(
 				process.stdout,
-				emitsInOrder([
-					'var x =',
-					'    operand +',
-					'    another * andAnother;',
-				]),
+				emitsInOrder(['var x =', '    operand +', '    another * andAnother;']),
 			);
 			await process.shouldExit(0);
 		});
@@ -221,10 +197,7 @@ var x = operand + another * andAnother;
 
 /// Test that formatting a file with surrounding analysis_options.yaml
 /// containing [options] formats the input with a page width of [expectedWidth].
-Future<void> _testWithOptions(
-	Object? options, {
-	required int expectedWidth,
-}) async {
+Future<void> _testWithOptions(Object? options, {required int expectedWidth}) async {
 	var expected = switch (expectedWidth) {
 		20 => _formatted20,
 		30 => _formatted30,

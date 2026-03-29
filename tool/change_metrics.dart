@@ -41,10 +41,7 @@ void main(List<String> arguments) {
 		'git',
 		['diff', '--shortstat'],
 		// Make sure the user's local Git config doesn't affect the output.
-		environment: {
-			'GIT_CONFIG_NOGLOBAL': 'true',
-			'GIT_CONFIG_NOSYSTEM': 'true',
-		},
+		environment: {'GIT_CONFIG_NOGLOBAL': 'true', 'GIT_CONFIG_NOSYSTEM': 'true'},
 		workingDirectory: directory,
 	);
 	if (result.exitCode != 0) {

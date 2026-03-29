@@ -38,12 +38,7 @@ sealed class TextPiece extends Piece {
 	/// If [selectionStart] and/or [selectionEnd] are given, then notes that the
 	/// corresponding selection markers appear that many code units from where
 	/// [text] will be appended.
-	void append(
-		String text, {
-		bool multiline = false,
-		int? selectionStart,
-		int? selectionEnd,
-	}) {
+	void append(String text, {bool multiline = false, int? selectionStart, int? selectionEnd}) {
 		if (selectionStart != null) {
 			_selectionStart = _adjustSelection(selectionStart);
 		}

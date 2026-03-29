@@ -39,9 +39,7 @@ sealed class Code {
 					write('`${code._text}`');
 
 				case GroupCode():
-					write(
-						'Group(tabs: ${code._indentTabs}, spaces: ${code._indentSpaces}):',
-					);
+					write('Group(tabs: ${code._indentTabs}, spaces: ${code._indentSpaces}):');
 					prefix += '| ';
 					for (var child in code._children) {
 						trace(child);
@@ -100,16 +98,10 @@ final class GroupCode extends Code {
 	/// single newline is written. The [tabs] and [spaces] parameters specify the
 	/// leading indentation on the next line after the newline (tabs for block
 	/// indentation, spaces for alignment).
-	void newline({
-		required bool blank,
-		required int tabs,
-		required int spaces,
-	}) {
+	void newline({required bool blank, required int tabs, required int spaces}) {
 		// Don't insert a redundant newline at the top of a group.
 		if (_children.isNotEmpty) {
-			_children.add(
-				_NewlineCode(blank: blank, tabs: tabs, spaces: spaces),
-			);
+			_children.add(_NewlineCode(blank: blank, tabs: tabs, spaces: spaces));
 		}
 	}
 
@@ -255,9 +247,7 @@ final class _StringBuilder {
 				// re-enabled.
 				if (_disableFormattingStart == -1) {
 					// Write any pending indentation (tabs for block indent, spaces for alignment).
-					_buffer.write(
-						indent_utils.getIndent(_indentTabs, _indentSpaces),
-					);
+					_buffer.write(indent_utils.getIndent(_indentTabs, _indentSpaces));
 					_indentTabs = 0;
 					_indentSpaces = 0;
 
@@ -280,8 +270,7 @@ final class _StringBuilder {
 					// relative offset of the marker into the subsequent [Code] we will
 					// write.
 					var pendingIndentLength = _indentTabs + _indentSpaces;
-					var absolutePosition =
-					    _buffer.length + pendingIndentLength + code._offset;
+					var absolutePosition = _buffer.length + pendingIndentLength + code._offset;
 					switch (code._marker) {
 						case _Marker.start:
 							_selectionStart = absolutePosition;
@@ -320,22 +309,16 @@ final class _StringBuilder {
 							// Calculate how far into the unformatted code where the marker
 							// should appear.
 							var markerOffsetInUnformatted =
-							    _source.selectionStart! -
-							    _disableFormattingStart;
-							_selectionStart =
-							    _buffer.length + markerOffsetInUnformatted;
+							    _source.selectionStart! - _disableFormattingStart;
+							_selectionStart = _buffer.length + markerOffsetInUnformatted;
 
 						case _Marker.end:
-							var end =
-							    _source.selectionStart! +
-							    _source.selectionLength!;
+							var end = _source.selectionStart! + _source.selectionLength!;
 
 							// Calculate how far into the unformatted code where the marker
 							// should appear.
-							var markerOffsetInUnformatted =
-							    end - _disableFormattingStart;
-							_selectionEnd =
-							    _buffer.length + markerOffsetInUnformatted;
+							var markerOffsetInUnformatted = end - _disableFormattingStart;
+							_selectionEnd = _buffer.length + markerOffsetInUnformatted;
 					}
 				}
 
@@ -353,10 +336,7 @@ final class _StringBuilder {
 					// Write all of the unformatted text from the `// dart format off`
 					// comment to the end of the `// dart format on` comment.
 					_buffer.write(
-						_source.text.substring(
-							_disableFormattingStart,
-							code._sourceOffset,
-						),
+						_source.text.substring(_disableFormattingStart, code._sourceOffset),
 					);
 					_disableFormattingStart = -1;
 				}
@@ -417,9 +397,7 @@ final class _DebugStringBuilder {
 
 			case _TextCode():
 				// Write any pending indentation.
-				_buffer.write(
-					indent_utils.getIndent(_indentTabs, _indentSpaces),
-				);
+				_buffer.write(indent_utils.getIndent(_indentTabs, _indentSpaces));
 				_indentTabs = 0;
 				_indentSpaces = 0;
 				_buffer.write(code._text);

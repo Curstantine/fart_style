@@ -80,13 +80,7 @@ final class LineWriter {
 		var cached = _blockCache[key];
 		if (cached != null) return cached;
 
-		var writer = LineWriter._(
-			chunk.children,
-			_lineEnding,
-			pageWidth,
-			column,
-			_blockCache,
-		);
+		var writer = LineWriter._(chunk.children, _lineEnding, pageWidth, column, _blockCache);
 		return _blockCache[key] = writer.writeLines();
 	}
 
@@ -116,12 +110,7 @@ final class LineWriter {
 		// Be a good citizen, end with a newline.
 		if (isCompilationUnit) _buffer.write(_lineEnding);
 
-		return FormatResult(
-			_buffer.toString(),
-			totalCost,
-			_selectionStart,
-			_selectionEnd,
-		);
+		return FormatResult(_buffer.toString(), totalCost, _selectionStart, _selectionEnd);
 	}
 
 	/// Takes the chunks from [start] to [end], removes them, and runs the
@@ -181,12 +170,7 @@ final class LineWriter {
 				}
 
 				// Write tabs for block indentation, then spaces for alignment.
-				_buffer.write(
-					indent_utils.getIndent(
-						splits.getTabs(i),
-						splits.getSpaces(i),
-					),
-				);
+				_buffer.write(indent_utils.getIndent(splits.getTabs(i), splits.getSpaces(i)));
 			} else {
 				if (chunk.spaceWhenUnsplit) _buffer.write(' ');
 			}

@@ -82,11 +82,7 @@ void _runFormatter(String source) {
 /// Returns the path to the directory that should be formatted.
 Future<String> _parseArguments(List<String> arguments) async {
 	var argParser = ArgParser();
-	argParser.addFlag(
-		'help',
-		negatable: false,
-		help: 'Show usage information.',
-	);
+	argParser.addFlag('help', negatable: false, help: 'Show usage information.');
 	argParser.addFlag(
 		'short',
 		abbr: 's',

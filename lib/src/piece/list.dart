@@ -67,8 +67,7 @@ final class ListPiece extends Piece {
 	final bool _isBlockShaped;
 
 	/// Whether any element in this argument list can be block formatted.
-	bool get hasBlockElement =>
-	    _elements.any((element) => element.allowNewlinesWhenUnsplit);
+	bool get hasBlockElement => _elements.any((element) => element.allowNewlinesWhenUnsplit);
 
 	/// Creates a new [ListPiece].
 	///
@@ -106,9 +105,7 @@ final class ListPiece extends Piece {
 				case Commas.nonTrailing:
 					// Never a trailing comma after the last element.
 					element.pin(
-						i < _lastNonCommentElement
-						    ? ListElementPiece._appendComma
-						    : State.unsplit,
+						i < _lastNonCommentElement ? ListElementPiece._appendComma : State.unsplit,
 					);
 
 				case Commas.none:
@@ -127,9 +124,7 @@ final class ListPiece extends Piece {
 		if (_style.commas == Commas.trailing && _lastNonCommentElement != -1) {
 			constrain(
 				_elements[_lastNonCommentElement],
-				state == State.split
-				    ? ListElementPiece._appendComma
-				    : State.unsplit,
+				state == State.split ? ListElementPiece._appendComma : State.unsplit,
 			);
 		}
 	}
@@ -148,9 +143,7 @@ final class ListPiece extends Piece {
 
 		// Only some elements (usually a single block element) allow newlines
 		// when the list itself isn't split.
-		return Shape.anyIf(
-			child is ListElementPiece && child.allowNewlinesWhenUnsplit,
-		);
+		return Shape.anyIf(child is ListElementPiece && child.allowNewlinesWhenUnsplit);
 	}
 
 	@override
@@ -351,9 +344,7 @@ final class ListElementPiece extends Piece {
 		: _leadingComments = [...leadingComments],
 		  _content = element;
 
-	ListElementPiece.comment(Piece comment)
-		: _leadingComments = const [],
-		  _content = null {
+	ListElementPiece.comment(Piece comment) : _leadingComments = const [], _content = null {
 		_hangingComments.add(comment);
 	}
 
@@ -398,11 +389,7 @@ final class ListElementPiece extends Piece {
 			}
 		}
 
-		for (
-			var i = _commentsBeforeDelimiter;
-			i < _hangingComments.length;
-			i++
-		) {
+		for (var i = _commentsBeforeDelimiter; i < _hangingComments.length; i++) {
 			if (i > 0 || _content != null) writer.space();
 			writer.format(_hangingComments[i]);
 		}

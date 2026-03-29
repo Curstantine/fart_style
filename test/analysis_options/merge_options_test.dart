@@ -40,11 +40,12 @@ void main() {
 		});
 
 		test('List with promotion', () {
-			_testMerge(
-				['one', 'two', 'three'],
-				{'three': false, 'four': true},
-				{'one': true, 'two': true, 'three': false, 'four': true},
-			);
+			_testMerge(['one', 'two', 'three'], {'three': false, 'four': true}, {
+				'one': true,
+				'two': true,
+				'three': false,
+				'four': true,
+			});
 			_testMerge({'one': false, 'two': false}, ['one', 'three'], {
 				'one': true,
 				'two': false,

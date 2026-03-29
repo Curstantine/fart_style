@@ -92,9 +92,7 @@ void main() {
 		test('nested package', () async {
 			await _makePackage('outer', '3.4', [
 				d.file('out_main.dart', 'f() {}'),
-				_makePackage('inner', '3.5', [
-					d.file('in_main.dart', 'f() {}'),
-				]),
+				_makePackage('inner', '3.5', [d.file('in_main.dart', 'f() {}')]),
 			]).create();
 
 			var cache = ConfigCache();
@@ -108,10 +106,7 @@ void main() {
 			await d.dir('dir', [d.file('main.dart', 'main() {}')]).create();
 
 			var cache = ConfigCache();
-			expect(
-				await cache.findPageWidth(_expectedFile('dir/main.dart')),
-				isNull,
-			);
+			expect(await cache.findPageWidth(_expectedFile('dir/main.dart')), isNull);
 		});
 
 		test('use page width of surrounding options', () async {
@@ -133,18 +128,12 @@ void main() {
 				]),
 			]).create();
 
-			await _expectWidth(
-				file: 'dir/some/sub/directory/main.dart',
-				width: 30,
-			);
+			await _expectWidth(file: 'dir/some/sub/directory/main.dart', width: 30);
 		});
 
 		test('null page width if no "formatter" key in options', () async {
 			await d.dir('dir', [
-				d.FileDescriptor(
-					'analysis_options.yaml',
-					jsonEncode({'unrelated': 'stuff'}),
-				),
+				d.FileDescriptor('analysis_options.yaml', jsonEncode({'unrelated': 'stuff'})),
 				d.file('main.dart', 'main() {}'),
 			]).create();
 
@@ -153,10 +142,7 @@ void main() {
 
 		test('null page width if "formatter" is not a map', () async {
 			await d.dir('dir', [
-				d.FileDescriptor(
-					'analysis_options.yaml',
-					jsonEncode({'formatter': 'not a map'}),
-				),
+				d.FileDescriptor('analysis_options.yaml', jsonEncode({'formatter': 'not a map'})),
 				d.file('main.dart', 'main() {}'),
 			]).create();
 
@@ -194,13 +180,8 @@ void main() {
 		test('take page width from included options file', () async {
 			await d.dir('dir', [
 				analysisOptionsFile(include: 'other.yaml'),
-				analysisOptionsFile(
-					name: 'other.yaml',
-					include: 'sub/third.yaml',
-				),
-				d.dir('sub', [
-					analysisOptionsFile(name: 'third.yaml', pageWidth: 30),
-				]),
+				analysisOptionsFile(name: 'other.yaml', include: 'sub/third.yaml'),
+				d.dir('sub', [analysisOptionsFile(name: 'third.yaml', pageWidth: 30)]),
 				d.file('main.dart', 'main() {}'),
 			]).create();
 
@@ -210,20 +191,13 @@ void main() {
 		test('resolve "package:" includes', () async {
 			await d.dir('dir', [
 				d.dir('foo', [
-					packageConfig(
-						'foo',
-						packages: {'bar': '../../bar', 'baz': '../../baz'},
-					),
-					analysisOptionsFile(
-						include: 'package:bar/analysis_options.yaml',
-					),
+					packageConfig('foo', packages: {'bar': '../../bar', 'baz': '../../baz'}),
+					analysisOptionsFile(include: 'package:bar/analysis_options.yaml'),
 					d.file('main.dart', 'main() {}'),
 				]),
 				d.dir('bar', [
 					d.dir('lib', [
-						analysisOptionsFile(
-							include: 'package:baz/analysis_options.yaml',
-						),
+						analysisOptionsFile(include: 'package:baz/analysis_options.yaml'),
 					]),
 				]),
 				d.dir('baz', [
@@ -232,10 +206,7 @@ void main() {
 			]).create();
 
 			var cache = ConfigCache();
-			expect(
-				await cache.findPageWidth(_expectedFile('dir/foo/main.dart')),
-				30,
-			);
+			expect(await cache.findPageWidth(_expectedFile('dir/foo/main.dart')), 30);
 		});
 
 		test('use the root file\'s config for transitive "package:" '
@@ -269,21 +240,14 @@ void main() {
 			// those dependencies.
 			await d.dir('dir', [
 				d.dir('foo', [
-					packageConfig(
-						'foo',
-						packages: {'bar': '../../bar', 'baz': '../../baz'},
-					),
-					analysisOptionsFile(
-						include: 'package:bar/analysis_options.yaml',
-					),
+					packageConfig('foo', packages: {'bar': '../../bar', 'baz': '../../baz'}),
+					analysisOptionsFile(include: 'package:bar/analysis_options.yaml'),
 					d.file('main.dart', 'main() {}'),
 				]),
 				d.dir('bar', [
 					packageConfig('foo', packages: {'baz': '../../evil_baz'}),
 					d.dir('lib', [
-						analysisOptionsFile(
-							include: 'package:baz/analysis_options.yaml',
-						),
+						analysisOptionsFile(include: 'package:baz/analysis_options.yaml'),
 					]),
 				]),
 				d.dir('baz', [
@@ -295,10 +259,7 @@ void main() {
 			]).create();
 
 			var cache = ConfigCache();
-			expect(
-				await cache.findPageWidth(_expectedFile('dir/foo/main.dart')),
-				30,
-			);
+			expect(await cache.findPageWidth(_expectedFile('dir/foo/main.dart')), 30);
 		});
 
 		test('nested package', () async {
@@ -307,23 +268,13 @@ void main() {
 			// "package:bar" include, we use the nearest surrounding package config.
 			await d.dir('dir', [
 				d.dir('outer', [
-					packageConfig(
-						'outer',
-						packages: {'bar': '../../outer_bar'},
-					),
+					packageConfig('outer', packages: {'bar': '../../outer_bar'}),
 					d.dir('inner', [
-						packageConfig(
-							'inner',
-							packages: {'bar': '../../../inner_bar'},
-						),
-						analysisOptionsFile(
-							include: 'package:bar/analysis_options.yaml',
-						),
+						packageConfig('inner', packages: {'bar': '../../../inner_bar'}),
+						analysisOptionsFile(include: 'package:bar/analysis_options.yaml'),
 						d.file('main.dart', 'f() {}'),
 					]),
-					analysisOptionsFile(
-						include: 'package:bar/analysis_options.yaml',
-					),
+					analysisOptionsFile(include: 'package:bar/analysis_options.yaml'),
 					d.file('main.dart', 'f() {}'),
 				]),
 				d.dir('outer_bar', [
@@ -335,16 +286,8 @@ void main() {
 			]).create();
 
 			var cache = ConfigCache();
-			expect(
-				await cache.findPageWidth(_expectedFile('dir/outer/main.dart')),
-				20,
-			);
-			expect(
-				await cache.findPageWidth(
-					_expectedFile('dir/outer/inner/main.dart'),
-				),
-				30,
-			);
+			expect(await cache.findPageWidth(_expectedFile('dir/outer/main.dart')), 20);
+			expect(await cache.findPageWidth(_expectedFile('dir/outer/inner/main.dart')), 30);
 		});
 	});
 
@@ -353,10 +296,7 @@ void main() {
 			await d.dir('dir', [d.file('main.dart', 'main() {}')]).create();
 
 			var cache = ConfigCache();
-			expect(
-				await cache.findTrailingCommas(_expectedFile('dir/main.dart')),
-				isNull,
-			);
+			expect(await cache.findTrailingCommas(_expectedFile('dir/main.dart')), isNull);
 		});
 
 		test('automate trailing commas if option is "automate"', () async {
@@ -379,10 +319,7 @@ void main() {
 
 		test('null if no "formatter" key in options', () async {
 			await d.dir('dir', [
-				d.FileDescriptor(
-					'analysis_options.yaml',
-					jsonEncode({'unrelated': 'stuff'}),
-				),
+				d.FileDescriptor('analysis_options.yaml', jsonEncode({'unrelated': 'stuff'})),
 				d.file('main.dart', 'main() {}'),
 			]).create();
 
@@ -391,10 +328,7 @@ void main() {
 
 		test('null if "formatter" is not a map', () async {
 			await d.dir('dir', [
-				d.FileDescriptor(
-					'analysis_options.yaml',
-					jsonEncode({'formatter': 'not a map'}),
-				),
+				d.FileDescriptor('analysis_options.yaml', jsonEncode({'formatter': 'not a map'})),
 				d.file('main.dart', 'main() {}'),
 			]).create();
 
@@ -431,16 +365,8 @@ void main() {
 	});
 }
 
-Future<void> _expectVersion(
-	ConfigCache cache,
-	String path,
-	int major,
-	int minor,
-) async {
-	expect(
-		await cache.findLanguageVersion(_expectedFile(path), path),
-		Version(major, minor, 0),
-	);
+Future<void> _expectVersion(ConfigCache cache, String path, int major, int minor) async {
+	expect(await cache.findLanguageVersion(_expectedFile(path), path), Version(major, minor, 0));
 }
 
 Future<void> _expectNullVersion(ConfigCache cache, String path) async {
@@ -449,10 +375,7 @@ Future<void> _expectNullVersion(ConfigCache cache, String path) async {
 
 /// Test that a [file] with some some surrounding analysis_options.yaml is
 /// interpreted as having the given page [width].
-Future<void> _expectWidth({
-	String file = 'dir/main.dart',
-	required int? width,
-}) async {
+Future<void> _expectWidth({String file = 'dir/main.dart', required int? width}) async {
 	var cache = ConfigCache();
 	expect(await cache.findPageWidth(_expectedFile(file)), width);
 }
@@ -469,8 +392,7 @@ Future<void> _expectTrailingCommas(
 
 /// Normalize path separators to the host OS separator since that's what the
 /// cache uses.
-File _expectedFile(String path) =>
-    File(p.joinAll([d.sandbox, ...p.posix.split(path)]));
+File _expectedFile(String path) => File(p.joinAll([d.sandbox, ...p.posix.split(path)]));
 
 /// Create a test package with [packageName] containing a package config with
 /// language version [major].[minor].
@@ -483,8 +405,5 @@ d.DirectoryDescriptor _makePackage(
 	List<d.Descriptor>? files,
 ]) {
 	files ??= [d.file('main.dart', 'f() {}')];
-	return d.dir(packageName, [
-		packageConfig(packageName, version: version),
-		...files,
-	]);
+	return d.dir(packageName, [packageConfig(packageName, version: version), ...files]);
 }

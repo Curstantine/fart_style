@@ -114,8 +114,7 @@ final class ConstructorPiece extends Piece {
 	@override
 	List<State> get additionalStates => [
 		if (_initializers != null) _splitBeforeInitializers,
-		if (_canSplitParameters && _initializers != null)
-			_splitBetweenInitializers,
+		if (_canSplitParameters && _initializers != null) _splitBetweenInitializers,
 	];
 
 	/// Apply constraints between how the parameters may split and how the
@@ -124,10 +123,7 @@ final class ConstructorPiece extends Piece {
 	void applyConstraints(State state, Constrain constrain) {
 		// If there are both parameters and initializers, constrain how they
 		// interact.
-		if ((_parameters, _initializers) case (
-			var parameters?,
-			var initializers?,
-		)) {
+		if ((_parameters, _initializers) case (var parameters?, var initializers?)) {
 			switch (state) {
 				case State.unsplit:
 					// All parameters and initializers on one line.

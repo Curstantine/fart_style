@@ -134,13 +134,8 @@ void dumpChunks(int start, List<Chunk> chunks) {
 		row.add(ruleString);
 
 		var rules = chunks.map((chunk) => chunk.rule).toSet();
-		var constrainedRules = rule.constrainedRules.toSet().intersection(
-			rules,
-		);
-		writeIf(
-			constrainedRules.isNotEmpty,
-			() => "-> ${constrainedRules.join(" ")}",
-		);
+		var constrainedRules = rule.constrainedRules.toSet().intersection(rules);
+		writeIf(constrainedRules.isNotEmpty, () => "-> ${constrainedRules.join(" ")}");
 
 		var properties = [
 			if (chunk.flushLeft) 'fl',
@@ -158,8 +153,7 @@ void dumpChunks(int start, List<Chunk> chunks) {
 			var spanBars = '';
 			for (var span in spans) {
 				if (chunk.spans.contains(span)) {
-					if (index == chunks.length - 1 ||
-					    !chunks[index + 1].spans.contains(span)) {
+					if (index == chunks.length - 1 || !chunks[index + 1].spans.contains(span)) {
 						// This is the last chunk with the span.
 						spanBars += '╙';
 					} else {
@@ -168,8 +162,7 @@ void dumpChunks(int start, List<Chunk> chunks) {
 				} else {
 					// If the next chunk has this span, then show it bridging this chunk
 					// and the next because a split between them breaks the span.
-					if (index < chunks.length - 1 &&
-					    chunks[index + 1].spans.contains(span)) {
+					if (index < chunks.length - 1 && chunks[index + 1].spans.contains(span)) {
 						if (span.cost == 1) {
 							spanBars += '╓';
 						} else {

@@ -52,13 +52,9 @@ final class VariablePiece extends Piece {
 	///
 	/// The [hasType] parameter should be `true` if the variable declaration has
 	/// a type annotation.
-	VariablePiece(
-		this._header,
-		this._variables, {
-		required bool hasType,
-		required bool is3Dot7,
-	}) : _hasType = hasType,
-		   _is3Dot7 = is3Dot7;
+	VariablePiece(this._header, this._variables, {required bool hasType, required bool is3Dot7})
+		: _hasType = hasType,
+		  _is3Dot7 = is3Dot7;
 
 	@override
 	List<State> get additionalStates => [
@@ -77,9 +73,7 @@ final class VariablePiece extends Piece {
 		if (child == _header) {
 			return Shape.anyIf(state != State.unsplit);
 		} else {
-			return Shape.anyIf(
-				_variables.length == 1 || state != State.unsplit,
-			);
+			return Shape.anyIf(_variables.length == 1 || state != State.unsplit);
 		}
 	}
 

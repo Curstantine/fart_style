@@ -125,11 +125,7 @@ mixin PieceFactory {
 	}
 
 	/// Writes a [ListPiece] for an argument list.
-	void writeArguments(
-		Token leftBracket,
-		List<Expression> arguments,
-		Token rightBracket,
-	) {
+	void writeArguments(Token leftBracket, List<Expression> arguments, Token rightBracket) {
 		// In 3.7, we don't support preserving trailing commas or eager splitting.
 		if (style.is3Dot7) {
 			writeList(
@@ -181,8 +177,7 @@ mixin PieceFactory {
 			// expressions or large collections which will force the call to (block)
 			// split, so the goal of not packing too much on one line is still met
 			// even without this eager splitting heuristic.
-			if (argumentsPiece is! ListPiece ||
-			    !argumentsPiece.hasBlockElement) {
+			if (argumentsPiece is! ListPiece || !argumentsPiece.hasBlockElement) {
 				argumentsPiece.pin(State.split);
 			}
 		}
@@ -236,12 +231,7 @@ mixin PieceFactory {
 	///     if (condition) {
 	///     } else {}
 	void writeBlock(Block block, {bool forceSplit = false}) {
-		writeBody(
-			block.leftBracket,
-			block.statements,
-			block.rightBracket,
-			forceSplit: forceSplit,
-		);
+		writeBody(block.leftBracket, block.statements, block.rightBracket, forceSplit: forceSplit);
 	}
 
 	/// Writes a piece for a `break` or `continue` statement.
@@ -253,9 +243,10 @@ mixin PieceFactory {
 
 	void writeChain(Expression node) {
 		pieces.add(
-			ChainBuilder(this, node).build(
-				isCascadeTarget: parentContext == NodeContext.cascadeTarget,
-			),
+			ChainBuilder(
+				this,
+				node,
+			).build(isCascadeTarget: parentContext == NodeContext.cascadeTarget),
 		);
 	}
 
@@ -321,9 +312,7 @@ mixin PieceFactory {
 
 		// Add this collection to the stack.
 		if (splitEagerly) {
-			_contents.beginCollection(
-				isNamed: parentContext == NodeContext.namedExpression,
-			);
+			_contents.beginCollection(isNamed: parentContext == NodeContext.namedExpression);
 		}
 
 		var collection = pieces.build(() {
@@ -345,10 +334,7 @@ mixin PieceFactory {
 
 	/// Creates a comma-separated [ListPiece] for [nodes].
 	Piece createCommaSeparated(Iterable<AstNode> nodes) {
-		var builder = DelimitedListBuilder(
-			this,
-			const ListStyle(commas: Commas.nonTrailing),
-		);
+		var builder = DelimitedListBuilder(this, const ListStyle(commas: Commas.nonTrailing));
 		nodes.forEach(builder.visit);
 		return builder.build();
 	}
@@ -394,12 +380,7 @@ mixin PieceFactory {
 				// Discard the trailing comma if there is one since there is a
 				// semicolon to use as the separator, but preserve any comments before
 				// the discarded comma.
-				pieces.add(
-					pieces.tokenPiece(
-						discardedToken: node.commaAfter,
-						semicolon,
-					),
-				);
+				pieces.add(pieces.tokenPiece(discardedToken: node.commaAfter, semicolon));
 			}
 		});
 	}
@@ -439,12 +420,9 @@ mixin PieceFactory {
 					pieces.token(rightParenthesis);
 				});
 
-			case ForParts forParts &&
-			    ForPartsWithDeclarations(variables: AstNode? initializer):
-			case ForParts forParts &&
-			    ForPartsWithExpression(initialization: AstNode? initializer):
-			case ForParts forParts &&
-			    ForPartsWithPattern(variables: AstNode? initializer):
+			case ForParts forParts && ForPartsWithDeclarations(variables: AstNode? initializer):
+			case ForParts forParts && ForPartsWithExpression(initialization: AstNode? initializer):
+			case ForParts forParts && ForPartsWithPattern(variables: AstNode? initializer):
 				// In a C-style for loop, treat the for loop parts like an argument list
 				// where each clause is a separate argument. This means that when they
 				// split, they split like:
@@ -456,10 +434,7 @@ mixin PieceFactory {
 				//     ) {
 				//       body;
 				//     }
-				var partsList = DelimitedListBuilder(
-					this,
-					const ListStyle(commas: Commas.none),
-				);
+				var partsList = DelimitedListBuilder(this, const ListStyle(commas: Commas.none));
 				partsList.leftBracket(leftParenthesis);
 
 				// The initializer clause.
@@ -467,10 +442,7 @@ mixin PieceFactory {
 					partsList.addCommentsBefore(initializer.beginToken);
 					partsList.add(
 						pieces.build(() {
-							pieces.visit(
-								initializer,
-								context: NodeContext.forLoopVariable,
-							);
+							pieces.visit(initializer, context: NodeContext.forLoopVariable);
 							pieces.token(forParts.leftSeparator);
 						}),
 					);
@@ -496,9 +468,7 @@ mixin PieceFactory {
 
 				// The update clauses.
 				if (forParts.updaters.isNotEmpty) {
-					partsList.addCommentsBefore(
-						forParts.updaters.first.beginToken,
-					);
+					partsList.addCommentsBefore(forParts.updaters.first.beginToken);
 
 					// Unlike most places in the language, if the updaters split, we
 					// don't want to add a trailing comma. But if the user has preserve
@@ -520,17 +490,14 @@ mixin PieceFactory {
 					// around a trailing comma after the updaters don't get dropped.
 					partsList.addInnerBuilder(
 						updaterBuilder,
-						forceSplit: style.preserveTrailingCommaBefore(
-							rightParenthesis,
-						),
+						forceSplit: style.preserveTrailingCommaBefore(rightParenthesis),
 					);
 				}
 
 				partsList.rightBracket(rightParenthesis);
 				forPartsPiece = partsList.build();
 
-			case ForEachParts forEachParts &&
-			    ForEachPartsWithDeclaration(:var loopVariable):
+			case ForEachParts forEachParts && ForEachPartsWithDeclaration(:var loopVariable):
 				forPartsPiece = pieces.build(() {
 					pieces.token(leftParenthesis);
 					_writeDeclaredForIn(
@@ -541,8 +508,7 @@ mixin PieceFactory {
 					pieces.token(rightParenthesis);
 				});
 
-			case ForEachParts forEachParts &&
-			    ForEachPartsWithIdentifier(:var identifier):
+			case ForEachParts forEachParts && ForEachPartsWithIdentifier(:var identifier):
 				// If a for-in loop, treat the for parts like an assignment, so they
 				// split like:
 				//
@@ -584,45 +550,26 @@ mixin PieceFactory {
 				// statement or element.
 				forPartsPiece = pieces.build(() {
 					pieces.token(leftParenthesis);
-					_writeForIn(
-						identifier,
-						forEachParts.inKeyword,
-						forEachParts.iterable,
-					);
+					_writeForIn(identifier, forEachParts.inKeyword, forEachParts.iterable);
 					pieces.token(rightParenthesis);
 				});
 
 			case ForEachParts forEachParts &&
-			    ForEachPartsWithPattern(
-				    :var keyword,
-				    :var metadata,
-				    :var pattern,
-			    ):
+			    ForEachPartsWithPattern(:var keyword, :var metadata, :var pattern):
 				forPartsPiece = pieces.build(() {
 					pieces.token(leftParenthesis);
 
 					// Hoist any leading comments so they don't force the for-in clauses
 					// to split.
-					pieces.hoistLeadingComments(
-						metadata.firstOrNull?.beginToken ?? keyword,
-						() {
-						    // Use a nested piece so that the metadata precedes the keyword
-						    // and not the `(`.
-						    return pieces.build(
-							    metadata: metadata,
-							    inlineMetadata: true,
-							    () {
-							        pieces.token(keyword);
-							        pieces.space();
-							        _writeForIn(
-								        pattern,
-								        forEachParts.inKeyword,
-								        forEachParts.iterable,
-							        );
-							    },
-						    );
-						},
-					);
+					pieces.hoistLeadingComments(metadata.firstOrNull?.beginToken ?? keyword, () {
+						// Use a nested piece so that the metadata precedes the keyword
+						// and not the `(`.
+						return pieces.build(metadata: metadata, inlineMetadata: true, () {
+							pieces.token(keyword);
+							pieces.space();
+							_writeForIn(pattern, forEachParts.inKeyword, forEachParts.iterable);
+						});
+					});
 
 					pieces.token(rightParenthesis);
 				});
@@ -634,16 +581,13 @@ mixin PieceFactory {
 		// sure that the entire contents of the for loop parts are indented so that
 		// the annotations are indented.
 		var indentHeader = switch (forLoopParts) {
-			ForEachPartsWithDeclaration(:var loopVariable) =>
-				loopVariable.metadata.isNotEmpty,
+			ForEachPartsWithDeclaration(:var loopVariable) => loopVariable.metadata.isNotEmpty,
 			ForEachPartsWithPattern(:var metadata) => metadata.isNotEmpty,
 			_ => false,
 		};
 
 		if (hasBlockBody) {
-			pieces.add(
-				ForPiece(forKeywordPiece, forPartsPiece, indent: indentHeader),
-			);
+			pieces.add(ForPiece(forKeywordPiece, forPartsPiece, indent: indentHeader));
 			pieces.space();
 			pieces.add(bodyPiece);
 		} else {
@@ -676,20 +620,13 @@ mixin PieceFactory {
 		// If the parameter has a default value, the parameter node will be wrapped
 		// in a DefaultFormalParameter node containing the default.
 		(Token separator, Expression value)? defaultValueRecord;
-		if (node.parent case DefaultFormalParameter(
-			:var separator?,
-			:var defaultValue?,
-		)) {
+		if (node.parent case DefaultFormalParameter(:var separator?, :var defaultValue?)) {
 			defaultValueRecord = (separator, defaultValue);
 		}
 
 		writeParameter(
 			metadata: node.metadata,
-			modifiers: [
-				node.requiredKeyword,
-				node.covariantKeyword,
-				mutableKeyword,
-			],
+			modifiers: [node.requiredKeyword, node.covariantKeyword, mutableKeyword],
 			type,
 			fieldKeyword: fieldKeyword,
 			period: period,
@@ -766,8 +703,7 @@ mixin PieceFactory {
 		//     @meta
 		//     // Weird place for comment.
 		//     int f() {}
-		var firstToken =
-		    modifiers.nonNulls.firstOrNull ?? returnType.firstNonCommentToken;
+		var firstToken = modifiers.nonNulls.firstOrNull ?? returnType.firstNonCommentToken;
 		pieces.hoistLeadingComments(firstToken, () {
 			var returnTypePiece = pieces.build(() {
 				for (var keyword in modifiers) {
@@ -794,10 +730,7 @@ mixin PieceFactory {
 	/// followed by that default value.
 	///
 	/// Otherwise, just writes [parameter].
-	void writeDefaultValue(
-		Piece parameter,
-		(Token separator, Expression value)? defaultValue,
-	) {
+	void writeDefaultValue(Piece parameter, (Token separator, Expression value)? defaultValue) {
 		if (defaultValue == null) {
 			pieces.add(parameter);
 			return;
@@ -852,8 +785,7 @@ mixin PieceFactory {
 			var modifiers = [
 				parameter?.requiredKeyword,
 				parameter?.covariantKeyword,
-				if (parameter case FunctionTypedFormalParameter(:var keyword))
-					keyword,
+				if (parameter case FunctionTypedFormalParameter(:var keyword)) keyword,
 			];
 
 			void write() {
@@ -892,11 +824,7 @@ mixin PieceFactory {
 	}
 
 	/// Writes a parenthesized expression or pattern.
-	void writeParenthesized(
-		Token leftBracket,
-		AstNode content,
-		Token rightBracket,
-	) {
+	void writeParenthesized(Token leftBracket, AstNode content, Token rightBracket) {
 		pieces.token(leftBracket);
 		pieces.visit(content);
 		pieces.token(rightBracket);
@@ -925,17 +853,14 @@ mixin PieceFactory {
 				pieces.visit(caseClause.guardedPattern.pattern);
 			});
 
-			var guardPiece = optionalNodePiece(
-				caseClause.guardedPattern.whenClause,
-			);
+			var guardPiece = optionalNodePiece(caseClause.guardedPattern.whenClause);
 
 			pieces.add(
 				IfCasePiece(
 					expressionPiece,
 					casePiece,
 					guardPiece,
-					canBlockSplitPattern:
-					    caseClause.guardedPattern.pattern.canBlockSplit,
+					canBlockSplitPattern: caseClause.guardedPattern.pattern.canBlockSplit,
 				),
 			);
 		} else {
@@ -960,8 +885,7 @@ mixin PieceFactory {
 				pieces.visit(catchClause.exceptionType);
 			}
 
-			if (catchClause.onKeyword != null &&
-			    catchClause.catchKeyword != null) {
+			if (catchClause.onKeyword != null && catchClause.catchKeyword != null) {
 				pieces.space();
 			}
 
@@ -974,12 +898,10 @@ mixin PieceFactory {
 					const ListStyle(commas: Commas.nonTrailing),
 				);
 				parameters.leftBracket(catchClause.leftParenthesis!);
-				if (catchClause.exceptionParameter
-				    case var exceptionParameter?) {
+				if (catchClause.exceptionParameter case var exceptionParameter?) {
 					parameters.visit(exceptionParameter);
 				}
-				if (catchClause.stackTraceParameter
-				    case var stackTraceParameter?) {
+				if (catchClause.stackTraceParameter case var stackTraceParameter?) {
 					parameters.visit(stackTraceParameter);
 				}
 				parameters.rightBracket(catchClause.rightParenthesis!);
@@ -998,8 +920,7 @@ mixin PieceFactory {
 			//       body;
 			//     }
 			var forceSplit =
-			    i < tryStatement.catchClauses.length - 1 ||
-			    tryStatement.finallyBlock != null;
+			    i < tryStatement.catchClauses.length - 1 || tryStatement.finallyBlock != null;
 			writeBlock(catchClause.body, forceSplit: forceSplit);
 		}
 
@@ -1055,8 +976,7 @@ mixin PieceFactory {
 						clauses.add(
 							InfixPiece([
 								tokenPiece(combinatorNode.keyword),
-								for (var name in names)
-									tokenPiece(name.token, commaAfter: true),
+								for (var name in names) tokenPiece(name.token, commaAfter: true),
 							], is3Dot7: style.is3Dot7),
 						);
 				}
@@ -1140,13 +1060,7 @@ mixin PieceFactory {
 			pieces.visit(right);
 		});
 
-		pieces.add(
-			InfixPiece(
-				[leftPiece, rightPiece],
-				indent: indent,
-				is3Dot7: style.is3Dot7,
-			),
-		);
+		pieces.add(InfixPiece([leftPiece, rightPiece], indent: indent, is3Dot7: style.is3Dot7));
 	}
 
 	/// Writes a chained infix operation: a binary operator expression, or
@@ -1177,8 +1091,7 @@ mixin PieceFactory {
 			// operands.
 			if (e is T) {
 				var (left, operator, right) = destructure(e);
-				if (precedence == null ||
-				    operator.type.precedence == precedence) {
+				if (precedence == null || operator.type.precedence == precedence) {
 					operands.add(
 						pieces.build(() {
 							traverse(left);
@@ -1284,10 +1197,7 @@ mixin PieceFactory {
 	///       // comment
 	///       5, 6, 7
 	///     ];
-	void _preserveNewlinesInCollection(
-		List<AstNode> elements,
-		DelimitedListBuilder builder,
-	) {
+	void _preserveNewlinesInCollection(List<AstNode> elements, DelimitedListBuilder builder) {
 		// Builder for all of the elements on a single line. We use a ListPiece for
 		// this too because even though we prefer to keep all elements that are on
 		// a single line in the input also on a single line in the output, we will
@@ -1300,10 +1210,7 @@ mixin PieceFactory {
 			var element = elements[i];
 
 			if (!atLineStart &&
-			    comments.hasNewlineBetween(
-				    elements[i - 1].endToken,
-				    element.beginToken,
-			    )) {
+			    comments.hasNewlineBetween(elements[i - 1].endToken, element.beginToken)) {
 				// This element begins a new line. Add the elements on the previous
 				// line to the list builder and start a new line.
 				builder.addInnerBuilder(lineBuilder);
@@ -1326,11 +1233,7 @@ mixin PieceFactory {
 	}
 
 	/// Writes a [VariablePiece] for a named or wildcard variable pattern.
-	void writePatternVariable(
-		Token? keyword,
-		TypeAnnotation? type,
-		Token name,
-	) {
+	void writePatternVariable(Token? keyword, TypeAnnotation? type, Token name) {
 		// If it's a wildcard with no declaration keyword or type, there is just a
 		// name token.
 		if (keyword == null && type == null) {
@@ -1416,9 +1319,7 @@ mixin PieceFactory {
 			//     if (obj case (name: value)) {
 			//       ;
 			//     }
-			[PatternField(name: _?)] => const ListStyle(
-				commas: Commas.trailing,
-			),
+			[PatternField(name: _?)] => const ListStyle(commas: Commas.trailing),
 			[NamedExpression()] => const ListStyle(commas: Commas.trailing),
 
 			// Record types or patterns with a single positional field always have a
@@ -1450,11 +1351,7 @@ mixin PieceFactory {
 	}
 
 	/// Writes a [ListPiece] for a type argument or type parameter list.
-	void writeTypeList(
-		Token leftBracket,
-		List<AstNode> elements,
-		Token rightBracket,
-	) {
+	void writeTypeList(Token leftBracket, List<AstNode> elements, Token rightBracket) {
 		writeList(
 			leftBracket: leftBracket,
 			elements,
@@ -1520,18 +1417,11 @@ mixin PieceFactory {
 
 	/// Writes the `<variable> in <expression>` part of an identifier or pattern
 	/// for-in loop.
-	void _writeForIn(
-		AstNode leftHandSide,
-		Token inKeyword,
-		Expression sequence,
-	) {
+	void _writeForIn(AstNode leftHandSide, Token inKeyword, Expression sequence) {
 		// Hoist any leading comments so they don't force the for-in clauses to
 		// split.
 		pieces.hoistLeadingComments(leftHandSide.firstNonCommentToken, () {
-			var leftPiece = nodePiece(
-				leftHandSide,
-				context: NodeContext.forLoopVariable,
-			);
+			var leftPiece = nodePiece(leftHandSide, context: NodeContext.forLoopVariable);
 			var sequencePiece = _createForInSequence(inKeyword, sequence);
 			return ForInPiece(
 				leftPiece,
@@ -1548,43 +1438,32 @@ mixin PieceFactory {
 	/// A for-in loop with a variable declaration can have metadata before it,
 	/// which requires some special handling so that we don't push the metadata
 	/// and any comments after it into the left child piece of [ForInPiece].
-	void _writeDeclaredForIn(
-		DeclaredIdentifier identifier,
-		Token inKeyword,
-		Expression sequence,
-	) {
+	void _writeDeclaredForIn(DeclaredIdentifier identifier, Token inKeyword, Expression sequence) {
 		// Hoist any leading comments so they don't force the for-in clauses
 		// to split.
 		pieces.hoistLeadingComments(identifier.beginToken, () {
 			// Use a nested piece so that the metadata precedes the keyword and
 			// not the `(`.
-			return pieces.build(
-				metadata: identifier.metadata,
-				inlineMetadata: true,
-				() {
-				    var leftPiece = pieces.build(() {
-					    writeParameter(
-						    modifiers: [identifier.keyword],
-						    identifier.type,
-						    identifier.name,
-					    );
-				    });
+			return pieces.build(metadata: identifier.metadata, inlineMetadata: true, () {
+				var leftPiece = pieces.build(() {
+					writeParameter(
+						modifiers: [identifier.keyword],
+						identifier.type,
+						identifier.name,
+					);
+				});
 
-				    var sequencePiece = _createForInSequence(
-					    inKeyword,
-					    sequence,
-				    );
+				var sequencePiece = _createForInSequence(inKeyword, sequence);
 
-				    pieces.add(
-					    ForInPiece(
-						    leftPiece,
-						    sequencePiece,
-						    canBlockSplitSequence: sequence.canBlockSplit,
-						    is3Dot7: style.is3Dot7,
-					    ),
-				    );
-				},
-			);
+				pieces.add(
+					ForInPiece(
+						leftPiece,
+						sequencePiece,
+						canBlockSplitSequence: sequence.canBlockSplit,
+						is3Dot7: style.is3Dot7,
+					),
+				);
+			});
 		});
 	}
 

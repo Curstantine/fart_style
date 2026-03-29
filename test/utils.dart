@@ -41,13 +41,9 @@ final List<Version> _testedTallVersions = [
 /// subsequent tests and to clean up the executable.
 void compileFormatter() {
 	setUpAll(() async {
-		var tempDir = await Directory.systemTemp.createTemp(
-			p.withoutExtension('format'),
-		);
+		var tempDir = await Directory.systemTemp.createTemp(p.withoutExtension('format'));
 		_formatterPath = p.join(tempDir.path, 'format.dart.snapshot');
-		var scriptPath = p.normalize(
-			p.join(await findTestDirectory(), '../bin/format.dart'),
-		);
+		var scriptPath = p.normalize(p.join(await findTestDirectory(), '../bin/format.dart'));
 
 		var compileResult = await Process.run(Platform.resolvedExecutable, [
 			'--snapshot-kind=app-jit',
@@ -118,9 +114,7 @@ Future<void> testBenchmarks({required bool useTallStyle}) async {
 					pageWidth: benchmark.pageWidth,
 				);
 
-				var actual = formatter.formatSource(
-					SourceCode(benchmark.input),
-				);
+				var actual = formatter.formatSource(SourceCode(benchmark.input));
 
 				// The test files always put a newline at the end of the expectation.
 				// Statements from the formatter (correctly) don't have that, so add
@@ -128,9 +122,7 @@ Future<void> testBenchmarks({required bool useTallStyle}) async {
 				var actualText = actual.text;
 				if (!benchmark.isCompilationUnit) actualText += '\n';
 
-				var expected = useTallStyle
-				    ? benchmark.tallOutput
-				    : benchmark.shortOutput;
+				var expected = useTallStyle ? benchmark.tallOutput : benchmark.shortOutput;
 
 				// Fail with an explicit message because it's easier to read than
 				// the matcher output.
@@ -158,9 +150,7 @@ void _testFile(TestFile testFile) {
 						_testedTallVersions.first: output,
 						_testedTallVersions.last: output,
 					},
-					VersionedFormatTest(:var outputs) => _versionedTestEntries(
-						outputs,
-					),
+					VersionedFormatTest(:var outputs) => _versionedTestEntries(outputs),
 				};
 			} else {
 				testedVersions = switch (formatTest) {
@@ -240,9 +230,7 @@ Map<Version, TestEntry> _versionedTestEntries(Map<Version, TestEntry> outputs) {
 		if (i < outputVersions.length - 1) {
 			// The end of this version's range is one version lower than the next
 			// output's version.
-			var nextVersionIndex = _testedTallVersions.indexOf(
-				outputVersions[i + 1],
-			);
+			var nextVersionIndex = _testedTallVersions.indexOf(outputVersions[i + 1]);
 			var rangeEnd = _testedTallVersions[nextVersionIndex - 1];
 			testedVersions[rangeEnd] = outputs[version]!;
 		} else {
@@ -260,8 +248,7 @@ void _runTestAtVersion(
 	TestEntry output,
 	Version version,
 ) {
-	var description =
-	    'line ${formatTest.line} at ${version.major}.${version.minor}';
+	var description = 'line ${formatTest.line} at ${version.major}.${version.minor}';
 	if (formatTest.input.description.isNotEmpty) {
 		description += ': ${formatTest.input.description}';
 	}
@@ -351,9 +338,7 @@ d.DirectoryDescriptor packageConfig(
 		],
 	};
 
-	return d.dir('.dart_tool', [
-		d.file('package_config.json', jsonEncode(config)),
-	]);
+	return d.dir('.dart_tool', [d.file('package_config.json', jsonEncode(config))]);
 }
 
 /// Creates the YAML string contents of an analysis options file.

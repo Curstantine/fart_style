@@ -36,10 +36,7 @@ final class SourceCode {
 	/// If there is no selection, returns an empty string.
 	String get selectedText {
 		if (selectionStart == null) return '';
-		return text.substring(
-			selectionStart!,
-			selectionStart! + selectionLength!,
-		);
+		return text.substring(selectionStart!, selectionStart! + selectionLength!);
 	}
 
 	/// Gets the source code following the selection.
@@ -59,9 +56,7 @@ final class SourceCode {
 	}) {
 		// Must either provide both selection bounds or neither.
 		if ((selectionStart == null) != (selectionLength == null)) {
-			throw ArgumentError(
-				'If selectionStart is provided, selectionLength must be too.',
-			);
+			throw ArgumentError('If selectionStart is provided, selectionLength must be too.');
 		}
 
 		if (selectionStart != null) {

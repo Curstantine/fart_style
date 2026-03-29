@@ -86,8 +86,7 @@ final class ChainBuilder {
 					//     ..method(
 					//       argument,
 					//     );
-					_ when piece is LeadingCommentPiece =>
-						CallType.unsplittableCall,
+					_ when piece is LeadingCommentPiece => CallType.unsplittableCall,
 
 					// If the section is itself a method chain, then force the cascade to
 					// split if the method does, as in:
@@ -124,9 +123,7 @@ final class ChainBuilder {
 		//     target..cascade(
 		//       argument,
 		//     );
-		var blockCallIndex = _calls.length == 1 && _calls.single.canSplit
-		    ? 0
-		    : -1;
+		var blockCallIndex = _calls.length == 1 && _calls.single.canSplit ? 0 : -1;
 
 		var chain = ChainPiece(
 			_target,
@@ -162,8 +159,7 @@ final class ChainBuilder {
 
 		// Count the number of leading properties and unsplittable calls.
 		var leadingUnsplittable = leadingProperties;
-		while (leadingUnsplittable < _calls.length &&
-		    !_calls[leadingUnsplittable].canSplit) {
+		while (leadingUnsplittable < _calls.length && !_calls[leadingUnsplittable].canSplit) {
 			leadingUnsplittable++;
 		}
 
@@ -204,8 +200,7 @@ final class ChainBuilder {
 		}
 
 		var blockCallIndex = -1;
-		if (leadingUnsplittable == lastCallIndex &&
-		    _calls[lastCallIndex].canSplit) {
+		if (leadingUnsplittable == lastCallIndex && _calls[lastCallIndex].canSplit) {
 			blockCallIndex = lastCallIndex;
 		} else if (_calls[lastCallIndex].type == CallType.blockFormatCall) {
 			blockCallIndex = lastCallIndex;
@@ -339,8 +334,7 @@ final class ChainBuilder {
 					});
 				});
 
-			case PostfixExpression()
-			    when expression.operator.type == TokenType.BANG:
+			case PostfixExpression() when expression.operator.type == TokenType.BANG:
 				_unwrapPostfix(expression.operand, (target) {
 					return _visitor.pieces.build(() {
 						_visitor.pieces.add(target);
@@ -363,16 +357,11 @@ final class ChainBuilder {
 		_allowSplitInTarget = target.canBlockSplit;
 		_target = _visitor.nodePiece(
 			target,
-			context: cascadeTarget
-			    ? NodeContext.cascadeTarget
-			    : NodeContext.none,
+			context: cascadeTarget ? NodeContext.cascadeTarget : NodeContext.none,
 		);
 	}
 
-	void _unwrapPostfix(
-		Expression operand,
-		Piece Function(Piece target) createPostfix,
-	) {
+	void _unwrapPostfix(Expression operand, Piece Function(Piece target) createPostfix) {
 		_unwrapCall(operand);
 
 		// If we don't have a preceding call to hang the postfix expression off of,

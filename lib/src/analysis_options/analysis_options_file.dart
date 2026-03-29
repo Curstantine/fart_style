@@ -38,10 +38,7 @@ Future<AnalysisOptions> findAnalysisOptions(
 	ResolvePackageUri? resolvePackageUri,
 }) async {
 	while (true) {
-		var optionsPath = await fileSystem.join(
-			directory,
-			'analysis_options.yaml',
-		);
+		var optionsPath = await fileSystem.join(directory, 'analysis_options.yaml');
 		if (await fileSystem.fileExists(optionsPath)) {
 			return readAnalysisOptions(
 				fileSystem,
@@ -135,8 +132,7 @@ Future<AnalysisOptions> readAnalysisOptions(
 				}
 				var includeOptions = await optionsFromInclude(include);
 				mergedIncludeOptions =
-				    merge(mergedIncludeOptions, includeOptions)
-				        as AnalysisOptions;
+				    merge(mergedIncludeOptions, includeOptions) as AnalysisOptions;
 			}
 			options = merge(mergedIncludeOptions, options) as AnalysisOptions;
 		case null:

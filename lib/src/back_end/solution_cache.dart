@@ -52,17 +52,12 @@ final class SolutionCache {
 		// Use visual width for caching - pieces with equivalent visual indentation
 		// can share cached solutions.
 		var leadingVisualWidth = leadingTabs * tabWidth + leadingSpaces;
-		var subsequentVisualWidth =
-		    subsequentTabs * tabWidth + subsequentSpaces;
+		var subsequentVisualWidth = subsequentTabs * tabWidth + subsequentSpaces;
 
 		// See if we've already formatted this piece at this indentation. If not,
 		// format it and store the result.
 		return _cache.putIfAbsent(
-			(
-				root,
-				indent: leadingVisualWidth,
-				subsequentIndent: subsequentVisualWidth,
-			),
+			(root, indent: leadingVisualWidth, subsequentIndent: subsequentVisualWidth),
 			() => Solver(
 				this,
 				pageWidth: pageWidth,

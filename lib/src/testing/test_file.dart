@@ -57,13 +57,8 @@ final class TestFile {
 
 		return [
 			for (var entry in entries)
-				if (entry is File &&
-				    (entry.path.endsWith('.stmt') ||
-				        entry.path.endsWith('.unit')))
-					TestFile._load(
-						entry,
-						p.relative(entry.path, from: testDir),
-					),
+				if (entry is File && (entry.path.endsWith('.stmt') || entry.path.endsWith('.unit')))
+					TestFile._load(entry, p.relative(entry.path, from: testDir)),
 		];
 	}
 
@@ -157,11 +152,7 @@ final class TestFile {
 				var outputDescription = match[4]!;
 				Version? outputVersion;
 				if (match[1] != null) {
-					outputVersion = Version(
-						int.parse(match[2]!),
-						int.parse(match[3]!),
-						0,
-					);
+					outputVersion = Version(int.parse(match[2]!), int.parse(match[3]!), 0);
 				}
 
 				var outputComments = readComments();
@@ -188,16 +179,10 @@ final class TestFile {
 					isCompilationUnit: isCompilationUnit,
 				);
 
-				var entry = TestEntry(
-					outputDescription.trim(),
-					outputComments,
-					outputCode,
-				);
+				var entry = TestEntry(outputDescription.trim(), outputComments, outputCode);
 				if (outputVersion != null) {
 					if (versionedOutputs.containsKey(outputVersion)) {
-						fail(
-							'Multiple outputs with the same version $outputVersion.',
-						);
+						fail('Multiple outputs with the same version $outputVersion.');
 					}
 
 					versionedOutputs[outputVersion] = entry;
@@ -210,39 +195,19 @@ final class TestFile {
 				case (0, 0):
 					fail('Test must have at least one output.');
 				case (0, > 0):
-					tests.add(
-						VersionedFormatTest(
-							lineNumber,
-							options,
-							input,
-							versionedOutputs,
-						),
-					);
+					tests.add(VersionedFormatTest(lineNumber, options, input, versionedOutputs));
 				case (1, 0):
 					tests.add(
-						UnversionedFormatTest(
-							lineNumber,
-							options,
-							input,
-							unversionedOutputs.first,
-						),
+						UnversionedFormatTest(lineNumber, options, input, unversionedOutputs.first),
 					);
 				case (> 1, 0):
 					fail('Test can\'t have multiple unversioned outputs.');
 				default:
-					fail(
-						'Test can\'t have both versioned and unversioned outputs.',
-					);
+					fail('Test can\'t have both versioned and unversioned outputs.');
 			}
 		}
 
-		return TestFile._(
-			relativePath,
-			pageWidth,
-			fileOptions,
-			fileComments,
-			tests,
-		);
+		return TestFile._(relativePath, pageWidth, fileOptions, fileComments, tests);
 	}
 
 	/// Parses all of the test option syntax like `(indent 3)` from [line].
@@ -275,13 +240,7 @@ final class TestFile {
 		return (TestOptions(leadingIndent, trailingCommas, experiments), line);
 	}
 
-	TestFile._(
-		this.path,
-		this.pageWidth,
-		this.options,
-		this.comments,
-		this.tests,
-	);
+	TestFile._(this.path, this.pageWidth, this.options, this.comments, this.tests);
 
 	/// The path to the test file, relative to the `test/` directory.
 	final String path;
@@ -319,14 +278,9 @@ final class TestFile {
 			languageVersion: version ?? defaultLanguageVersion,
 			pageWidth: pageWidth,
 			indent: test.options.leadingIndent ?? options.leadingIndent ?? 0,
-			experimentFlags: [
-				...options.experimentFlags,
-				...test.options.experimentFlags,
-			],
+			experimentFlags: [...options.experimentFlags, ...test.options.experimentFlags],
 			trailingCommas:
-			    test.options.trailingCommas ??
-			    options.trailingCommas ??
-			    TrailingCommas.automate,
+			    test.options.trailingCommas ?? options.trailingCommas ?? TrailingCommas.automate,
 		);
 	}
 }

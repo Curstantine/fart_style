@@ -53,15 +53,13 @@ final class SequenceBuilder {
 		// BlockPiece.
 		if (_elements.isEmpty) {
 			return _visitor.pieces.build(() {
-				if (_leftBracket case var bracket?)
-					_visitor.pieces.add(bracket);
+				if (_leftBracket case var bracket?) _visitor.pieces.add(bracket);
 
 				if (forceSplit || _leftBracket == null) {
 					_visitor.pieces.add(NewlinePiece());
 				}
 
-				if (_rightBracket case var bracket?)
-					_visitor.pieces.add(bracket);
+				if (_rightBracket case var bracket?) _visitor.pieces.add(bracket);
 			});
 		}
 
@@ -103,11 +101,7 @@ final class SequenceBuilder {
 	/// any comments or blank lines that appear before it.
 	void visit(AstNode node, {Indent? indent, bool allowBlankAfter = true}) {
 		addCommentsBefore(node.firstNonCommentToken, indent: indent);
-		add(
-			_visitor.nodePiece(node),
-			indent: indent,
-			allowBlankAfter: allowBlankAfter,
-		);
+		add(_visitor.nodePiece(node), indent: indent, allowBlankAfter: allowBlankAfter);
 	}
 
 	/// Appends a blank line before the next piece in the sequence.

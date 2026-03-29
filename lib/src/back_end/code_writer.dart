@@ -130,9 +130,7 @@ final class CodeWriter {
 		var leadingVisual = leadingTabs * tabWidth + leadingSpaces;
 		var subsequentVisual = subsequentTabs * tabWidth + subsequentSpaces;
 		if (subsequentVisual > leadingVisual) {
-			_indentStack.add(
-				_IndentLevel(Indent.none, subsequentTabs, subsequentSpaces),
-			);
+			_indentStack.add(_IndentLevel(Indent.none, subsequentTabs, subsequentSpaces));
 		}
 	}
 
@@ -194,9 +192,7 @@ final class CodeWriter {
 			};
 
 			var newTabs = parent.tabs + indent.tabs;
-			var newSpaces = collapseSpaces
-			    ? parent.spaces
-			    : parent.spaces + indent.spaces;
+			var newSpaces = collapseSpaces ? parent.spaces : parent.spaces + indent.spaces;
 
 			_indentStack.add(_IndentLevel(indent, newTabs, newSpaces));
 			if (debug.traceIndent) {
@@ -258,9 +254,7 @@ final class CodeWriter {
 		if (parentCollapse == indentVisualWidth) {
 			// We're indenting by the same existing collapsible amount, so collapse
 			// this new indentation with that existing one.
-			_indentStack.add(
-				_IndentLevel.v3Dot7(parentTabs + indent.tabs, parentSpaces, 0),
-			);
+			_indentStack.add(_IndentLevel.v3Dot7(parentTabs + indent.tabs, parentSpaces, 0));
 		} else if (canCollapse) {
 			// We should never get multiple levels of nested collapsible indentation.
 			assert(parentCollapse == 0);
@@ -277,11 +271,7 @@ final class CodeWriter {
 		} else {
 			// Regular indentation, so just increase the indent.
 			_indentStack.add(
-				_IndentLevel.v3Dot7(
-					parentTabs + indent.tabs,
-					parentSpaces + indent.spaces,
-					0,
-				),
+				_IndentLevel.v3Dot7(parentTabs + indent.tabs, parentSpaces + indent.spaces, 0),
 			);
 		}
 	}
@@ -317,10 +307,7 @@ final class CodeWriter {
 	/// any surrounding indentation. This is used for multi-line block comments
 	/// and multi-line strings.
 	void newline({bool blank = false, bool flushLeft = false}) {
-		whitespace(
-			blank ? Whitespace.blankLine : Whitespace.newline,
-			flushLeft: flushLeft,
-		);
+		whitespace(blank ? Whitespace.blankLine : Whitespace.newline, flushLeft: flushLeft);
 	}
 
 	/// Queues [whitespace] to be written to the output.
@@ -403,8 +390,7 @@ final class CodeWriter {
 
 	/// Format [piece] writing directly into this [CodeWriter].
 	void _formatInline(Piece piece) {
-		var isUnsolved =
-		    !_solution.isBound(piece) && piece.additionalStates.isNotEmpty;
+		var isUnsolved = !_solution.isBound(piece) && piece.additionalStates.isNotEmpty;
 
 		// See if we can immediately bind it based on the page width and the piece's
 		// contents.
@@ -522,8 +508,7 @@ final class CodeWriter {
 		// we can try to split, then remember them so that the solution will expand
 		// them next.
 		if (_foundExpandLine) return;
-		if (_currentLinePieces.isNotEmpty &&
-		    (_column > _pageWidth || !_solution.isValid)) {
+		if (_currentLinePieces.isNotEmpty && (_column > _pageWidth || !_solution.isValid)) {
 			_expandPieces.addAll(_currentLinePieces);
 			_foundExpandLine = true;
 		} else {
@@ -540,8 +525,7 @@ final class CodeWriter {
 			ShapeMode.beforeHeadline => Shape.other,
 			// If there were no newlines inside the headline, now that there is one,
 			// we have a headline shape.
-			ShapeMode.afterHeadline when state.shape == Shape.inline =>
-				Shape.headline,
+			ShapeMode.afterHeadline when state.shape == Shape.inline => Shape.headline,
 			// If there was already a newline in the headline, preserve that shape.
 			ShapeMode.afterHeadline => state.shape,
 			ShapeMode.other => Shape.other,
@@ -713,8 +697,7 @@ final class _IndentLevel {
 	/// The visual width of this indentation for line-length calculations.
 	int get visualWidth => tabs * tabWidth + spaces;
 
-	_IndentLevel.v3Dot7(this.tabs, this.spaces, this.collapsible)
-		: type = Indent.none;
+	_IndentLevel.v3Dot7(this.tabs, this.spaces, this.collapsible) : type = Indent.none;
 
 	_IndentLevel(this.type, this.tabs, this.spaces) : collapsible = 0;
 

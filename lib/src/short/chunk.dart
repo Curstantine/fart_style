@@ -166,8 +166,7 @@ final class Chunk extends Selection {
 			if (isDouble) 'double',
 			if (flushLeft) 'flush',
 			'$rule${rule.isHardened ? '!' : ''}',
-			if (rule.constrainedRules.isNotEmpty)
-				"-> ${rule.constrainedRules.join(' ')}",
+			if (rule.constrainedRules.isNotEmpty) "-> ${rule.constrainedRules.join(' ')}",
 		];
 
 		return '[${parts.join(' ')}] `$text`';

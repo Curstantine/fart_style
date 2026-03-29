@@ -30,9 +30,7 @@ Future<void> validate() async {
 @Task()
 Future<void> patch() async {
 	var version = _readVersion();
-	_updateVersion(
-		Version(version.major, version.minor, version.patch + 1, pre: 'wip'),
-	);
+	_updateVersion(Version(version.major, version.minor, version.patch + 1, pre: 'wip'));
 }
 
 /// Increments the minor version of the current version.
@@ -111,11 +109,7 @@ void _updateVersion(Version version) {
 	// pre-release prefix). We do this eagerly so that the version number shown
 	// by `dart format --version` is the version that *will* be published, even
 	// though we roll into the Dart SDK before publishing the final version.
-	var withoutPrerelease = Version(
-		version.major,
-		version.minor,
-		version.patch,
-	);
+	var withoutPrerelease = Version(version.major, version.minor, version.patch);
 	var versionFile = getFile('lib/src/cli/formatter_options.dart');
 	var versionSource = versionFile.readAsStringSync().replaceAll(
 		RegExp(r"const dartStyleVersion = '[^']+';"),

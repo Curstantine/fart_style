@@ -18,11 +18,7 @@ void main() async {
 
 /// Run all of the DartFormatter tests either using short or tall style.
 void _runTests({required bool isTall}) {
-	DartFormatter makeFormatter({
-		Version? languageVersion,
-		int? indent,
-		String? lineEnding,
-	}) {
+	DartFormatter makeFormatter({Version? languageVersion, int? indent, String? lineEnding}) {
 		languageVersion ??= isTall
 		    ? DartFormatter.latestLanguageVersion
 		    : DartFormatter.latestShortStyleLanguageVersion;
@@ -50,9 +46,7 @@ void _runTests({required bool isTall}) {
 			// is an error.
 			var formatter = makeFormatter(languageVersion: Version(2, 19, 0));
 			expect(
-				() => formatter.format(
-					'main() {switch (o) {case var x: break;}}',
-				),
+				() => formatter.format('main() {switch (o) {case var x: break;}}'),
 				throwsA(isA<FormatterException>()),
 			);
 		});
@@ -62,8 +56,7 @@ void _runTests({required bool isTall}) {
 			// error.
 			var formatter = makeFormatter(languageVersion: Version(3, 0, 0));
 			expect(
-				() =>
-				    formatter.format('main() {switch (o) {case 1+2: break;}}'),
+				() => formatter.format('main() {switch (o) {case 1+2: break;}}'),
 				throwsA(isA<FormatterException>()),
 			);
 		});
@@ -176,10 +169,7 @@ var variable =
 
 	test('throws a FormatterException on failed parse', () {
 		var formatter = makeFormatter();
-		expect(
-			() => formatter.format('wat?!'),
-			throwsA(isA<FormatterException>()),
-		);
+		expect(() => formatter.format('wat?!'), throwsA(isA<FormatterException>()));
 	});
 
 	test('FormatterException.message() does not throw', () {
@@ -213,11 +203,7 @@ var variable =
 				isA<FormatterException>().having(
 					(e) => e.message(),
 					'message',
-					allOf(
-						contains('Could not format'),
-						contains('line 2'),
-						contains('line 4'),
-					),
+					allOf(contains('Could not format'), contains('line 2'), contains('line 4')),
 				),
 			),
 		);
@@ -228,24 +214,15 @@ var variable =
 	});
 
 	test('adds newline to unit after trailing comment', () {
-		expect(
-			makeFormatter().format('library foo; //zamm'),
-			equals('library foo; //zamm\n'),
-		);
+		expect(makeFormatter().format('library foo; //zamm'), equals('library foo; //zamm\n'));
 	});
 
 	test('removes extra newlines', () {
-		expect(
-			makeFormatter().format('var x = 1;\n\n\n'),
-			equals('var x = 1;\n'),
-		);
+		expect(makeFormatter().format('var x = 1;\n\n\n'), equals('var x = 1;\n'));
 	});
 
 	test('does not add newline to statement', () {
-		expect(
-			makeFormatter().formatStatement('var x = 1;'),
-			equals('var x = 1;'),
-		);
+		expect(makeFormatter().formatStatement('var x = 1;'), equals('var x = 1;'));
 	});
 
 	test('fails if anything is after the statement', () {
@@ -254,11 +231,7 @@ var variable =
 			throwsA(
 				isA<FormatterException>()
 				    .having((e) => e.errors.length, 'errors.length', equals(1))
-				    .having(
-					    (e) => e.errors.first.offset,
-					    'errors.length.first.offset',
-					    equals(10),
-				    ),
+				    .having((e) => e.errors.first.offset, 'errors.length.first.offset', equals(10)),
 			),
 		);
 	});
@@ -290,17 +263,11 @@ var variable =
 		});
 
 		test('infers \\r\\n if the first newline uses that', () {
-			expect(
-				makeFormatter().format('var\r\ni\n=\n1;\n'),
-				equals('var i = 1;\r\n'),
-			);
+			expect(makeFormatter().format('var\r\ni\n=\n1;\n'), equals('var i = 1;\r\n'));
 		});
 
 		test('infers \\n if the first newline uses that', () {
-			expect(
-				makeFormatter().format('var\ni\r\n=\r\n1;\r\n'),
-				equals('var i = 1;\n'),
-			);
+			expect(makeFormatter().format('var\ni\r\n=\r\n1;\r\n'), equals('var i = 1;\n'));
 		});
 
 		test('defaults to \\n if there are no newlines', () {
@@ -327,9 +294,6 @@ var variable =
 		// Use an invalid line ending character to ensure the formatter will
 		// attempt to make non-whitespace changes.
 		var formatter = makeFormatter(lineEnding: '%');
-		expect(
-			() => formatter.format('var i = 1;'),
-			throwsA(isA<UnexpectedOutputException>()),
-		);
+		expect(() => formatter.format('var i = 1;'), throwsA(isA<UnexpectedOutputException>()));
 	});
 }
