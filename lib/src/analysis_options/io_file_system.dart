@@ -23,7 +23,7 @@ final class IOFileSystem implements FileSystem {
 	Future<FileSystemPath?> parentDirectory(covariant IOFileSystemPath path) async {
 		// Make [path] absolute (if not already) so that we can walk outside of the
 		// literal path string passed.
-		var result = p.dirname(p.absolute(path.path));
+		var result = p.dirname(p.normalize(p.absolute(path.path)));
 
 		// If the parent directory is the same as [path], we must be at the root.
 		if (result == path.path) return null;
@@ -43,4 +43,7 @@ final class IOFileSystemPath implements FileSystemPath {
 	final String path;
 
 	IOFileSystemPath._(this.path);
+
+	@override
+	String toString() => path;
 }

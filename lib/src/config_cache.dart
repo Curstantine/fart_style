@@ -143,7 +143,7 @@ final class ConfigCache {
 			// Report the error, but use the default settings and keep going.
 			stderr.writeln(
 				'Warning: Package resolution error when reading '
-				'"analysis_options.yaml" file:\n$exception',
+				'"analysis_options.yaml" file:\n$exception for "${file.path}":\n$exception',
 			);
 		}
 
