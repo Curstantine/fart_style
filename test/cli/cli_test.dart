@@ -208,7 +208,7 @@ void main() {
 			expect(await process.stderr.next, 'Hit a bug in the formatter when formatting stdin.');
 			expect(
 				await process.stderr.next,
-				'Please report at: github.com/dart-lang/dart_style/issues',
+				'Please report at: github.com/Curstantine/fart_style/issues',
 			);
 			expect(
 				await process.stderr.next,

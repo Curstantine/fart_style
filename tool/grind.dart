@@ -8,7 +8,7 @@ import 'package:grinder/grinder.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
-/// Matches the version line in dart_style's pubspec.
+/// Matches the version line in fart_style's pubspec.
 final _versionPattern = RegExp(r'^version: .*$', multiLine: true);
 
 void main(List<String> args) => grind(args);
@@ -95,7 +95,7 @@ Version _readVersion() {
 	return Version.parse((yaml.loadYaml(pubspec) as Map)['version'] as String);
 }
 
-/// Sets version numbers in the dart_style repository with [version].
+/// Sets version numbers in the fart_style repository with [version].
 void _updateVersion(Version version) {
 	// Read the version from the pubspec.
 	var pubspecFile = getFile('pubspec.yaml');

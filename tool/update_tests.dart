@@ -4,8 +4,8 @@
 import 'dart:io';
 
 import 'package:collection/collection.dart';
-import 'package:dart_style/dart_style.dart';
-import 'package:dart_style/src/testing/test_file.dart';
+import 'package:fart_style/fart_style.dart';
+import 'package:fart_style/src/testing/test_file.dart';
 import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 

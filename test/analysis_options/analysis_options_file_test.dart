@@ -2,8 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:dart_style/src/analysis_options/analysis_options_file.dart';
-import 'package:dart_style/src/testing/test_file_system.dart';
+import 'package:fart_style/src/analysis_options/analysis_options_file.dart';
+import 'package:fart_style/src/testing/test_file_system.dart';
 import 'package:test/test.dart';
 
 import '../utils.dart';

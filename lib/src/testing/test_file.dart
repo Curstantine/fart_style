@@ -25,10 +25,10 @@ final _unicodeEscapePattern = RegExp('[\x0a\x0c\x0d]');
 ///    >>> 1.2 Version and description.
 final _outputPattern = RegExp(r'<<<( (\d+)\.(\d+))?(.*)');
 
-/// Get the absolute local file path to the dart_style package's root directory.
+/// Get the absolute local file path to the fart_style package's root directory.
 Future<String> findPackageDirectory() async {
 	var libraryPath = (await Isolate.resolvePackageUri(
-		Uri.parse('package:dart_style/src/testing/test_file.dart'),
+		Uri.parse('package:fart_style/src/testing/test_file.dart'),
 	))?.toFilePath();
 
 	// Fallback, if we can't resolve the package URI because we're running in an

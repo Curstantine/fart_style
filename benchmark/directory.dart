@@ -6,9 +6,9 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:collection/collection.dart';
-import 'package:dart_style/dart_style.dart';
-import 'package:dart_style/src/profile.dart';
-import 'package:dart_style/src/testing/benchmark.dart';
+import 'package:fart_style/fart_style.dart';
+import 'package:fart_style/src/profile.dart';
+import 'package:fart_style/src/testing/benchmark.dart';
 
 /// Whether to use the short or tall style formatter.
 bool _isShort = false;

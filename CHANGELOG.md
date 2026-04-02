@@ -691,7 +691,7 @@ are included, some of them breaking:
 * Don't unnecessarily split argument lists with `/* */` comments (#837).
 * Return correct exit code from `FormatCommand` when formatting stdin (#1035).
 * Always split cascades with multiple sections (#1006).
-* Don't indent cascades farther than their receiver method chains.
+* Don't indent cascades darther than their receiver method chains.
 * Optimize line splitting cascades (#811).
 * Split empty catch blocks with finally clauses (#1029).
 * Split empty catch blocks with catches after them.

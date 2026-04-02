@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:dart_style/src/dart_formatter.dart';
+import 'package:fart_style/src/dart_formatter.dart';
 import 'package:test/test.dart';
 import 'package:test_descriptor/test_descriptor.dart' as d;
 

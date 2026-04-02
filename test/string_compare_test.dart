@@ -5,7 +5,7 @@
 @TestOn('vm')
 library;
 
-import 'package:dart_style/src/string_compare.dart';
+import 'package:fart_style/src/string_compare.dart';
 import 'package:test/test.dart';
 
 void main() {

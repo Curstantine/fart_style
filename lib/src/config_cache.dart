@@ -23,7 +23,7 @@ import 'profile.dart';
 /// will share the same package config, so this caches a previously read
 /// config for each directory.
 ///
-/// (When formatting dart_style on a Mac laptop, it would spend as much time
+/// (When formatting fart_style on a Mac laptop, it would spend as much time
 /// looking for package configs for each file as it did formatting if we don't
 /// cache. Caching makes it ~10x faster to find the config for each file.)
 ///

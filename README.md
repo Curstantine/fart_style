@@ -219,9 +219,9 @@ dart run fart_style:format --line-length=80 lib/
 dart run fart_style:format --indent=2 snippet.dart
 ```
 
-## Changes from dart_style
+## Changes from fart_style
 
-| Feature | dart_style | fart_style |
+| Feature | fart_style | fart_style |
 |---------|-----------|------------|
 | **Indentation** | Spaces only | SmartTabs (tabs + spaces) |
 | **Block indent** | 2 spaces | 1 tab |
@@ -233,7 +233,7 @@ dart run fart_style:format --indent=2 snippet.dart
 
 ### Indentation Types
 
-| Context | dart_style | fart_style |
+| Context | fart_style | fart_style |
 |---------|------------|------------|
 | Block body (class, method, if) | 2 spaces | 1 tab |
 | Cascade (`..method()`) | 2 spaces | 1 tab |

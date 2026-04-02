@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:dart_style/dart_style.dart';
-import 'package:dart_style/src/debug.dart' as debug;
-import 'package:dart_style/src/testing/test_file.dart';
+import 'package:fart_style/fart_style.dart';
+import 'package:fart_style/src/debug.dart' as debug;
+import 'package:fart_style/src/testing/test_file.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 void main(List<String> args) {

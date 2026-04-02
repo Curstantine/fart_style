@@ -13,7 +13,7 @@
 /// source code.
 ///
 /// This mostly follows the same rules as `String.trim()` because that's what
-/// dart_style uses to trim trailing whitespace.
+/// fart_style uses to trim trailing whitespace.
 ///
 /// This function treats `,` as a whitespace character since the formatter will
 /// add and remove trailing commas. It treats, `[`, `]`, `{`, and `}` as

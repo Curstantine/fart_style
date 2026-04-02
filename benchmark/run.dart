@@ -9,14 +9,14 @@ import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:args/args.dart';
-import 'package:dart_style/dart_style.dart';
-import 'package:dart_style/src/debug.dart' as debug;
-import 'package:dart_style/src/front_end/ast_node_visitor.dart';
-import 'package:dart_style/src/front_end/formatting_style.dart';
-import 'package:dart_style/src/profile.dart';
-import 'package:dart_style/src/short/source_visitor.dart';
-import 'package:dart_style/src/testing/benchmark.dart';
-import 'package:dart_style/src/testing/test_file.dart';
+import 'package:fart_style/fart_style.dart';
+import 'package:fart_style/src/debug.dart' as debug;
+import 'package:fart_style/src/front_end/ast_node_visitor.dart';
+import 'package:fart_style/src/front_end/formatting_style.dart';
+import 'package:fart_style/src/profile.dart';
+import 'package:fart_style/src/short/source_visitor.dart';
+import 'package:fart_style/src/testing/benchmark.dart';
+import 'package:fart_style/src/testing/test_file.dart';
 import 'package:path/path.dart' as p;
 
 /// The number of trials to run before measuring results.

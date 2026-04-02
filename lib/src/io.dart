@@ -80,7 +80,7 @@ Future<void> formatStdin(FormatterOptions options, List<int>? selection, String?
 			exitCode = 65; // sysexits.h: EX_DATAERR
 		} catch (err, stack) {
 			stderr.writeln('''Hit a bug in the formatter when formatting stdin.
-Please report at: github.com/dart-lang/dart_style/issues
+Please report at: github.com/Curstantine/fart_style/issues
 $err
 $stack''');
 			exitCode = 70; // sysexits.h: EX_SOFTWARE
@@ -201,10 +201,10 @@ Future<bool> _processFile(
 	} on UnexpectedOutputException catch (err) {
 		stderr.writeln('''Hit a bug in the formatter when formatting $displayPath.
 $err
-Please report at github.com/dart-lang/dart_style/issues.''');
+Please report at github.com/Curstantine/fart_style/issues.''');
 	} catch (err, stack) {
 		stderr.writeln('''Hit a bug in the formatter when formatting $displayPath.
-Please report at github.com/dart-lang/dart_style/issues.
+Please report at github.com/Curstantine/fart_style/issues.
 $err
 $stack''');
 	}

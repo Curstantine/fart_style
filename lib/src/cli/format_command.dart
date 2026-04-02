@@ -144,7 +144,7 @@ final class FormatCommand extends Command<int> {
 		argParser.addFlag(
 			'version',
 			negatable: false,
-			help: 'Show dart_style version.',
+			help: 'Show fart_style version.',
 			hide: !verbose,
 		);
 		argParser.addMultiOption(
@@ -326,7 +326,7 @@ final class FormatCommand extends Command<int> {
 			options.summary.show();
 		}
 
-		// Return the exitCode explicitly for tools which embed dart_style
+		// Return the exitCode explicitly for tools which embed fart_style
 		// and set their own exitCode.
 		return exitCode;
 	}
