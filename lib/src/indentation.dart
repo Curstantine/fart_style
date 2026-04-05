@@ -12,11 +12,11 @@
 /// breaking alignment.
 library;
 
-/// The visual width of a tab character for line-length calculations.
+/// The default visual width of a tab character for line-length calculations.
 ///
 /// This is used when calculating whether a line exceeds the page width.
 /// The actual display width depends on the user's editor settings.
-const int tabWidth = 4;
+const int defaultTabWidth = 4;
 
 /// Represents an indentation level with separate tab and space counts.
 ///
@@ -40,7 +40,13 @@ final class Indentation {
 	const Indentation.spaces(this.spaces) : tabs = 0;
 
 	/// The visual width of this indentation for line-length calculations.
-	int get visualWidth => tabs * tabWidth + spaces;
+	///
+	/// Uses the default tab width. For custom tab widths, use
+	/// [visualWidthWith] instead.
+	int get visualWidth => tabs * defaultTabWidth + spaces;
+
+	/// Returns the visual width of this indentation using [tabWidth].
+	int visualWidthWith(int tabWidth) => tabs * tabWidth + spaces;
 
 	/// Generates the output string: tabs followed by spaces.
 	String toOutput() => '\t' * tabs + ' ' * spaces;
@@ -71,7 +77,13 @@ final class Indentation {
 String indent(int tabs, int spaces) => '\t' * tabs + ' ' * spaces;
 
 /// Calculates the visual width of an indentation for line-length calculations.
-int visualWidth(int tabs, int spaces) => tabs * tabWidth + spaces;
+///
+/// Uses the default tab width. For custom tab widths, use
+/// [visualWidthWith] instead.
+int visualWidth(int tabs, int spaces) => tabs * defaultTabWidth + spaces;
+
+/// Calculates the visual width of an indentation using [tabWidth].
+int visualWidthWith(int tabs, int spaces, int tabWidth) => tabs * tabWidth + spaces;
 
 /// Pre-calculated indentation strings for common tab counts.
 ///

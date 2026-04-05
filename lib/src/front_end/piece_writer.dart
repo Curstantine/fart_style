@@ -425,10 +425,11 @@ final class PieceWriter {
 
 		Profile.begin('PieceWriter.finish() format piece tree');
 
-		var cache = SolutionCache(is3Dot7: style.is3Dot7);
+		var cache = SolutionCache(is3Dot7: style.is3Dot7, tabWidth: style.tabWidth);
 		var solver = Solver(
 			cache,
 			pageWidth: style.pageWidth,
+			tabWidth: style.tabWidth,
 			leadingTabs: style.leadingIndent,
 			leadingSpaces: 0,
 		);

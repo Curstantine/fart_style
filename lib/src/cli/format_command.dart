@@ -133,6 +133,15 @@ final class FormatCommand extends Command<int> {
 			hide: !verbose,
 		);
 
+		argParser.addOption(
+			'tab-width',
+			help:
+			    'The visual width of a tab character for line-length calculations.\n'
+			    'This affects when lines wrap, not how code is indented.',
+			defaultsTo: '4',
+			hide: !verbose,
+		);
+
 		argParser.addFlag(
 			'follow-links',
 			negatable: false,
@@ -279,6 +288,17 @@ final class FormatCommand extends Command<int> {
 			);
 		}
 
+		int? tabWidth;
+		if (argResults.wasParsed('tab-width')) {
+			var tabWidthString = argResults.option('tab-width')!;
+			tabWidth = int.tryParse(tabWidthString);
+			if (tabWidth == null) {
+				usageException('--tab-width must be an integer, was "$tabWidthString".');
+			} else if (tabWidth <= 0) {
+				usageException('--tab-width must be a positive number, was $tabWidth.');
+			}
+		}
+
 		List<int>? selection;
 		try {
 			selection = _parseSelection(argResults, 'selection');
@@ -310,6 +330,7 @@ final class FormatCommand extends Command<int> {
 			languageVersion: languageVersion,
 			indent: indent,
 			pageWidth: pageWidth,
+			tabWidth: tabWidth,
 			trailingCommas: trailingCommas,
 			followLinks: followLinks,
 			show: show,

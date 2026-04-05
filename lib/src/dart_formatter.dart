@@ -17,6 +17,7 @@ import 'package:pub_semver/pub_semver.dart';
 import 'exceptions.dart';
 import 'front_end/ast_node_visitor.dart';
 import 'front_end/formatting_style.dart';
+import 'indentation.dart' show defaultTabWidth;
 import 'short/source_visitor.dart';
 import 'source_code.dart';
 import 'string_compare.dart' as string_compare;
@@ -66,6 +67,13 @@ final class DartFormatter {
 	/// The number of characters of indentation to prefix the output lines with.
 	final int indent;
 
+	/// The visual width of a tab character for line-length calculations.
+	///
+	/// This is used when calculating whether a line exceeds the page width.
+	/// The actual display width depends on the user's editor settings.
+	/// Defaults to 4.
+	final int tabWidth;
+
 	/// How trailing commas in various constructs should affect formatting.
 	///
 	/// The default is [TrailingCommas.automate] where the formatter is free to
@@ -86,15 +94,20 @@ final class DartFormatter {
 	///
 	/// If [indent] is given, that many levels of indentation will be prefixed
 	/// before each resulting line in the output.
+	///
+	/// If [tabWidth] is given, it specifies the visual width of a tab character
+	/// for line-length calculations. Defaults to 4.
 	DartFormatter({
 		required this.languageVersion,
 		this.lineEnding,
 		int? pageWidth,
 		int? indent,
+		int? tabWidth,
 		TrailingCommas? trailingCommas,
 		List<String>? experimentFlags,
 	}) : pageWidth = pageWidth ?? defaultPageWidth,
 		   indent = indent ?? 0,
+		   tabWidth = tabWidth ?? defaultTabWidth,
 		   trailingCommas = trailingCommas ?? TrailingCommas.automate,
 		   experimentFlags = [...?experimentFlags];
 

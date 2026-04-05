@@ -32,6 +32,11 @@ final class FormatterOptions {
 	/// [DartFormatter.defaultPageWidth].
 	final int? pageWidth;
 
+	/// The visual width of a tab character for line-length calculations.
+	///
+	/// If omitted, defaults to 4.
+	final int? tabWidth;
+
 	/// How trailing commas in the input source code affect formatting.
 	final TrailingCommas? trailingCommas;
 
@@ -58,6 +63,7 @@ final class FormatterOptions {
 		this.languageVersion,
 		this.indent = 0,
 		this.pageWidth,
+		this.tabWidth,
 		this.trailingCommas,
 		this.followLinks = false,
 		this.show = Show.changed,

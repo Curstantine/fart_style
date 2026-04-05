@@ -85,6 +85,19 @@ final class ConfigCache {
 	}
 
 	/// Looks for an "analysis_options.yaml" file surrounding [file] and, if
+	/// found and valid, returns the tab width specified by that config file.
+	///
+	/// Otherwise returns `null`.
+	///
+	/// The schema looks like:
+	///
+	///     formatter:
+	///       tab_width: 4
+	Future<int?> findTabWidth(File file) async {
+		return (await _findFormatterOptions(file)).tabWidth;
+	}
+
+	/// Looks for an "analysis_options.yaml" file surrounding [file] and, if
 	/// found and valid, returns the trailing comma handling specified by that
 	/// config file.
 	///
@@ -110,6 +123,7 @@ final class ConfigCache {
 		if (_directoryOptions[directory] case var options?) return options;
 
 		int? pageWidth;
+		int? tabWidth;
 		TrailingCommas? trailingCommas;
 
 		try {
@@ -123,6 +137,10 @@ final class ConfigCache {
 			if (optionsFile['formatter'] case Map<Object?, Object?> formatter) {
 				if (formatter case {'page_width': int width}) {
 					pageWidth = width;
+				}
+
+				if (formatter case {'tab_width': int width}) {
+					tabWidth = width;
 				}
 
 				if (formatter case {'trailing_commas': var commas}) {
@@ -148,7 +166,11 @@ final class ConfigCache {
 		}
 
 		// Cache whichever options we found (or `null` if we didn't find them).
-		return _directoryOptions[directory] = _FormatterOptions(pageWidth, trailingCommas);
+		return _directoryOptions[directory] = _FormatterOptions(
+			pageWidth,
+			tabWidth,
+			trailingCommas,
+		);
 	}
 
 	/// Look for and cache the nearest package surrounding [file].
@@ -209,9 +231,13 @@ final class _FormatterOptions {
 	/// options file doesn't specify it.
 	final int? pageWidth;
 
+	/// The configured tab width, or `null` if there is no options file or the
+	/// options file doesn't specify it.
+	final int? tabWidth;
+
 	/// The configured comma handling, or `null` if there is no options file or
 	/// the options file doesn't specify it.
 	final TrailingCommas? trailingCommas;
 
-	_FormatterOptions(this.pageWidth, this.trailingCommas);
+	_FormatterOptions(this.pageWidth, this.tabWidth, this.trailingCommas);
 }

@@ -4,7 +4,7 @@
 import 'dart:math';
 
 import '../debug.dart' as debug;
-import '../indentation.dart' show tabWidth;
+import '../indentation.dart' show defaultTabWidth;
 import '../piece/piece.dart';
 import '../profile.dart';
 import 'code.dart';
@@ -24,6 +24,9 @@ import 'solution_cache.dart';
 /// whitespace, etc.
 final class CodeWriter {
 	final int _pageWidth;
+
+	/// The visual width of a tab character for line-length calculations.
+	final int _tabWidth;
 
 	/// Previously cached formatted subtrees.
 	final SolutionCache _cache;
@@ -108,27 +111,32 @@ final class CodeWriter {
 	/// beginning of the first line. [subsequentTabs] and [subsequentSpaces]
 	/// specify the indentation of each line after that, independent of
 	/// indentation created by pieces being written.
+	///
+	/// [tabWidth] specifies the visual width of a tab character for line-length
+	/// calculations. Defaults to [defaultTabWidth].
 	CodeWriter(
 		this._pageWidth,
+		int tabWidth,
 		int leadingTabs,
 		int leadingSpaces,
 		int subsequentTabs,
 		int subsequentSpaces,
 		this._cache,
 		this._solution,
-	) : _code = GroupCode.withTabs(leadingTabs, leadingSpaces) {
+	) : _tabWidth = tabWidth,
+		  _code = GroupCode.withTabs(leadingTabs, leadingSpaces) {
 		_indentStack.add(_IndentLevel(Indent.none, leadingTabs, leadingSpaces));
 
 		// Track the leading indent before the first line.
 		_pendingIndentTabs = leadingTabs;
 		_pendingIndentSpaces = leadingSpaces;
-		_column = leadingTabs * tabWidth + leadingSpaces;
+		_column = leadingTabs * _tabWidth + leadingSpaces;
 
 		// If there is additional indentation on subsequent lines, then push that
 		// onto the stack. When the first newline is written, [_pendingIndentTabs]
 		// will pick this up and use it for subsequent lines.
-		var leadingVisual = leadingTabs * tabWidth + leadingSpaces;
-		var subsequentVisual = subsequentTabs * tabWidth + subsequentSpaces;
+		var leadingVisual = leadingTabs * _tabWidth + leadingSpaces;
+		var subsequentVisual = subsequentTabs * _tabWidth + subsequentSpaces;
 		if (subsequentVisual > leadingVisual) {
 			_indentStack.add(_IndentLevel(Indent.none, subsequentTabs, subsequentSpaces));
 		}
@@ -483,7 +491,7 @@ final class CodeWriter {
 			case Whitespace.newline:
 			case Whitespace.blankLine:
 				_finishLine();
-				_column = _pendingIndentTabs * tabWidth + _pendingIndentSpaces;
+				_column = _pendingIndentTabs * _tabWidth + _pendingIndentSpaces;
 				_code.newline(
 					blank: _pendingWhitespace == Whitespace.blankLine,
 					tabs: _pendingIndentTabs,
@@ -628,7 +636,7 @@ enum Indent {
 	const Indent({required this.tabs, required this.spaces});
 
 	/// The visual width of this indentation for line-length calculations.
-	int get visualWidth => tabs * tabWidth + spaces;
+	int get visualWidth => tabs * defaultTabWidth + spaces;
 }
 
 /// Information for each piece currently being formatted while [CodeWriter]
@@ -695,7 +703,7 @@ final class _IndentLevel {
 	final int collapsible;
 
 	/// The visual width of this indentation for line-length calculations.
-	int get visualWidth => tabs * tabWidth + spaces;
+	int get visualWidth => tabs * defaultTabWidth + spaces;
 
 	_IndentLevel.v3Dot7(this.tabs, this.spaces, this.collapsible) : type = Indent.none;
 

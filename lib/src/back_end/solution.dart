@@ -1,6 +1,7 @@
 // Copyright (c) 2023, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+import '../indentation.dart' show defaultTabWidth;
 import '../piece/piece.dart';
 import '../profile.dart';
 import 'code.dart';
@@ -117,6 +118,7 @@ final class Solution implements Comparable<Solution> {
 		SolutionCache cache,
 		Piece root, {
 		required int pageWidth,
+		int? tabWidth,
 		required int leadingTabs,
 		required int leadingSpaces,
 		required int subsequentTabs,
@@ -128,6 +130,7 @@ final class Solution implements Comparable<Solution> {
 			cache,
 			root,
 			pageWidth,
+			tabWidth ?? defaultTabWidth,
 			leadingTabs,
 			leadingSpaces,
 			subsequentTabs,
@@ -225,6 +228,7 @@ final class Solution implements Comparable<Solution> {
 		SolutionCache cache,
 		Piece root, {
 		required int pageWidth,
+		int? tabWidth,
 		required int leadingTabs,
 		required int leadingSpaces,
 		required int subsequentTabs,
@@ -234,6 +238,7 @@ final class Solution implements Comparable<Solution> {
 		// end (or a winner).
 		if (_expandPieces.isEmpty) return const [];
 
+		var effectiveTabWidth = tabWidth ?? defaultTabWidth;
 		var solutions = <Solution>[];
 		for (var i = 0; i < _expandPieces.length; i++) {
 			// For each non-default state that the expanding piece can be in, create
@@ -268,6 +273,7 @@ final class Solution implements Comparable<Solution> {
 						cache,
 						root,
 						pageWidth,
+						effectiveTabWidth,
 						leadingTabs,
 						leadingSpaces,
 						subsequentTabs,
@@ -332,6 +338,7 @@ final class Solution implements Comparable<Solution> {
 		SolutionCache cache,
 		Piece root,
 		int pageWidth,
+		int tabWidth,
 		int leadingTabs,
 		int leadingSpaces,
 		int subsequentTabs,
@@ -339,6 +346,7 @@ final class Solution implements Comparable<Solution> {
 	) {
 		var writer = CodeWriter(
 			pageWidth,
+			tabWidth,
 			leadingTabs,
 			leadingSpaces,
 			subsequentTabs,

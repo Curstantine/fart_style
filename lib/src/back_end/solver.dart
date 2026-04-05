@@ -4,6 +4,7 @@
 import 'package:collection/collection.dart';
 
 import '../debug.dart' as debug;
+import '../indentation.dart' show defaultTabWidth;
 import '../piece/piece.dart';
 import '../profile.dart';
 import 'solution.dart';
@@ -47,6 +48,9 @@ final class Solver {
 
 	final int _pageWidth;
 
+	/// The visual width of a tab character for line-length calculations.
+	final int _tabWidth;
+
 	/// The number of tabs of block-level indentation on the first line.
 	final int _leadingTabs;
 
@@ -66,14 +70,19 @@ final class Solver {
 	/// The first line is indented by [leadingTabs] tabs and [leadingSpaces]
 	/// spaces. All lines after that use [subsequentTabs] and [subsequentSpaces].
 	/// If subsequent values are omitted, they default to the leading values.
+	///
+	/// [tabWidth] specifies the visual width of a tab character for line-length
+	/// calculations. Defaults to [defaultTabWidth].
 	Solver(
 		this._cache, {
 		required int pageWidth,
+		int? tabWidth,
 		int leadingTabs = 0,
 		int leadingSpaces = 0,
 		int? subsequentTabs,
 		int? subsequentSpaces,
 	}) : _pageWidth = pageWidth,
+		   _tabWidth = tabWidth ?? defaultTabWidth,
 		   _leadingTabs = leadingTabs,
 		   _leadingSpaces = leadingSpaces,
 		   _subsequentTabs = subsequentTabs ?? leadingTabs,
@@ -109,6 +118,7 @@ final class Solver {
 			_cache,
 			root,
 			pageWidth: _pageWidth,
+			tabWidth: _tabWidth,
 			leadingTabs: _leadingTabs,
 			leadingSpaces: _leadingSpaces,
 			subsequentTabs: _subsequentTabs,
@@ -168,6 +178,7 @@ final class Solver {
 				_cache,
 				root,
 				pageWidth: _pageWidth,
+				tabWidth: _tabWidth,
 				leadingTabs: _leadingTabs,
 				leadingSpaces: _leadingSpaces,
 				subsequentTabs: _subsequentTabs,

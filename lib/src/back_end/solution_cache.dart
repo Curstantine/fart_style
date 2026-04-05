@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import '../indentation.dart' show tabWidth;
+import '../indentation.dart' show defaultTabWidth;
 import '../piece/piece.dart';
 import 'solution.dart';
 import 'solver.dart';
@@ -27,9 +27,12 @@ final class SolutionCache {
 	/// Whether this cache and all solutions in it use the 3.7 style solver.
 	final bool is3Dot7;
 
+	/// The visual width of a tab character for line-length calculations.
+	final int tabWidth;
+
 	final _cache = <_Key, Solution>{};
 
-	SolutionCache({required this.is3Dot7});
+	SolutionCache({required this.is3Dot7, int? tabWidth}) : tabWidth = tabWidth ?? defaultTabWidth;
 
 	/// Returns a previously cached solution for formatting [root] with leading
 	/// indentation of [leadingTabs] tabs and [leadingSpaces] spaces (and
@@ -61,6 +64,7 @@ final class SolutionCache {
 			() => Solver(
 				this,
 				pageWidth: pageWidth,
+				tabWidth: tabWidth,
 				leadingTabs: leadingTabs,
 				leadingSpaces: leadingSpaces,
 				subsequentTabs: subsequentTabs,

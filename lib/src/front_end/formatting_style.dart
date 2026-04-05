@@ -3,6 +3,7 @@ import 'package:pub_semver/pub_semver.dart';
 
 import '../ast_extensions.dart';
 import '../dart_formatter.dart';
+import '../indentation.dart' show defaultTabWidth;
 
 /// The formatting style that should be applied to code.
 ///
@@ -30,9 +31,15 @@ final class FormattingStyle {
 	/// formatted has a `// dart format width = ` comment.
 	final int pageWidth;
 
+	/// The visual width of a tab character for line-length calculations.
+	///
+	/// Defaults to [defaultTabWidth] (4) if not specified.
+	final int tabWidth;
+
 	FormattingStyle(this._formatter, {Version? languageVersion, int? pageWidth})
 		: _languageVersion = languageVersion ?? _formatter.languageVersion,
-		  pageWidth = pageWidth ?? _formatter.pageWidth;
+		  pageWidth = pageWidth ?? _formatter.pageWidth,
+		  tabWidth = _formatter.tabWidth;
 
 	String? get lineEnding => _formatter.lineEnding;
 
