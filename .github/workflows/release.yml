@@ -1,0 +1,106 @@
+name: Release
+
+on:
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+']
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: linux-x86_64
+            artifact: fart_style
+          - os: ubuntu-24.04-arm64
+            target: linux-aarch64
+            artifact: fart_style
+          - os: macos-13
+            target: darwin-x86_64
+            artifact: fart_style
+          - os: macos-latest
+            target: darwin-aarch64
+            artifact: fart_style
+          - os: windows-latest
+            target: windows-x86_64
+            artifact: fart_style.exe
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Compile native executable
+        run: dart compile exe bin/format.dart -o ${{ matrix.artifact }}
+
+      - name: Create tarball (Linux)
+        if: runner.os == 'Linux'
+        run: tar -czvf fart_style-${{ matrix.target }}.tar.gz ${{ matrix.artifact }}
+
+      - name: Create zip (macOS)
+        if: runner.os == 'macOS'
+        run: zip fart_style-${{ matrix.target }}.zip ${{ matrix.artifact }}
+
+      - name: Create zip (Windows)
+        if: runner.os == 'Windows'
+        run: Compress-Archive -Path ${{ matrix.artifact }} -DestinationPath fart_style-${{ matrix.target }}.zip
+
+      - name: Upload artifact (Linux)
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: fart_style-${{ matrix.target }}
+          path: fart_style-${{ matrix.target }}.tar.gz
+
+      - name: Upload artifact (macOS/Windows)
+        if: runner.os != 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: fart_style-${{ matrix.target }}
+          path: fart_style-${{ matrix.target }}.zip
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Generate checksums
+        run: |
+          cd artifacts
+          sha256sum *.tar.gz *.zip > checksums.txt
+          cat checksums.txt
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: v${{ steps.version.outputs.version }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            artifacts/*.tar.gz
+            artifacts/*.zip
+            artifacts/checksums.txt

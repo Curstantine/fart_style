@@ -219,6 +219,73 @@ dart run fart_style:format --line-length=80 lib/
 dart run fart_style:format --indent=2 snippet.dart
 ```
 
+## Using with dprint
+
+You can use fart_style with [dprint](https://dprint.dev/) via the [exec plugin](https://dprint.dev/plugins/exec/).
+
+### 1. Download the Native Binary
+
+Download the appropriate binary for your platform from [Releases](https://github.com/Curstantine/fart_style/releases) and add it to your PATH.
+
+| Platform | Binary |
+|----------|--------|
+| Linux x86_64 | `fart_style-linux-x86_64.tar.gz` |
+| Linux ARM64 | `fart_style-linux-aarch64.tar.gz` |
+| macOS Intel | `fart_style-darwin-x86_64.zip` |
+| macOS Apple Silicon | `fart_style-darwin-aarch64.zip` |
+| Windows x86_64 | `fart_style-windows-x86_64.zip` |
+
+### 2. Configure dprint
+
+Add to your `dprint.json`:
+
+```json
+{
+  "exec": {
+    "commands": [{
+      "command": "fart_style --stdin-name {{file_path}}",
+      "exts": ["dart"]
+    }]
+  },
+  "plugins": [
+    "https://plugins.dprint.dev/exec-0.5.0.json"
+  ]
+}
+```
+
+### 3. Run dprint
+
+```sh
+# Format all Dart files
+dprint fmt
+
+# Check formatting
+dprint check
+```
+
+### Configuration Options
+
+You can pass additional flags to fart_style in the command:
+
+```json
+{
+  "exec": {
+    "commands": [{
+      "command": "fart_style --stdin-name {{file_path}} --page-width 80",
+      "exts": ["dart"]
+    }]
+  },
+  "plugins": [
+    "https://plugins.dprint.dev/exec-0.5.0.json"
+  ]
+}
+```
+
+Available flags:
+- `--page-width <n>` - Maximum line width (default: 100)
+- `--trailing-commas <mode>` - `automate` or `preserve` (default: automate)
+- `--language-version <version>` - Dart language version (e.g., `3.0`, `latest`)
+
 ## Changes from fart_style
 
 | Feature | fart_style | fart_style |
