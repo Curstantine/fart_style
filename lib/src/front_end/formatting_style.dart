@@ -16,58 +16,71 @@ import '../indentation.dart' show defaultTabWidth;
 /// code whose language version is older than a style change will retain the
 /// older style.
 final class FormattingStyle {
-	/// The [DartFormatter] the style was created from.
-	final DartFormatter _formatter;
+  static final _version3Dot7 = Version(3, 7, 0);
+  static final _version3Dot10 = Version(3, 10, 0);
+  static final _version3Dot13 = Version(3, 13, 0);
 
-	/// The language version of the style.
-	///
-	/// Usually the same version as [formatter], but may be different if the file
-	/// being formatted has an `@dart=` comment.
-	final Version _languageVersion;
+  /// The [DartFormatter] the style was created from.
+  final DartFormatter _formatter;
 
-	/// The number of characters allowed in a single line.
-	///
-	/// Usually the same as [formatter]'s but may be different if the file being
-	/// formatted has a `// dart format width = ` comment.
-	final int pageWidth;
+  /// The language version of the style.
+  ///
+  /// Usually the same version as [formatter], but may be different if the file
+  /// being formatted has an `@dart=` comment.
+  final Version _languageVersion;
 
-	/// The visual width of a tab character for line-length calculations.
-	///
-	/// Defaults to [defaultTabWidth] (4) if not specified.
-	final int tabWidth;
+  /// The number of characters allowed in a single line.
+  ///
+  /// Usually the same as [formatter]'s but may be different if the file being
+  /// formatted has a `// dart format width = ` comment.
+  final int pageWidth;
 
-	FormattingStyle(this._formatter, {Version? languageVersion, int? pageWidth})
-		: _languageVersion = languageVersion ?? _formatter.languageVersion,
-		  pageWidth = pageWidth ?? _formatter.pageWidth,
-		  tabWidth = _formatter.tabWidth;
+  /// The visual width of a tab character for line-length calculations.
+  ///
+  /// Defaults to [defaultTabWidth] (4) if not specified.
+  final int tabWidth;
 
-	String? get lineEnding => _formatter.lineEnding;
+  FormattingStyle(this._formatter, {Version? languageVersion, int? pageWidth})
+    : _languageVersion = languageVersion ?? _formatter.languageVersion,
+      pageWidth = pageWidth ?? _formatter.pageWidth,
+      tabWidth = _formatter.tabWidth;
 
-	/// The number of characters of indentation to prefix the output lines with.
-	int get leadingIndent => _formatter.indent;
+  String? get lineEnding => _formatter.lineEnding;
 
-	/// Whether the code being formatted is at language version 3.7 and doesn't
-	/// include the sweeping style changes in 3.8.
-	bool get is3Dot7 => _languageVersion == Version(3, 7, 0);
+  /// The number of characters of indentation to prefix the output lines with.
+  int get leadingIndent => _formatter.indent;
 
-	/// Whether a trailing comma should be preserved after for-loop updaters.
-	bool get preserveTrailingCommaAfterForUpdaters =>
-	    _formatter.trailingCommas == TrailingCommas.preserve;
+  /// Whether the code being formatted is at language version 3.7 and doesn't
+  /// include the sweeping style changes in 3.8.
+  bool get is3Dot7 => _languageVersion == _version3Dot7;
 
-	/// Whether a trailing comma should be preserved after enum values.
-	bool get preserveTrailingCommaAfterEnumValues =>
-	    _formatter.trailingCommas == TrailingCommas.preserve &&
-	    _languageVersion >= Version(3, 10, 0);
+  /// Whether a trailing comma should be preserved after for-loop updaters.
+  bool get preserveTrailingCommaAfterForUpdaters =>
+      _formatter.trailingCommas == TrailingCommas.preserve;
 
-	/// Whether mixin declarations and extension types with brace bodies should
-	/// always get a blank line above and below them.
-	///
-	/// They always should have, but they were overlooked. We already do this for
-	/// classes, enums, and extensions.
-	bool get blankLineAroundMixinAndExtensionTypes => _languageVersion >= Version(3, 13, 0);
+  /// Whether a trailing comma should be preserved after enum values.
+  bool get preserveTrailingCommaAfterEnumValues =>
+      _formatter.trailingCommas == TrailingCommas.preserve &&
+      _languageVersion >= _version3Dot10;
 
-	/// Whether there is a trailing comma at the end of the list delimited by
-	/// [rightBracket] which should be preserved by this style.
-	bool preserveTrailingCommaBefore(Token rightBracket) =>
-	    _formatter.trailingCommas == TrailingCommas.preserve && rightBracket.hasCommaBefore;
+  /// Whether mixin declarations and extension types with brace bodies should
+  /// always get a blank line above and below them.
+  ///
+  /// They always should have, but they were overlooked. We already do this for
+  /// classes, enums, and extensions.
+  bool get blankLineAroundMixinAndExtensionTypes =>
+      _languageVersion >= _version3Dot13;
+
+  /// Whether parameter lists should be block formatted in things like typedefs.
+  bool get blockFormatParameterLists => _languageVersion >= _version3Dot13;
+
+  /// Whether the LHS of an `as`, `is`, or `is!` expression can be block
+  /// formatted.
+  bool get blockFormatTypeTest => _languageVersion >= _version3Dot13;
+
+  /// Whether there is a trailing comma at the end of the list delimited by
+  /// [rightBracket] which should be preserved by this style.
+  bool preserveTrailingCommaBefore(Token rightBracket) =>
+      _formatter.trailingCommas == TrailingCommas.preserve &&
+      rightBracket.hasCommaBefore;
 }

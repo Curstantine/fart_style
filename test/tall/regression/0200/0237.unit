@@ -17,3 +17,23 @@ class Bar {
 		);
 	}
 }
+<<< 3.13 (unsupported)
+>>> Without var
+class Bar {
+  void foo() {
+    blah.method(someLongArgument, andAnotherOne, andAThirdOne, andOneMore)
+      .then((x) {
+        var y = x * 2;
+      });
+  }
+}
+<<<
+class Bar {
+  void foo() {
+    blah.method(someLongArgument, andAnotherOne, andAThirdOne, andOneMore).then(
+      (x) {
+        var y = x * 2;
+      },
+    );
+  }
+}

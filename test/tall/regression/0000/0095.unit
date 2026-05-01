@@ -4,12 +4,28 @@
   }, String locale, String name, List<String> args, String meaning]) =>
       message_str;
 <<<
-	String lookupMessage(
-		String message_str, [
-		final String desc = '',
-		final Map examples = const {},
-		String locale,
-		String name,
-		List<String> args,
-		String meaning,
-	]) => message_str;
+  String lookupMessage(
+    String message_str, [
+    final String desc = '',
+    final Map examples = const {},
+    String locale,
+    String name,
+    List<String> args,
+    String meaning,
+  ]) => message_str;
+<<< 3.13 (unsupported)
+>>> (indent 2) Without final
+  String lookupMessage(
+      String message_str, [String desc = '', Map examples = const {
+  }, String locale, String name, List<String> args, String meaning]) =>
+      message_str;
+<<<
+  String lookupMessage(
+    String message_str, [
+    String desc = '',
+    Map examples = const {},
+    String locale,
+    String name,
+    List<String> args,
+    String meaning,
+  ]) => message_str;

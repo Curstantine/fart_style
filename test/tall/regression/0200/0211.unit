@@ -35,6 +35,24 @@ void defineProperty(var obj, String property, var value) {
 		value,
 	);
 }
+<<< 3.13 (unsupported)
+>>> Without var
+void defineProperty(obj, String property, value) {
+  JS('void', 'Object.defineProperty(#, #, '
+      '{value: #, enumerable: false, writable: true, configurable: true})',
+      obj, property, value);
+}
+<<<
+void defineProperty(obj, String property, value) {
+  JS(
+    'void',
+    'Object.defineProperty(#, #, '
+        '{value: #, enumerable: false, writable: true, configurable: true})',
+    obj,
+    property,
+    value,
+  );
+}
 >>> (indent 4)
     main() {
       return searchEngine.searchTopLevelDeclarations('').then(

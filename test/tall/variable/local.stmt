@@ -233,19 +233,25 @@ var variableName = (
 };
 <<< 3.8
 var variableName =
-		(
-			parameter1,
-			parameter2,
-			parameter3,
-		) {
-			body;
-		};
->>> Don't use block-like splitting for expression-bodied function expressions.
+    (
+      parameter1,
+      parameter2,
+      parameter3,
+    ) {
+      body;
+    };
+>>> Block-like splitting for expression-bodied function expressions.
 var variableName = (parameter, parameter, parameter) => body;
-<<<
+<<< 3.7
 var variableName =
-		(parameter, parameter, parameter) =>
-				body;
+    (parameter, parameter, parameter) =>
+        body;
+<<< 3.13
+var variableName = (
+  parameter,
+  parameter,
+  parameter,
+) => body;
 >>> Use block-like splitting for parenthesized expressions whose inner does.
 var variableName = ([element, element, element]);
 <<<
