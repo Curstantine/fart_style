@@ -236,12 +236,15 @@ enum Shape {
 	/// Prohibits any newlines at all.
 	static const Set<Shape> onlyInline = {inline};
 
-	/// Allows all shapes if [condition] is `true` or only an inline piece
-	/// otherwise.
-	///
-	/// This is a convenience for pieces that only care about disallowing newlines
-	/// entirely.
-	static Set<Shape> anyIf(bool condition) => condition ? all : onlyInline;
+  /// The only way it can split is block-style.
+  static const Set<Shape> inlineOrBlock = {inline, block};
+
+  /// Allows all shapes if [condition] is `true` or only an inline piece
+  /// otherwise.
+  ///
+  /// This is a convenience for pieces that only care about disallowing newlines
+  /// entirely.
+  static Set<Shape> anyIf(bool condition) => condition ? all : onlyInline;
 
 	/// Determines the resulting shape of a parent when it has children with
 	/// this shape and [other] shape.

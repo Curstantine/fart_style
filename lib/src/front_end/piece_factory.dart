@@ -907,6 +907,7 @@ mixin PieceFactory {
           casePiece,
           guardPiece,
           canBlockSplitPattern: caseClause.guardedPattern.pattern.canBlockSplit,
+          canBlockFormatPatternWithGuard: style.blockFormatIfCaseWithGuard,
         ),
       );
     } else {

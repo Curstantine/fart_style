@@ -76,16 +76,19 @@ final class CaseExpressionPiece extends Piece {
 			// allowing the body on the same line as `=>`.
 			_ when child == _pattern && _patternIsLogicalOr => Shape.all,
 
-			// There are almost never splits in the arrow piece. It requires a comment
-			// in a funny location, but if it happens, allow it.
-			_ when child == _arrow => Shape.all,
-			_blockSplitBody when child == _body => Shape.onlyBlock,
-			_beforeBody when child == _pattern => Shape.anyIf(_guard == null),
-			_beforeBody when child == _body => Shape.all,
-			_beforeWhenAndBody => Shape.all,
-			_ => Shape.onlyInline,
-		};
-	}
+      // There are almost never splits in the arrow piece. It requires a comment
+      // in a funny location, but if it happens, allow it.
+      _ when child == _arrow => Shape.all,
+      _blockSplitBody when child == _body => Shape.onlyBlock,
+
+      // Only allow the pattern to split if there is no guard.
+      _beforeBody when child == _pattern => Shape.anyIf(_guard == null),
+      _beforeBody when child == _body => Shape.all,
+
+      _beforeWhenAndBody => Shape.all,
+      _ => Shape.onlyInline,
+    };
+  }
 
 	@override
 	void format(CodeWriter writer, State state) {
