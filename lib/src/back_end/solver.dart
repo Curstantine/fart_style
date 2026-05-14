@@ -44,167 +44,167 @@ const _maxAttempts = 10000;
 ///     conquer the Piece tree and solve portions separately, while also
 ///     reusing work across different solutions.
 final class Solver {
-	final SolutionCache _cache;
+  final SolutionCache _cache;
 
-	final int _pageWidth;
+  final int _pageWidth;
 
-	/// The visual width of a tab character for line-length calculations.
-	final int _tabWidth;
+  /// The visual width of a tab character for line-length calculations.
+  final int _tabWidth;
 
-	/// The number of tabs of block-level indentation on the first line.
-	final int _leadingTabs;
+  /// The number of tabs of block-level indentation on the first line.
+  final int _leadingTabs;
 
-	/// The number of spaces of alignment on the first line.
-	final int _leadingSpaces;
+  /// The number of spaces of alignment on the first line.
+  final int _leadingSpaces;
 
-	/// The number of tabs of block-level indentation on all lines after the first.
-	final int _subsequentTabs;
+  /// The number of tabs of block-level indentation on all lines after the first.
+  final int _subsequentTabs;
 
-	/// The number of spaces of alignment on all lines after the first.
-	final int _subsequentSpaces;
+  /// The number of spaces of alignment on all lines after the first.
+  final int _subsequentSpaces;
 
-	final PriorityQueue<Solution> _queue = PriorityQueue();
+  final PriorityQueue<Solution> _queue = PriorityQueue();
 
-	/// Creates a solver that fits code into the given [pageWidth].
-	///
-	/// The first line is indented by [leadingTabs] tabs and [leadingSpaces]
-	/// spaces. All lines after that use [subsequentTabs] and [subsequentSpaces].
-	/// If subsequent values are omitted, they default to the leading values.
-	///
-	/// [tabWidth] specifies the visual width of a tab character for line-length
-	/// calculations. Defaults to [defaultTabWidth].
-	Solver(
-		this._cache, {
-		required int pageWidth,
-		int? tabWidth,
-		int leadingTabs = 0,
-		int leadingSpaces = 0,
-		int? subsequentTabs,
-		int? subsequentSpaces,
-	}) : _pageWidth = pageWidth,
-		   _tabWidth = tabWidth ?? defaultTabWidth,
-		   _leadingTabs = leadingTabs,
-		   _leadingSpaces = leadingSpaces,
-		   _subsequentTabs = subsequentTabs ?? leadingTabs,
-		   _subsequentSpaces = subsequentSpaces ?? leadingSpaces;
+  /// Creates a solver that fits code into the given [pageWidth].
+  ///
+  /// The first line is indented by [leadingTabs] tabs and [leadingSpaces]
+  /// spaces. All lines after that use [subsequentTabs] and [subsequentSpaces].
+  /// If subsequent values are omitted, they default to the leading values.
+  ///
+  /// [tabWidth] specifies the visual width of a tab character for line-length
+  /// calculations. Defaults to [defaultTabWidth].
+  Solver(
+    this._cache, {
+    required int pageWidth,
+    int? tabWidth,
+    int leadingTabs = 0,
+    int leadingSpaces = 0,
+    int? subsequentTabs,
+    int? subsequentSpaces,
+  }) : _pageWidth = pageWidth,
+       _tabWidth = tabWidth ?? defaultTabWidth,
+       _leadingTabs = leadingTabs,
+       _leadingSpaces = leadingSpaces,
+       _subsequentTabs = subsequentTabs ?? leadingTabs,
+       _subsequentSpaces = subsequentSpaces ?? leadingSpaces;
 
-	/// Finds the best set of line splits for [root] piece and returns the
-	/// resulting formatted code.
-	///
-	/// If [rootState] is given, then [root] is bound to that state.
-	Solution format(Piece root, [State? rootState]) {
-		if (debug.traceSolver) {
-			var unsolved = <Piece>[];
-			void traverse(Piece piece) {
-				if (piece.additionalStates.isNotEmpty) unsolved.add(piece);
+  /// Finds the best set of line splits for [root] piece and returns the
+  /// resulting formatted code.
+  ///
+  /// If [rootState] is given, then [root] is bound to that state.
+  Solution format(Piece root, [State? rootState]) {
+    if (debug.traceSolver) {
+      var unsolved = <Piece>[];
+      void traverse(Piece piece) {
+        if (piece.additionalStates.isNotEmpty) unsolved.add(piece);
 
-				piece.forEachChild(traverse);
-			}
+        piece.forEachChild(traverse);
+      }
 
-			traverse(root);
+      traverse(root);
 
-			var label = [
-				'Solving $root',
-				if (rootState != null) 'at state $rootState',
-				if (unsolved.isNotEmpty) 'for ${unsolved.join(', ')}',
-			].join(' ');
+      var label = [
+        'Solving $root',
+        if (rootState != null) 'at state $rootState',
+        if (unsolved.isNotEmpty) 'for ${unsolved.join(', ')}',
+      ].join(' ');
 
-			debug.log(debug.bold('$label:'));
-			debug.indent();
-			debug.log(debug.pieceTree(root));
-		}
+      debug.log(debug.bold('$label:'));
+      debug.indent();
+      debug.log(debug.pieceTree(root));
+    }
 
-		var solution = Solution(
-			_cache,
-			root,
-			pageWidth: _pageWidth,
-			tabWidth: _tabWidth,
-			leadingTabs: _leadingTabs,
-			leadingSpaces: _leadingSpaces,
-			subsequentTabs: _subsequentTabs,
-			subsequentSpaces: _subsequentSpaces,
-			rootState: rootState,
-		);
+    var solution = Solution(
+      _cache,
+      root,
+      pageWidth: _pageWidth,
+      tabWidth: _tabWidth,
+      leadingTabs: _leadingTabs,
+      leadingSpaces: _leadingSpaces,
+      subsequentTabs: _subsequentTabs,
+      subsequentSpaces: _subsequentSpaces,
+      rootState: rootState,
+    );
 
-		Profile.begin('Solver enqueue');
-		Profile.count('Solver enqueue');
-		_queue.add(solution);
-		Profile.end('Solver enqueue');
+    Profile.begin('Solver enqueue');
+    Profile.count('Solver enqueue');
+    _queue.add(solution);
+    Profile.end('Solver enqueue');
 
-		if (debug.traceSolverEnqueing) {
-			debug.log(debug.bold('Enqueue initial $solution'));
-			if (debug.traceSolverShowCode) {
-				debug.log(solution.code.toDebugString());
-				debug.log('');
-			}
-		}
+    if (debug.traceSolverEnqueing) {
+      debug.log(debug.bold('Enqueue initial $solution'));
+      if (debug.traceSolverShowCode) {
+        debug.log(solution.code.toDebugString());
+        debug.log('');
+      }
+    }
 
-		// The lowest cost solution found so far that does overflow.
-		var best = solution;
+    // The lowest cost solution found so far that does overflow.
+    var best = solution;
 
-		var attempts = 0;
+    var attempts = 0;
 
-		while (_queue.isNotEmpty && attempts < _maxAttempts) {
-			Profile.count('Solver dequeue');
-			var solution = _queue.removeFirst();
+    while (_queue.isNotEmpty && attempts < _maxAttempts) {
+      Profile.count('Solver dequeue');
+      var solution = _queue.removeFirst();
 
-			attempts++;
+      attempts++;
 
-			if (debug.traceSolverDequeing) {
-				debug.log(debug.bold('Try #$attempts $solution'));
-				if (debug.traceSolverShowCode) {
-					debug.log(solution.code.toDebugString());
-					debug.log('');
-				}
-			}
+      if (debug.traceSolverDequeing) {
+        debug.log(debug.bold('Try #$attempts $solution'));
+        if (debug.traceSolverShowCode) {
+          debug.log(solution.code.toDebugString());
+          debug.log('');
+        }
+      }
 
-			if (solution.isValid) {
-				// Since we process the solutions from lowest cost up, as soon as we
-				// find a valid one that fits, it's the best.
-				if (solution.overflow == 0) {
-					best = solution;
-					break;
-				}
+      if (solution.isValid) {
+        // Since we process the solutions from lowest cost up, as soon as we
+        // find a valid one that fits, it's the best.
+        if (solution.overflow == 0) {
+          best = solution;
+          break;
+        }
 
-				// If not, keep track of the least-bad one we've found so far.
-				if (!best.isValid || solution.overflow < best.overflow) {
-					best = solution;
-				}
-			}
+        // If not, keep track of the least-bad one we've found so far.
+        if (!best.isValid || solution.overflow < best.overflow) {
+          best = solution;
+        }
+      }
 
-			// Otherwise, try to expand the solution to explore different splitting
-			// options.
-			for (var expanded in solution.expand(
-				_cache,
-				root,
-				pageWidth: _pageWidth,
-				tabWidth: _tabWidth,
-				leadingTabs: _leadingTabs,
-				leadingSpaces: _leadingSpaces,
-				subsequentTabs: _subsequentTabs,
-				subsequentSpaces: _subsequentSpaces,
-			)) {
-				Profile.count('Solver enqueue');
-				_queue.add(expanded);
+      // Otherwise, try to expand the solution to explore different splitting
+      // options.
+      for (var expanded in solution.expand(
+        _cache,
+        root,
+        pageWidth: _pageWidth,
+        tabWidth: _tabWidth,
+        leadingTabs: _leadingTabs,
+        leadingSpaces: _leadingSpaces,
+        subsequentTabs: _subsequentTabs,
+        subsequentSpaces: _subsequentSpaces,
+      )) {
+        Profile.count('Solver enqueue');
+        _queue.add(expanded);
 
-				if (debug.traceSolverEnqueing) {
-					debug.log(debug.bold('Enqueue $expanded'));
-					if (debug.traceSolverShowCode) {
-						debug.log(expanded.code.toDebugString());
-						debug.log('');
-					}
-				}
-			}
-		}
+        if (debug.traceSolverEnqueing) {
+          debug.log(debug.bold('Enqueue $expanded'));
+          if (debug.traceSolverShowCode) {
+            debug.log(expanded.code.toDebugString());
+            debug.log('');
+          }
+        }
+      }
+    }
 
-		// If we didn't find a solution without overflow, pick the least bad one.
-		if (debug.traceSolver) {
-			debug.unindent();
-			debug.log(debug.bold('Solved $root to $best'));
-			debug.log(best.code.toDebugString());
-			debug.log('');
-		}
+    // If we didn't find a solution without overflow, pick the least bad one.
+    if (debug.traceSolver) {
+      debug.unindent();
+      debug.log(debug.bold('Solved $root to $best'));
+      debug.log(best.code.toDebugString());
+      debug.log('');
+    }
 
-		return best;
-	}
+    return best;
+  }
 }

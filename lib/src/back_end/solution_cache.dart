@@ -24,54 +24,59 @@ import 'solver.dart';
 /// indentation. When that happens, sharing this cache allows us to reuse that
 /// cached subtree Solution.
 final class SolutionCache {
-	/// Whether this cache and all solutions in it use the 3.7 style solver.
-	final bool is3Dot7;
+  /// Whether this cache and all solutions in it use the 3.7 style solver.
+  final bool is3Dot7;
 
-	/// The visual width of a tab character for line-length calculations.
-	final int tabWidth;
+  /// The visual width of a tab character for line-length calculations.
+  final int tabWidth;
 
-	final _cache = <_Key, Solution>{};
+  final _cache = <_Key, Solution>{};
 
-	SolutionCache({required this.is3Dot7, int? tabWidth}) : tabWidth = tabWidth ?? defaultTabWidth;
+  SolutionCache({required this.is3Dot7, int? tabWidth})
+    : tabWidth = tabWidth ?? defaultTabWidth;
 
-	/// Returns a previously cached solution for formatting [root] with leading
-	/// indentation of [leadingTabs] tabs and [leadingSpaces] spaces (and
-	/// [subsequentTabs]/[subsequentSpaces] for lines after the first) or produces
-	/// a new solution, caches it, and returns it.
-	///
-	/// If [root] is already bound to a state in the surrounding piece tree's
-	/// [Solution], then [stateIfBound] is that state. Otherwise, it is treated
-	/// as unbound and the cache will find a state for [root] as well as its
-	/// children.
-	Solution find(
-		Piece root,
-		State? stateIfBound, {
-		required int pageWidth,
-		required int leadingTabs,
-		required int leadingSpaces,
-		required int subsequentTabs,
-		required int subsequentSpaces,
-	}) {
-		// Use visual width for caching - pieces with equivalent visual indentation
-		// can share cached solutions.
-		var leadingVisualWidth = leadingTabs * tabWidth + leadingSpaces;
-		var subsequentVisualWidth = subsequentTabs * tabWidth + subsequentSpaces;
+  /// Returns a previously cached solution for formatting [root] with leading
+  /// indentation of [leadingTabs] tabs and [leadingSpaces] spaces (and
+  /// [subsequentTabs]/[subsequentSpaces] for lines after the first) or produces
+  /// a new solution, caches it, and returns it.
+  ///
+  /// If [root] is already bound to a state in the surrounding piece tree's
+  /// [Solution], then [stateIfBound] is that state. Otherwise, it is treated
+  /// as unbound and the cache will find a state for [root] as well as its
+  /// children.
+  Solution find(
+    Piece root,
+    State? stateIfBound, {
+    required int pageWidth,
+    required int leadingTabs,
+    required int leadingSpaces,
+    required int subsequentTabs,
+    required int subsequentSpaces,
+  }) {
+    // Use visual width for caching - pieces with equivalent visual indentation
+    // can share cached solutions.
+    var leadingVisualWidth = leadingTabs * tabWidth + leadingSpaces;
+    var subsequentVisualWidth = subsequentTabs * tabWidth + subsequentSpaces;
 
-		// See if we've already formatted this piece at this indentation. If not,
-		// format it and store the result.
-		return _cache.putIfAbsent(
-			(root, indent: leadingVisualWidth, subsequentIndent: subsequentVisualWidth),
-			() => Solver(
-				this,
-				pageWidth: pageWidth,
-				tabWidth: tabWidth,
-				leadingTabs: leadingTabs,
-				leadingSpaces: leadingSpaces,
-				subsequentTabs: subsequentTabs,
-				subsequentSpaces: subsequentSpaces,
-			).format(root, stateIfBound),
-		);
-	}
+    // See if we've already formatted this piece at this indentation. If not,
+    // format it and store the result.
+    return _cache.putIfAbsent(
+      (
+        root,
+        indent: leadingVisualWidth,
+        subsequentIndent: subsequentVisualWidth,
+      ),
+      () => Solver(
+        this,
+        pageWidth: pageWidth,
+        tabWidth: tabWidth,
+        leadingTabs: leadingTabs,
+        leadingSpaces: leadingSpaces,
+        subsequentTabs: subsequentTabs,
+        subsequentSpaces: subsequentSpaces,
+      ).format(root, stateIfBound),
+    );
+  }
 }
 
 /// The key used to uniquely identify a previously formatted Piece.

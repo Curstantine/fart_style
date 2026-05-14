@@ -22,54 +22,54 @@ const int defaultTabWidth = 4;
 ///
 /// Use [tabs] for block-level indentation and [spaces] for alignment.
 final class Indentation {
-	/// The number of tab characters for block indentation.
-	final int tabs;
+  /// The number of tab characters for block indentation.
+  final int tabs;
 
-	/// The number of space characters for alignment.
-	final int spaces;
+  /// The number of space characters for alignment.
+  final int spaces;
 
-	const Indentation(this.tabs, this.spaces);
+  const Indentation(this.tabs, this.spaces);
 
-	/// No indentation.
-	static const none = Indentation(0, 0);
+  /// No indentation.
+  static const none = Indentation(0, 0);
 
-	/// Creates an indentation with only tabs.
-	const Indentation.tabs(this.tabs) : spaces = 0;
+  /// Creates an indentation with only tabs.
+  const Indentation.tabs(this.tabs) : spaces = 0;
 
-	/// Creates an indentation with only spaces (for alignment).
-	const Indentation.spaces(this.spaces) : tabs = 0;
+  /// Creates an indentation with only spaces (for alignment).
+  const Indentation.spaces(this.spaces) : tabs = 0;
 
-	/// The visual width of this indentation for line-length calculations.
-	///
-	/// Uses the default tab width. For custom tab widths, use
-	/// [visualWidthWith] instead.
-	int get visualWidth => tabs * defaultTabWidth + spaces;
+  /// The visual width of this indentation for line-length calculations.
+  ///
+  /// Uses the default tab width. For custom tab widths, use
+  /// [visualWidthWith] instead.
+  int get visualWidth => tabs * defaultTabWidth + spaces;
 
-	/// Returns the visual width of this indentation using [tabWidth].
-	int visualWidthWith(int tabWidth) => tabs * tabWidth + spaces;
+  /// Returns the visual width of this indentation using [tabWidth].
+  int visualWidthWith(int tabWidth) => tabs * tabWidth + spaces;
 
-	/// Generates the output string: tabs followed by spaces.
-	String toOutput() => '\t' * tabs + ' ' * spaces;
+  /// Generates the output string: tabs followed by spaces.
+  String toOutput() => '\t' * tabs + ' ' * spaces;
 
-	/// Creates a new indentation by adding [other] to this one.
-	Indentation operator +(Indentation other) =>
-	    Indentation(tabs + other.tabs, spaces + other.spaces);
+  /// Creates a new indentation by adding [other] to this one.
+  Indentation operator +(Indentation other) =>
+      Indentation(tabs + other.tabs, spaces + other.spaces);
 
-	/// Creates a new indentation with additional tabs.
-	Indentation addTabs(int count) => Indentation(tabs + count, spaces);
+  /// Creates a new indentation with additional tabs.
+  Indentation addTabs(int count) => Indentation(tabs + count, spaces);
 
-	/// Creates a new indentation with additional spaces.
-	Indentation addSpaces(int count) => Indentation(tabs, spaces + count);
+  /// Creates a new indentation with additional spaces.
+  Indentation addSpaces(int count) => Indentation(tabs, spaces + count);
 
-	@override
-	bool operator ==(Object other) =>
-	    other is Indentation && tabs == other.tabs && spaces == other.spaces;
+  @override
+  bool operator ==(Object other) =>
+      other is Indentation && tabs == other.tabs && spaces == other.spaces;
 
-	@override
-	int get hashCode => Object.hash(tabs, spaces);
+  @override
+  int get hashCode => Object.hash(tabs, spaces);
 
-	@override
-	String toString() => 'Indentation(tabs: $tabs, spaces: $spaces)';
+  @override
+  String toString() => 'Indentation(tabs: $tabs, spaces: $spaces)';
 }
 
 /// Generates an indentation string with [tabs] tab characters followed by
@@ -83,59 +83,60 @@ String indent(int tabs, int spaces) => '\t' * tabs + ' ' * spaces;
 int visualWidth(int tabs, int spaces) => tabs * defaultTabWidth + spaces;
 
 /// Calculates the visual width of an indentation using [tabWidth].
-int visualWidthWith(int tabs, int spaces, int tabWidth) => tabs * tabWidth + spaces;
+int visualWidthWith(int tabs, int spaces, int tabWidth) =>
+    tabs * tabWidth + spaces;
 
 /// Pre-calculated indentation strings for common tab counts.
 ///
 /// These are generated ahead of time for performance, similar to how the
 /// original code pre-calculated space strings.
 const Map<int, String> _tabIndents = {
-	0: '',
-	1: '\t',
-	2: '\t\t',
-	3: '\t\t\t',
-	4: '\t\t\t\t',
-	5: '\t\t\t\t\t',
-	6: '\t\t\t\t\t\t',
-	7: '\t\t\t\t\t\t\t',
-	8: '\t\t\t\t\t\t\t\t',
-	9: '\t\t\t\t\t\t\t\t\t',
-	10: '\t\t\t\t\t\t\t\t\t\t',
-	11: '\t\t\t\t\t\t\t\t\t\t\t',
-	12: '\t\t\t\t\t\t\t\t\t\t\t\t',
-	13: '\t\t\t\t\t\t\t\t\t\t\t\t\t',
-	14: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
-	15: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
+  0: '',
+  1: '\t',
+  2: '\t\t',
+  3: '\t\t\t',
+  4: '\t\t\t\t',
+  5: '\t\t\t\t\t',
+  6: '\t\t\t\t\t\t',
+  7: '\t\t\t\t\t\t\t',
+  8: '\t\t\t\t\t\t\t\t',
+  9: '\t\t\t\t\t\t\t\t\t',
+  10: '\t\t\t\t\t\t\t\t\t\t',
+  11: '\t\t\t\t\t\t\t\t\t\t\t',
+  12: '\t\t\t\t\t\t\t\t\t\t\t\t',
+  13: '\t\t\t\t\t\t\t\t\t\t\t\t\t',
+  14: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
+  15: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
 };
 
 /// Pre-calculated space strings for common alignment widths.
 const Map<int, String> _spaceAligns = {
-	0: '',
-	1: ' ',
-	2: '  ',
-	3: '   ',
-	4: '    ',
-	5: '     ',
-	6: '      ',
-	7: '       ',
-	8: '        ',
-	9: '         ',
-	10: '          ',
-	11: '           ',
-	12: '            ',
-	13: '             ',
-	14: '              ',
-	15: '               ',
-	16: '                ',
+  0: '',
+  1: ' ',
+  2: '  ',
+  3: '   ',
+  4: '    ',
+  5: '     ',
+  6: '      ',
+  7: '       ',
+  8: '        ',
+  9: '         ',
+  10: '          ',
+  11: '           ',
+  12: '            ',
+  13: '             ',
+  14: '              ',
+  15: '               ',
+  16: '                ',
 };
 
 /// Returns the indentation string for [tabs] tabs and [spaces] alignment spaces.
 ///
 /// Uses pre-calculated strings for common values for performance.
 String getIndent(int tabs, int spaces) {
-	var tabPart = _tabIndents[tabs] ?? ('\t' * tabs);
-	var spacePart = _spaceAligns[spaces] ?? (' ' * spaces);
-	return tabPart + spacePart;
+  var tabPart = _tabIndents[tabs] ?? ('\t' * tabs);
+  var spacePart = _spaceAligns[spaces] ?? (' ' * spaces);
+  return tabPart + spacePart;
 }
 
 /// Returns a string of [count] tab characters.
