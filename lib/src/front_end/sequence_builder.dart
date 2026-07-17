@@ -75,8 +75,8 @@ final class SequenceBuilder {
   }
 
   /// Adds the opening [bracket] to the built sequence.
-  void leftBracket(Token bracket) {
-    _leftBracket = _visitor.tokenPiece(bracket);
+  void leftBracket(Token bracket, {bool soft = false}) {
+    _leftBracket = _visitor.tokenPiece(bracket, soft: soft);
   }
 
   /// Adds the closing [bracket] to the built sequence along with any comments
@@ -99,13 +99,23 @@ final class SequenceBuilder {
 
   /// Visits [node] and adds the resulting [Piece] to this sequence, handling
   /// any comments or blank lines that appear before it.
-  void visit(AstNode node, {Indent? indent, bool allowBlankAfter = true}) {
-    addCommentsBefore(node.firstNonCommentToken, indent: indent);
-    add(
-      _visitor.nodePiece(node),
+  ///
+  /// If [blankBefore] is `true`, then ensures there is a blank line before
+  /// [token]. If there any blank lines around the comments, then the first one
+  /// will be preserved. Otherwise, writes a blank line before the first
+  /// comment.
+  void visit(AstNode node, {Indent? indent, bool blankBefore = false}) {
+    var token = node.firstNonCommentToken;
+
+    var wroteBlank = addCommentsBefore(
+      token,
       indent: indent,
-      allowBlankAfter: allowBlankAfter,
+      blankBefore: blankBefore,
     );
+
+    if (blankBefore && !wroteBlank) addBlank();
+
+    add(_visitor.nodePiece(node), indent: indent);
   }
 
   /// Appends a blank line before the next piece in the sequence.
@@ -122,10 +132,30 @@ final class SequenceBuilder {
   ///
   /// Comments between sequence elements get special handling where comments
   /// on their own line become standalone sequence elements.
-  void addCommentsBefore(Token token, {Indent? indent}) {
+  ///
+  /// If [blankBefore] is `true`, then ensures there is a blank line before
+  /// [token]. If there any blank lines around the comments, then the first one
+  /// will be preserved. Otherwise, writes a blank line before the first
+  /// comment.
+  ///
+  /// Returns `true` if processing the comments ended up writing any blank
+  /// lines.
+  bool addCommentsBefore(
+    Token token, {
+    Indent? indent,
+    bool blankBefore = false,
+  }) {
     indent ??= Indent.none;
 
+    var wroteBlank = false;
     var comments = _visitor.comments.takeCommentsBefore(token);
+
+    // Default to putting the blank line before all comments unless there are
+    // blank lines inside or after them.
+    if (blankBefore && !comments.containsBlankLine) {
+      addBlank();
+      wroteBlank = true;
+    }
 
     for (var i = 0; i < comments.length; i++) {
       var comment = _visitor.pieces.commentPiece(comments[i]);
@@ -138,6 +168,7 @@ final class SequenceBuilder {
           // Always preserve a blank line above sequence-level comments.
           _allowBlank = true;
           addBlank();
+          wroteBlank = true;
         }
 
         // Write the comment as its own sequence piece.
@@ -152,6 +183,9 @@ final class SequenceBuilder {
       if (comments.isNotEmpty) _allowBlank = true;
 
       addBlank();
+      wroteBlank = true;
     }
+
+    return wroteBlank;
   }
 }

@@ -201,8 +201,10 @@ final class Solver {
     if (debug.traceSolver) {
       debug.unindent();
       debug.log(debug.bold('Solved $root to $best'));
-      debug.log(best.code.toDebugString());
-      debug.log('');
+      if (debug.traceSolverShowCode) {
+        debug.log(best.code.toDebugString());
+        debug.log('');
+      }
     }
 
     return best;

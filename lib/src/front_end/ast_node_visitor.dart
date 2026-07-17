@@ -100,8 +100,22 @@ final class AstNodeVisitor extends ThrowingAstVisitor<void> with PieceFactory {
         directives = directives.skip(1);
       }
 
+      var precedingSection = _DirectiveSection.none;
       for (var directive in directives) {
-        sequence.visit(directive);
+        // Separate sections of different import categories with blank lines.
+        var needsBlank = false;
+        if (style.separateDirectiveSections) {
+          var section = _DirectiveSection.parse(directive);
+          if (section != _DirectiveSection.none &&
+              precedingSection != _DirectiveSection.none &&
+              section != precedingSection) {
+            needsBlank = true;
+          }
+
+          precedingSection = section;
+        }
+
+        sequence.visit(directive, blankBefore: needsBlank);
       }
 
       // Add a blank line between directives and declarations.
@@ -124,10 +138,7 @@ final class AstNodeVisitor extends ThrowingAstVisitor<void> with PieceFactory {
           _ => false,
         };
 
-        // Add a blank line before types with bodies.
-        if (needsBlank || addBlankLines) sequence.addBlank();
-
-        sequence.visit(declaration);
+        sequence.visit(declaration, blankBefore: needsBlank || addBlankLines);
 
         // Add a blank line after type or function declarations with bodies.
         needsBlank = addBlankLines || declaration.hasNonEmptyBody;
@@ -707,7 +718,10 @@ final class AstNodeVisitor extends ThrowingAstVisitor<void> with PieceFactory {
   @override
   void visitExpressionStatement(ExpressionStatement node) {
     pieces.visit(node.expression);
-    pieces.token(node.semicolon);
+
+    // Treat the ";" as soft so that a long expression containing soft code at
+    // the end isn't split unnecessarily.
+    pieces.token(node.semicolon, soft: true);
   }
 
   @override
@@ -736,7 +750,7 @@ final class AstNodeVisitor extends ThrowingAstVisitor<void> with PieceFactory {
       this,
       node.metadata,
       [node.extensionKeyword, node.typeKeyword],
-      namePart: node.primaryConstructor,
+      namePart: node.namePart,
       implementsClause: node.implementsClause,
     );
     builder.buildClassBody(node.body);
@@ -792,14 +806,19 @@ final class AstNodeVisitor extends ThrowingAstVisitor<void> with PieceFactory {
     // If the parameter list is completely empty, write the brackets inline so
     // that we generate fewer separate pieces.
     if (!node.parameters.canSplit(node.rightParenthesis)) {
-      pieces.token(node.leftParenthesis);
-      pieces.token(node.rightParenthesis);
+      // Treat the "()" as soft so that if a function expression follows a long
+      // string literal (typically after the description in  a `test()` call),
+      // then we allow soft overflow for the string and the rest of the line.
+      pieces.token(node.leftParenthesis, soft: true);
+      pieces.token(node.rightParenthesis, soft: true);
       return;
     }
 
-    // If all parameters are optional, put the `[` or `{` right after `(`.
+    // Extension type representation clauses prior to Dart 3.13 don't allow a
+    // trailing comma.
     var listStyle = const ListStyle();
-    if (node.parent?.parent is ExtensionTypeDeclaration) {
+    if (!style.allowTrailingCommaInRepresentationClause &&
+        node.parent?.parent is ExtensionTypeDeclaration) {
       listStyle = const ListStyle(commas: Commas.nonTrailing);
     }
 
@@ -808,6 +827,7 @@ final class AstNodeVisitor extends ThrowingAstVisitor<void> with PieceFactory {
     builder.addLeftBracket(
       pieces.build(() {
         pieces.token(node.leftParenthesis);
+        // If all parameters are optional, put the `[` or `{` right after `(`.
         if (node.parameters.isNotEmpty && firstOptional == 0) {
           pieces.token(node.leftDelimiter);
         }
@@ -1881,9 +1901,9 @@ final class AstNodeVisitor extends ThrowingAstVisitor<void> with PieceFactory {
   @override
   void visitSimpleStringLiteral(SimpleStringLiteral node) {
     if (node.isMultiline) {
-      pieces.multilineToken(node.literal);
+      pieces.multilineToken(node.literal, soft: true);
     } else {
-      pieces.token(node.literal);
+      pieces.token(node.literal, soft: true);
     }
   }
 
@@ -2307,5 +2327,41 @@ final class AstNodeVisitor extends ThrowingAstVisitor<void> with PieceFactory {
     }
 
     _parentContext = previousContext;
+  }
+}
+
+/// The sections of imports and exports that should have blank lines between
+/// them.
+///
+/// "Effective Dart" says that "dart:", "package:", and other imports and
+/// exports should be grouped into their own sections with blank lines between
+/// them. The formatter doesn't reorder directives, but it can enforce a blank
+/// line between sections.
+///
+/// See: https://dart.dev/effective-dart/style#ordering
+enum _DirectiveSection {
+  /// A "dart:" URI.
+  dart,
+
+  /// A "package:" URI.
+  package,
+
+  /// A relative or other kind of URI.
+  other,
+
+  /// A directive that doesn't have a URI.
+  none;
+
+  /// Returns the section that [directive] belongs to, for the purpose of
+  /// [separateImportSections].
+  static _DirectiveSection parse(Directive directive) {
+    if (directive is! NamespaceDirective) return _DirectiveSection.none;
+
+    var uri = directive.uri.stringValue;
+    if (uri == null) return _DirectiveSection.none;
+
+    if (uri.startsWith('dart:')) return _DirectiveSection.dart;
+    if (uri.startsWith('package:')) return _DirectiveSection.package;
+    return _DirectiveSection.other;
   }
 }

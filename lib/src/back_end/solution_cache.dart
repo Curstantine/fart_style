@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import '../indentation.dart' show defaultTabWidth;
+import '../front_end/formatting_style.dart';
 import '../piece/piece.dart';
 import 'solution.dart';
 import 'solver.dart';
@@ -24,16 +24,11 @@ import 'solver.dart';
 /// indentation. When that happens, sharing this cache allows us to reuse that
 /// cached subtree Solution.
 final class SolutionCache {
-  /// Whether this cache and all solutions in it use the 3.7 style solver.
-  final bool is3Dot7;
-
-  /// The visual width of a tab character for line-length calculations.
-  final int tabWidth;
+  final FormattingStyle style;
 
   final _cache = <_Key, Solution>{};
 
-  SolutionCache({required this.is3Dot7, int? tabWidth})
-    : tabWidth = tabWidth ?? defaultTabWidth;
+  SolutionCache(this.style);
 
   /// Returns a previously cached solution for formatting [root] with leading
   /// indentation of [leadingTabs] tabs and [leadingSpaces] spaces (and
@@ -55,8 +50,9 @@ final class SolutionCache {
   }) {
     // Use visual width for caching - pieces with equivalent visual indentation
     // can share cached solutions.
-    var leadingVisualWidth = leadingTabs * tabWidth + leadingSpaces;
-    var subsequentVisualWidth = subsequentTabs * tabWidth + subsequentSpaces;
+    var leadingVisualWidth = leadingTabs * style.tabWidth + leadingSpaces;
+    var subsequentVisualWidth =
+        subsequentTabs * style.tabWidth + subsequentSpaces;
 
     // See if we've already formatted this piece at this indentation. If not,
     // format it and store the result.
@@ -69,7 +65,7 @@ final class SolutionCache {
       () => Solver(
         this,
         pageWidth: pageWidth,
-        tabWidth: tabWidth,
+        tabWidth: style.tabWidth,
         leadingTabs: leadingTabs,
         leadingSpaces: leadingSpaces,
         subsequentTabs: subsequentTabs,

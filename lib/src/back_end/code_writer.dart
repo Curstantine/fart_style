@@ -61,6 +61,11 @@ final class CodeWriter {
   /// The number of characters in the line currently being written.
   int _column = 0;
 
+  /// The number of characters at the end of the current line that are "soft".
+  ///
+  /// See [FormattingStyle.useSoftOverflow] for more details.
+  int _softCharacters = 0;
+
   /// The stack of indentation levels.
   ///
   /// Each entry in the stack tracks the number of tabs for block-level
@@ -160,10 +165,21 @@ final class CodeWriter {
   /// When possible, avoid calling this directly. Instead, any input code
   /// lexemes should be written to TextPieces which then call this. That way,
   /// selections inside lexemes are correctly updated.
-  void write(String text) {
+  ///
+  /// If [soft] is `true`, then [text] is considered to be "soft" code. See
+  /// [FormattingStyle.useSoftOverflow] for more details.
+  void write(String text, {bool soft = false}) {
     _flushWhitespace();
     _code.write(text);
     _column += text.length;
+
+    if (soft) {
+      _softCharacters += text.length;
+    } else {
+      // We only count trailing soft characters at the end of the line, so
+      // writing any non-soft code resets the count.
+      _softCharacters = 0;
+    }
 
     // If we haven't found an overflowing line yet, then this line might be one
     // so keep track of the unsolved pieces we've encountered on it.
@@ -175,7 +191,7 @@ final class CodeWriter {
   /// Increases the indentation by [indent] relative to the current amount of
   /// indentation.
   void pushIndent(Indent indent) {
-    if (_cache.is3Dot7) {
+    if (_cache.style.is3Dot7) {
       _pushIndent3Dot7(indent);
     } else {
       var parent = _indentStack.last;
@@ -218,7 +234,7 @@ final class CodeWriter {
   /// This is only used in a couple of corners of if-case and for-in headers
   /// where the indentation is unusual.
   void pushCollapsibleIndent() {
-    if (_cache.is3Dot7) {
+    if (_cache.style.is3Dot7) {
       _pushIndent3Dot7(Indent.expression, canCollapse: true);
     } else {
       pushIndent(Indent.controlFlowClause);
@@ -416,7 +432,7 @@ final class CodeWriter {
 
     // See if we can immediately bind it based on the page width and the piece's
     // contents.
-    if (isUnsolved) {
+    if (isUnsolved && !_cache.style.pinStateByPageWidthBeforeSolving) {
       // If the solution doesn't bind the piece already, we may be able to
       // eagerly bind it to a state knowing just the page width (minus any
       // leading indentation). If so, do that now. We do that here instead of
@@ -452,7 +468,7 @@ final class CodeWriter {
       );
 
       bool invalid;
-      if (_cache.is3Dot7) {
+      if (_cache.style.is3Dot7) {
         // If the child must be inline, then invalidate because we know it
         // contains some kind of newline.
         // TODO(rnystrom): It would be better if this logic wasn't different for
@@ -506,6 +522,7 @@ final class CodeWriter {
       case Whitespace.blankLine:
         _finishLine();
         _column = _pendingIndentTabs * _tabWidth + _pendingIndentSpaces;
+        _softCharacters = 0;
         _code.newline(
           blank: _pendingWhitespace == Whitespace.blankLine,
           tabs: _pendingIndentTabs,
@@ -515,6 +532,7 @@ final class CodeWriter {
       case Whitespace.space:
         _code.write(' ');
         _column++;
+        _softCharacters++;
     }
 
     _pendingWhitespace = Whitespace.none;
@@ -522,8 +540,24 @@ final class CodeWriter {
 
   void _finishLine() {
     // If the completed line is too long, track the overflow.
-    if (_column >= _pageWidth) {
-      _solution.addOverflow(_column - _pageWidth);
+    if (_column > _pageWidth) {
+      var overflow = _column - _pageWidth;
+
+      // If soft overflow is enabled, then collapse any trailing soft characters
+      // to a single point of overflow.
+      if (_cache.style.useSoftOverflow && _softCharacters > 0) {
+        if (_softCharacters >= overflow) {
+          // All of the overflowing characters are soft.
+          overflow = 1;
+        } else {
+          // The overflow contains both hard and soft overflow. Count each
+          // character of hard overflow and collapse the soft overflow.
+          var hardOverflow = overflow - _softCharacters;
+          overflow = hardOverflow + 1;
+        }
+      }
+
+      _solution.addOverflow(overflow);
     }
 
     // If we found a problematic line, and there is are pieces on the line that
