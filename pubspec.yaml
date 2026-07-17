@@ -1,6 +1,5 @@
 name: fart_style
-# Note: See tool/grind.dart for how to bump the version.
-version: 0.2.0-wip
+version: 0.2.0
 description: >-
     SmartTabs enabled Dart formatter. A fork of dart_style that uses tabs for indentation and spaces for alignment.
 
