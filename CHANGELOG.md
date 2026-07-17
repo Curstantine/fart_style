@@ -1,4 +1,4 @@
-# 0.2.0
+## 0.2.0
 
 * Synchronized with upstream `dart_style` (up to version 3.1.12 / Dart 3.13 formatting rules), incorporating:
   * Support for Analyzer `14.x.x` and `package_config` `3.x.x`.
@@ -6,7 +6,7 @@
   * Various upstream bug fixes and formatting improvements.
 * Fully updated and verified all tab-indentation test expectations and CLI options to correctly support the SmartTabs strategy.
 
-# 0.1.2
+## 0.1.2
 
 * Require `analyzer: ^13.0.0`.
 * Show the supported language versions in `dart format --version --verbose`.
