@@ -1,0 +1,13 @@
+>>>
+obj.functionWithTwoParameters(firstParameterGenerator()
+  ..id = myId
+  ..teamId = myTeamId
+  ..startTime = new Time(getEndOfDate(clock.currentTime()).millisecondsSinceEpoch), secondParameterGenerator());
+<<< 3.7
+obj.functionWithTwoParameters(
+	firstParameterGenerator()
+		..id = myId
+		..teamId = myTeamId
+		..startTime = new Time(getEndOfDate(clock.currentTime()).millisecondsSinceEpoch),
+	secondParameterGenerator(),
+);
