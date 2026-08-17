@@ -40,12 +40,16 @@ final class FormattingStyle {
   /// Defaults to [defaultTabWidth] (4) if not specified.
   final int tabWidth;
 
-  FormattingStyle(this._formatter, {Version? languageVersion, int? pageWidth})
-    : _languageVersion = languageVersion ?? _formatter.languageVersion,
-      pageWidth = pageWidth ?? _formatter.pageWidth,
-      tabWidth = _formatter.tabWidth;
+  FormattingStyle(
+    this._formatter, {
+    required this.lineEnding,
+    Version? languageVersion,
+    int? pageWidth,
+  }) : _languageVersion = languageVersion ?? _formatter.languageVersion,
+       pageWidth = pageWidth ?? _formatter.pageWidth,
+       tabWidth = _formatter.tabWidth;
 
-  String? get lineEnding => _formatter.lineEnding;
+  final String? lineEnding;
 
   /// The number of characters of indentation to prefix the output lines with.
   int get leadingIndent => _formatter.indent;
