@@ -1,5 +1,5 @@
 name: fart_style
-version: 0.2.0
+version: 0.2.1-wip
 description: >-
     SmartTabs enabled Dart formatter. A fork of dart_style that uses tabs for indentation and spaces for alignment.
 
